@@ -104,10 +104,10 @@ class TreeLayoutService {
     }
 
     final sortedLevels = levelGroups.keys.toList()..sort();
-    
+
     for (var level in sortedLevels) {
       final nodesInLevel = levelGroups[level]!;
-      
+
       nodesInLevel.sort((a, b) {
         if (a.spouses.contains(b)) return -1;
         return a.id.compareTo(b.id);
@@ -117,29 +117,32 @@ class TreeLayoutService {
         if (node.level == 0 && node.parents.isEmpty && node.children.isEmpty) {
           node.x = 0;
         } else if (node.level > 0 && node.children.isNotEmpty) {
-          final avgX = node.children.map((c) => c.x).reduce((a, b) => a + b) / node.children.length;
+          final avgX = node.children.map((c) => c.x).reduce((a, b) => a + b) /
+              node.children.length;
           node.x = avgX;
         } else if (node.level < 0 && node.parents.isNotEmpty) {
-          final avgX = node.parents.map((p) => p.x).reduce((a, b) => a + b) / node.parents.length;
+          final avgX = node.parents.map((p) => p.x).reduce((a, b) => a + b) /
+              node.parents.length;
           node.x = avgX;
         } else if (node.spouses.isNotEmpty) {
-          final placedSpouse = node.spouses.firstWhere((s) => s.x != 0.0, orElse: () => node.spouses.first);
+          final placedSpouse = node.spouses
+              .firstWhere((s) => s.x != 0.0, orElse: () => node.spouses.first);
           node.x = placedSpouse.x + nodeSpacing;
         }
       }
 
       nodesInLevel.sort((a, b) => a.x.compareTo(b.x));
-      
+
       for (int i = 1; i < nodesInLevel.length; i++) {
         final prev = nodesInLevel[i - 1];
         final curr = nodesInLevel[i];
-        
+
         final double requiredX = prev.x + nodeSpacing;
         if (curr.x < requiredX) {
           curr.x = requiredX;
         }
       }
-      
+
       if (nodesInLevel.isNotEmpty) {
         final minX = nodesInLevel.first.x;
         final maxX = nodesInLevel.last.x;

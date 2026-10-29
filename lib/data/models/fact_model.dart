@@ -15,5 +15,6 @@ class FactModel with _$FactModel {
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _FactModel;
 
-  factory FactModel.fromJson(Map<String, dynamic> json) => _$FactModelFromJson(json);
+  factory FactModel.fromJson(Map<String, dynamic> json) =>
+      _$FactModelFromJson(json);
 }

@@ -18,7 +18,8 @@ class TreeListScreen extends ConsumerWidget {
         title: const Text('Create New Tree'),
         content: TextField(
           controller: controller,
-          decoration: const InputDecoration(hintText: 'e.g., The Smiths Family'),
+          decoration:
+              const InputDecoration(hintText: 'e.g., The Smiths Family'),
           autofocus: true,
         ),
         actions: [
@@ -29,7 +30,9 @@ class TreeListScreen extends ConsumerWidget {
           ElevatedButton(
             onPressed: () {
               if (controller.text.trim().isNotEmpty) {
-                ref.read(treeListControllerProvider.notifier).createTree(controller.text.trim());
+                ref
+                    .read(treeListControllerProvider.notifier)
+                    .createTree(controller.text.trim());
                 Navigator.pop(context);
               }
             },
@@ -40,13 +43,17 @@ class TreeListScreen extends ConsumerWidget {
     );
   }
 
-  Future<void> _exportTree(BuildContext context, WidgetRef ref, String treeId, String treeName) async {
+  Future<void> _exportTree(BuildContext context, WidgetRef ref, String treeId,
+      String treeName) async {
     try {
-      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(content: Text('Preparing export...')));
-      final data = await ref.read(treeRepositoryProvider).getTreeExportData(treeId);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(const SnackBar(content: Text('Preparing export...')));
+      final data =
+          await ref.read(treeRepositoryProvider).getTreeExportData(treeId);
       await ExportService.exportJsonToDevice(data, treeName);
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Export failed: $e')));
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text('Export failed: $e')));
     }
   }
 
@@ -60,7 +67,8 @@ class TreeListScreen extends ConsumerWidget {
         actions: [
           IconButton(
             icon: const Icon(Icons.logout),
-            onPressed: () => ref.read(authControllerProvider.notifier).signOut(),
+            onPressed: () =>
+                ref.read(authControllerProvider.notifier).signOut(),
           ),
         ],
       ),
@@ -70,10 +78,11 @@ class TreeListScreen extends ConsumerWidget {
         data: (trees) {
           if (trees.isEmpty) {
             return const Center(
-              child: Text('No trees yet. Tap + to create one!', style: TextStyle(fontSize: 16)),
+              child: Text('No trees yet. Tap + to create one!',
+                  style: TextStyle(fontSize: 16)),
             );
           }
-          
+
           return ListView.builder(
             itemCount: trees.length,
             padding: const EdgeInsets.all(16),
@@ -81,18 +90,25 @@ class TreeListScreen extends ConsumerWidget {
               final tree = trees[index];
               return Card(
                 margin: const EdgeInsets.only(bottom: 12),
-                shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(16)),
                 child: ListTile(
                   contentPadding: const EdgeInsets.all(16),
-                  title: Text(tree.name, style: const TextStyle(fontWeight: FontWeight.bold, fontSize: 18)),
-                  subtitle: Text('Created: ${tree.createdAt.toLocal().toString().split(' ')[0]}'),
+                  title: Text(tree.name,
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, fontSize: 18)),
+                  subtitle: Text(
+                      'Created: ${tree.createdAt.toLocal().toString().split(' ')[0]}'),
                   trailing: IconButton(
                     icon: const Icon(Icons.download),
                     tooltip: 'Export as JSON',
-                    onPressed: () => _exportTree(context, ref, tree.id, tree.name),
+                    onPressed: () =>
+                        _exportTree(context, ref, tree.id, tree.name),
                   ),
                   onTap: () {
-                    ref.read(currentTreeControllerProvider.notifier).setTree(tree);
+                    ref
+                        .read(currentTreeControllerProvider.notifier)
+                        .setTree(tree);
                     context.push('/canvas');
                   },
                 ),

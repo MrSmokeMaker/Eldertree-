@@ -35,7 +35,8 @@ class AudioService {
     if (!_isSoundEnabled) return;
     if (_scrollPlayer.state != PlayerState.playing) {
       try {
-        await _scrollPlayer.play(AssetSource('sounds/leaves_scroll.mp3'), volume: 0.2);
+        await _scrollPlayer.play(AssetSource('sounds/leaves_scroll.mp3'),
+            volume: 0.2);
       } catch (_) {}
     }
   }
@@ -47,7 +48,8 @@ class AudioService {
   Future<void> playAddMemberChime() async {
     if (!_isSoundEnabled) return;
     try {
-      await _sfxPlayer.play(AssetSource('sounds/chime_add_member.mp3'), volume: 0.6);
+      await _sfxPlayer.play(AssetSource('sounds/chime_add_member.mp3'),
+          volume: 0.6);
     } catch (_) {}
   }
 }

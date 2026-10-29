@@ -15,15 +15,18 @@ NotificationService notificationService(NotificationServiceRef ref) {
 }
 
 class NotificationService {
-  final FlutterLocalNotificationsPlugin _plugin = FlutterLocalNotificationsPlugin();
-  
-  final StreamController<String> _onNotificationTap = StreamController<String>.broadcast();
+  final FlutterLocalNotificationsPlugin _plugin =
+      FlutterLocalNotificationsPlugin();
+
+  final StreamController<String> _onNotificationTap =
+      StreamController<String>.broadcast();
   Stream<String> get onNotificationTap => _onNotificationTap.stream;
 
   Future<void> init() async {
     tz.initializeTimeZones();
 
-    const AndroidInitializationSettings androidInit = AndroidInitializationSettings('@mipmap/ic_launcher');
+    const AndroidInitializationSettings androidInit =
+        AndroidInitializationSettings('@mipmap/ic_launcher');
     const DarwinInitializationSettings iosInit = DarwinInitializationSettings(
       requestAlertPermission: false,
       requestBadgePermission: false,
@@ -68,12 +71,14 @@ class NotificationService {
 
     if (proceed != true) return;
 
-    final androidPlugin = _plugin.resolvePlatformSpecificImplementation<AndroidFlutterLocalNotificationsPlugin>();
+    final androidPlugin = _plugin.resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin>();
     if (androidPlugin != null) {
       await androidPlugin.requestNotificationsPermission();
     }
 
-    final iosPlugin = _plugin.resolvePlatformSpecificImplementation<IOSFlutterLocalNotificationsPlugin>();
+    final iosPlugin = _plugin.resolvePlatformSpecificImplementation<
+        IOSFlutterLocalNotificationsPlugin>();
     if (iosPlugin != null) {
       await iosPlugin.requestPermissions(alert: true, badge: true, sound: true);
     }
@@ -93,12 +98,14 @@ class NotificationService {
     );
 
     if (scheduledDate.isBefore(now)) {
-      scheduledDate = tz.TZDateTime(tz.local, now.year + 1, member.birthDate!.month, member.birthDate!.day, 9, 0);
+      scheduledDate = tz.TZDateTime(tz.local, now.year + 1,
+          member.birthDate!.month, member.birthDate!.day, 9, 0);
     }
 
     final notificationId = member.id.hashCode;
 
-    const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
+    const AndroidNotificationDetails androidDetails =
+        AndroidNotificationDetails(
       'family_events',
       'Family Events',
       channelDescription: 'Reminders for birthdays and anniversaries',
@@ -118,7 +125,8 @@ class NotificationService {
       scheduledDate,
       platformDetails,
       androidScheduleMode: AndroidScheduleMode.exactAllowWhileIdle,
-      uiLocalNotificationDateInterpretation: UILocalNotificationDateInterpretation.absoluteTime,
+      uiLocalNotificationDateInterpretation:
+          UILocalNotificationDateInterpretation.absoluteTime,
       matchDateTimeComponents: DateTimeComponents.dayOfMonthAndTime,
       payload: member.id,
     );

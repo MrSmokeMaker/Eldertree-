@@ -12,5 +12,6 @@ class TreeModel with _$TreeModel {
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _TreeModel;
 
-  factory TreeModel.fromJson(Map<String, dynamic> json) => _$TreeModelFromJson(json);
+  factory TreeModel.fromJson(Map<String, dynamic> json) =>
+      _$TreeModelFromJson(json);
 }

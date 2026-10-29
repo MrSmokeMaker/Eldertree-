@@ -37,7 +37,8 @@ class BranchPainter extends CustomPainter {
     const cardRadius = 60.0;
 
     for (var rel in relationships) {
-      if (hiddenNodeIds.contains(rel.member1Id) || hiddenNodeIds.contains(rel.member2Id)) {
+      if (hiddenNodeIds.contains(rel.member1Id) ||
+          hiddenNodeIds.contains(rel.member2Id)) {
         continue;
       }
 
@@ -53,29 +54,37 @@ class BranchPainter extends CustomPainter {
       if (rel.relationshipType == RelationshipType.parent) {
         final startY = p1.dy + cardRadius;
         final endY = p2.dy - cardRadius;
-        
+
         path.moveTo(p1.dx, startY);
         path.cubicTo(
-          p1.dx, startY + 100,
-          p2.dx, endY - 100,
-          p2.dx, endY,
+          p1.dx,
+          startY + 100,
+          p2.dx,
+          endY - 100,
+          p2.dx,
+          endY,
         );
         canvas.drawPath(path, parentPaint);
       } else if (rel.relationshipType == RelationshipType.spouse) {
         final startX = p1.dx < p2.dx ? p1.dx + cardRadius : p1.dx - cardRadius;
         final endX = p2.dx > p1.dx ? p2.dx - cardRadius : p2.dx + cardRadius;
-        
+
         path.moveTo(startX, p1.dy);
         path.quadraticBezierTo(
-          (startX + endX) / 2, p1.dy + 30,
-          endX, p2.dy,
+          (startX + endX) / 2,
+          p1.dy + 30,
+          endX,
+          p2.dy,
         );
         canvas.drawPath(path, spousePaint);
-        
+
         canvas.drawCircle(
           Offset((startX + endX) / 2, p1.dy + 15),
           6.0,
-          Paint()..color = accentColor..style = PaintingStyle.stroke..strokeWidth = 2.0,
+          Paint()
+            ..color = accentColor
+            ..style = PaintingStyle.stroke
+            ..strokeWidth = 2.0,
         );
       }
     }
@@ -83,8 +92,8 @@ class BranchPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant BranchPainter oldDelegate) {
-    return oldDelegate.nodes != nodes || 
-           oldDelegate.isDark != isDark || 
-           oldDelegate.hiddenNodeIds != hiddenNodeIds;
+    return oldDelegate.nodes != nodes ||
+        oldDelegate.isDark != isDark ||
+        oldDelegate.hiddenNodeIds != hiddenNodeIds;
   }
 }

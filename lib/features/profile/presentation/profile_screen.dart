@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import '../../../data/models/member_model.dart';
+import '../../../data/models/fact_model.dart';
 import '../../../data/models/enums.dart';
 import '../profile_controller.dart';
 import 'widgets/voice_capsule_widgets.dart';
@@ -27,7 +28,8 @@ class ProfileScreen extends ConsumerWidget {
   Widget build(BuildContext context, WidgetRef ref) {
     final profileStateAsync = ref.watch(profileControllerProvider(member.id));
     final isDark = Theme.of(context).brightness == Brightness.dark;
-    final surfaceColor = isDark ? const Color(0xFF1A1D24) : const Color(0xFFFFFFFF);
+    final surfaceColor =
+        isDark ? const Color(0xFF1A1D24) : const Color(0xFFFFFFFF);
 
     return Container(
       decoration: BoxDecoration(
@@ -45,28 +47,50 @@ class ProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(24.0),
                   child: Column(
                     children: [
-                      Container(width: 40, height: 4, decoration: BoxDecoration(color: Colors.grey.withOpacity(0.3), borderRadius: BorderRadius.circular(2))),
+                      Container(
+                          width: 40,
+                          height: 4,
+                          decoration: BoxDecoration(
+                              color: Colors.grey.withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(2))),
                       const SizedBox(height: 24),
                       CircleAvatar(
                         radius: 50,
-                        backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
-                        backgroundImage: member.avatarUrl != null ? NetworkImage(member.avatarUrl!) : null,
-                        child: member.avatarUrl == null ? Text(member.firstName[0], style: const TextStyle(fontSize: 40)) : null,
+                        backgroundColor: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.1),
+                        backgroundImage: member.avatarUrl != null
+                            ? NetworkImage(member.avatarUrl!)
+                            : null,
+                        child: member.avatarUrl == null
+                            ? Text(member.firstName[0],
+                                style: const TextStyle(fontSize: 40))
+                            : null,
                       ),
                       const SizedBox(height: 16),
-                      Text(member.firstName, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold)),
+                      Text(member.firstName,
+                          style: const TextStyle(
+                              fontSize: 28, fontWeight: FontWeight.bold)),
                       if (member.birthDate != null)
-                        Text('${member.birthDate!.year} – ${member.deathDate?.year ?? 'Present'}', style: const TextStyle(color: Colors.grey)),
+                        Text(
+                            '${member.birthDate!.year} – ${member.deathDate?.year ?? 'Present'}',
+                            style: const TextStyle(color: Colors.grey)),
                       const SizedBox(height: 16),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          OutlinedButton.icon(onPressed: () {}, icon: const Icon(Icons.edit, size: 16), label: const Text('Edit')),
+                          OutlinedButton.icon(
+                              onPressed: () {},
+                              icon: const Icon(Icons.edit, size: 16),
+                              label: const Text('Edit')),
                           const SizedBox(width: 12),
                           FilledButton.icon(
                             onPressed: () => Navigator.push(
                               context,
-                              MaterialPageRoute(builder: (context) => InterviewScreen(member: member)),
+                              MaterialPageRoute(
+                                  builder: (context) =>
+                                      InterviewScreen(member: member)),
                             ),
                             icon: const Icon(Icons.forum, size: 16),
                             label: const Text('Interview'),
@@ -81,7 +105,8 @@ class ProfileScreen extends ConsumerWidget {
                 child: _buildGhostFacts(context, state.allFacts),
               ),
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => _buildTimelineEvent(
@@ -98,7 +123,9 @@ class ProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.all(32.0),
                   child: Center(
                     child: VoiceRecorderButton(
-                      onRecordComplete: (path) => ref.read(profileControllerProvider(member.id).notifier).addVoiceCapsule(path),
+                      onRecordComplete: (path) => ref
+                          .read(profileControllerProvider(member.id).notifier)
+                          .addVoiceCapsule(path),
                     ),
                   ),
                 ),
@@ -117,23 +144,29 @@ class ProfileScreen extends ConsumerWidget {
         child: GestureDetector(
           onTap: () => Navigator.push(
             context,
-            MaterialPageRoute(builder: (context) => InterviewScreen(member: member)),
+            MaterialPageRoute(
+                builder: (context) => InterviewScreen(member: member)),
           ),
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
               color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
-              border: Border.all(color: Theme.of(context).colorScheme.primary.withOpacity(0.2)),
+              border: Border.all(
+                  color:
+                      Theme.of(context).colorScheme.primary.withOpacity(0.2)),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
               children: [
-                Icon(Icons.lightbulb_outline, color: Theme.of(context).colorScheme.primary),
+                Icon(Icons.lightbulb_outline,
+                    color: Theme.of(context).colorScheme.primary),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
                     'Tell us where ${member.firstName} was born \u2192',
-                    style: TextStyle(color: Theme.of(context).colorScheme.primary, fontStyle: FontStyle.italic),
+                    style: TextStyle(
+                        color: Theme.of(context).colorScheme.primary,
+                        fontStyle: FontStyle.italic),
                   ),
                 ),
               ],
@@ -145,15 +178,28 @@ class ProfileScreen extends ConsumerWidget {
     return const SizedBox.shrink();
   }
 
-  Widget _buildTimelineEvent(BuildContext context, UnifiedEvent event, {required bool isLast}) {
+  Widget _buildTimelineEvent(BuildContext context, UnifiedEvent event,
+      {required bool isLast}) {
     return IntrinsicHeight(
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Column(
             children: [
-              Container(width: 12, height: 12, decoration: BoxDecoration(color: Theme.of(context).colorScheme.primary, shape: BoxShape.circle)),
-              if (!isLast) Expanded(child: Container(width: 2, color: Theme.of(context).colorScheme.primary.withOpacity(0.3))),
+              Container(
+                  width: 12,
+                  height: 12,
+                  decoration: BoxDecoration(
+                      color: Theme.of(context).colorScheme.primary,
+                      shape: BoxShape.circle)),
+              if (!isLast)
+                Expanded(
+                    child: Container(
+                        width: 2,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.3))),
             ],
           ),
           const SizedBox(width: 16),
@@ -163,12 +209,29 @@ class ProfileScreen extends ConsumerWidget {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(event.date.year.toString(), style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.grey)),
+                  Text(event.date.year.toString(),
+                      style: const TextStyle(
+                          fontWeight: FontWeight.bold, color: Colors.grey)),
                   const SizedBox(height: 4),
-                  Text(event.title, style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold)),
-                  if (event.description != null) ...[const SizedBox(height: 8), Text(event.description!)],
-                  if (event.imageUrl != null) ...[const SizedBox(height: 8), ClipRRect(borderRadius: BorderRadius.circular(12), child: Image.network(event.imageUrl!, height: 150, width: double.infinity, fit: BoxFit.cover))],
-                  if (event.audioUrl != null) ...[VoicePlayerWidget(audioUrl: event.audioUrl!)],
+                  Text(event.title,
+                      style: const TextStyle(
+                          fontSize: 18, fontWeight: FontWeight.bold)),
+                  if (event.description != null) ...[
+                    const SizedBox(height: 8),
+                    Text(event.description!)
+                  ],
+                  if (event.imageUrl != null) ...[
+                    const SizedBox(height: 8),
+                    ClipRRect(
+                        borderRadius: BorderRadius.circular(12),
+                        child: Image.network(event.imageUrl!,
+                            height: 150,
+                            width: double.infinity,
+                            fit: BoxFit.cover))
+                  ],
+                  if (event.audioUrl != null) ...[
+                    VoicePlayerWidget(audioUrl: event.audioUrl!)
+                  ],
                 ],
               ),
             ),

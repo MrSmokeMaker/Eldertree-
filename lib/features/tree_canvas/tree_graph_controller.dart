@@ -23,15 +23,19 @@ class TreeGraphController extends _$TreeGraphController {
     if (currentTree == null) return TreeGraphState([], []);
 
     final client = ref.watch(supabaseProvider);
-    
-    final membersRes = await client.from('members').select().eq('tree_id', currentTree.id);
+
+    final membersRes =
+        await client.from('members').select().eq('tree_id', currentTree.id);
     final members = membersRes.map((j) => MemberModel.fromJson(j)).toList();
 
     List<RelationshipModel> relationships = [];
     if (members.isNotEmpty) {
-      final relsRes = await client.from('relationships').select().inFilter(
-          'member1_id', members.map((m) => m.id).toList());
-      relationships = relsRes.map((j) => RelationshipModel.fromJson(j)).toList();
+      final relsRes = await client
+          .from('relationships')
+          .select()
+          .inFilter('member1_id', members.map((m) => m.id).toList());
+      relationships =
+          relsRes.map((j) => RelationshipModel.fromJson(j)).toList();
     }
 
     final notifService = ref.read(notificationServiceProvider);
@@ -52,13 +56,17 @@ class TreeGraphController extends _$TreeGraphController {
     if (currentTree == null) return;
 
     final client = ref.watch(supabaseProvider);
-    
-    final newMemberRes = await client.from('members').insert({
-      'tree_id': currentTree.id,
-      'first_name': firstName,
-      'gender': gender.name,
-    }).select().single();
-    
+
+    final newMemberRes = await client
+        .from('members')
+        .insert({
+          'tree_id': currentTree.id,
+          'first_name': firstName,
+          'gender': gender.name,
+        })
+        .select()
+        .single();
+
     final newMember = MemberModel.fromJson(newMemberRes);
 
     if (relationType != 'self') {

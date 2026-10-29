@@ -18,5 +18,6 @@ class MemberModel with _$MemberModel {
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _MemberModel;
 
-  factory MemberModel.fromJson(Map<String, dynamic> json) => _$MemberModelFromJson(json);
+  factory MemberModel.fromJson(Map<String, dynamic> json) =>
+      _$MemberModelFromJson(json);
 }

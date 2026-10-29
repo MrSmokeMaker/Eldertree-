@@ -16,5 +16,6 @@ class TimelineEventModel with _$TimelineEventModel {
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _TimelineEventModel;
 
-  factory TimelineEventModel.fromJson(Map<String, dynamic> json) => _$TimelineEventModelFromJson(json);
+  factory TimelineEventModel.fromJson(Map<String, dynamic> json) =>
+      _$TimelineEventModelFromJson(json);
 }

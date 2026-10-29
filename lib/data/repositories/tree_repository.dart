@@ -18,7 +18,11 @@ class TreeRepository {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) throw Exception('Not authenticated');
 
-    final response = await _client.from('trees').select().eq('owner_id', userId).order('created_at');
+    final response = await _client
+        .from('trees')
+        .select()
+        .eq('owner_id', userId)
+        .order('created_at');
     return response.map((json) => TreeModel.fromJson(json)).toList();
   }
 
@@ -26,26 +30,38 @@ class TreeRepository {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) throw Exception('Not authenticated');
 
-    final response = await _client.from('trees').insert({
-      'owner_id': userId,
-      'name': name,
-    }).select().single();
+    final response = await _client
+        .from('trees')
+        .insert({
+          'owner_id': userId,
+          'name': name,
+        })
+        .select()
+        .single();
     return TreeModel.fromJson(response);
   }
 
   Future<Map<String, dynamic>> getTreeExportData(String treeId) async {
     final tree = await _client.from('trees').select().eq('id', treeId).single();
-    final members = await _client.from('members').select().eq('tree_id', treeId);
+    final members =
+        await _client.from('members').select().eq('tree_id', treeId);
     final memberIds = members.map((m) => m['id'] as String).toList();
-    
+
     List<dynamic> relationships = [];
     List<dynamic> facts = [];
     List<dynamic> events = [];
 
     if (memberIds.isNotEmpty) {
-      relationships = await _client.from('relationships').select().inFilter('member1_id', memberIds);
-      facts = await _client.from('facts').select().inFilter('member_id', memberIds);
-      events = await _client.from('timeline_events').select().inFilter('member_id', memberIds);
+      relationships = await _client
+          .from('relationships')
+          .select()
+          .inFilter('member1_id', memberIds);
+      facts =
+          await _client.from('facts').select().inFilter('member_id', memberIds);
+      events = await _client
+          .from('timeline_events')
+          .select()
+          .inFilter('member_id', memberIds);
     }
 
     return {

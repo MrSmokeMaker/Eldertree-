@@ -23,7 +23,8 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
 
   void _submitAnswer(WidgetRef ref) {
     if (_textController.text.trim().isEmpty) return;
-    ref.read(interviewControllerProvider(widget.member.id).notifier)
+    ref
+        .read(interviewControllerProvider(widget.member.id).notifier)
         .saveAnswer(_textController.text, _selectedDate);
     _textController.clear();
     setState(() => _selectedDate = null);
@@ -49,8 +50,11 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
       appBar: AppBar(
         backgroundColor: Colors.transparent,
         elevation: 0,
-        leading: IconButton(icon: const Icon(Icons.close), onPressed: () => Navigator.pop(context)),
-        title: Text('Interview: ${widget.member.firstName}', style: const TextStyle(fontSize: 16)),
+        leading: IconButton(
+            icon: const Icon(Icons.close),
+            onPressed: () => Navigator.pop(context)),
+        title: Text('Interview: ${widget.member.firstName}',
+            style: const TextStyle(fontSize: 16)),
         centerTitle: true,
       ),
       body: stateAsync.when(
@@ -65,9 +69,13 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
                 children: [
                   const Icon(Icons.check_circle, size: 64, color: Colors.green),
                   const SizedBox(height: 16),
-                  const Text('Интервью завершено!', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+                  const Text('Интервью завершено!',
+                      style:
+                          TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
                   const SizedBox(height: 24),
-                  ElevatedButton(onPressed: () => Navigator.pop(context), child: const Text('Вернуться в профиль'))
+                  ElevatedButton(
+                      onPressed: () => Navigator.pop(context),
+                      child: const Text('Вернуться в профиль'))
                 ],
               ),
             );
@@ -81,7 +89,8 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
                 children: [
                   LinearProgressIndicator(
                     value: state.progress,
-                    backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   const SizedBox(height: 32),
@@ -90,7 +99,10 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
                     child: Text(
                       question.text,
                       key: ValueKey(question.id),
-                      style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold, height: 1.3),
+                      style: const TextStyle(
+                          fontSize: 28,
+                          fontWeight: FontWeight.bold,
+                          height: 1.3),
                     ),
                   ),
                   const SizedBox(height: 32),
@@ -103,8 +115,12 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
                       decoration: InputDecoration(
                         hintText: 'Ваш ответ...',
                         filled: true,
-                        fillColor: isDark ? const Color(0xFF2A2D35) : const Color(0xFFF0F0F0),
-                        border: OutlineInputBorder(borderRadius: BorderRadius.circular(16), borderSide: BorderSide.none),
+                        fillColor: isDark
+                            ? const Color(0xFF2A2D35)
+                            : const Color(0xFFF0F0F0),
+                        border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(16),
+                            borderSide: BorderSide.none),
                         contentPadding: const EdgeInsets.all(20),
                       ),
                     ),
@@ -113,19 +129,30 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
                   Row(
                     children: [
                       ActionChip(
-                        label: Text(_selectedDate != null 
-                            ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}' 
+                        label: Text(_selectedDate != null
+                            ? '${_selectedDate!.day}.${_selectedDate!.month}.${_selectedDate!.year}'
                             : 'Указать дату события'),
                         avatar: const Icon(Icons.calendar_today, size: 16),
                         onPressed: _pickDate,
-                        backgroundColor: _selectedDate != null ? Theme.of(context).colorScheme.primary.withOpacity(0.2) : null,
+                        backgroundColor: _selectedDate != null
+                            ? Theme.of(context)
+                                .colorScheme
+                                .primary
+                                .withOpacity(0.2)
+                            : null,
                       ),
                       const Spacer(),
                       TextButton(
-                        onPressed: state.isSaving ? null : () {
-                          _textController.clear();
-                          ref.read(interviewControllerProvider(widget.member.id).notifier).skipQuestion();
-                        },
+                        onPressed: state.isSaving
+                            ? null
+                            : () {
+                                _textController.clear();
+                                ref
+                                    .read(interviewControllerProvider(
+                                            widget.member.id)
+                                        .notifier)
+                                    .skipQuestion();
+                              },
                         child: const Text('Пропустить'),
                       ),
                     ],
@@ -135,11 +162,17 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
                     onPressed: state.isSaving ? null : () => _submitAnswer(ref),
                     style: ElevatedButton.styleFrom(
                       padding: const EdgeInsets.symmetric(vertical: 16),
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+                      shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(16)),
                     ),
-                    child: state.isSaving 
-                        ? const SizedBox(height: 20, width: 20, child: CircularProgressIndicator(strokeWidth: 2)) 
-                        : const Text('Сохранить и продолжить', style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold)),
+                    child: state.isSaving
+                        ? const SizedBox(
+                            height: 20,
+                            width: 20,
+                            child: CircularProgressIndicator(strokeWidth: 2))
+                        : const Text('Сохранить и продолжить',
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold)),
                   ),
                 ],
               ),

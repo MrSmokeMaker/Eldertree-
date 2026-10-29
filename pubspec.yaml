@@ -33,6 +33,7 @@ dependencies:
   intl: any
   path_provider: ^2.1.3
   uuid: ^4.4.0
+  shared_preferences: ^2.3.2
 
 dev_dependencies:
   flutter_test:
@@ -49,10 +50,11 @@ dev_dependencies:
 flutter:
   uses-material-design: true
   assets:
+    - .env
     - assets/textures/branch/
     - assets/particles/
     - assets/foliage/
-    - assets/background/
     - assets/sounds/
+    - assets/background/
 
 

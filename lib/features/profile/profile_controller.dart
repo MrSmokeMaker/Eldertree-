@@ -40,14 +40,17 @@ class ProfileController extends _$ProfileController {
   @override
   FutureOr<ProfileState> build(String memberId) async {
     final client = ref.watch(supabaseProvider);
-    final factsRes = await client.from('facts').select().eq('member_id', memberId);
+    final factsRes =
+        await client.from('facts').select().eq('member_id', memberId);
     final facts = factsRes.map((j) => FactModel.fromJson(j)).toList();
 
-    final eventsRes = await client.from('timeline_events').select().eq('member_id', memberId);
-    final events = eventsRes.map((j) => TimelineEventModel.fromJson(j)).toList();
+    final eventsRes =
+        await client.from('timeline_events').select().eq('member_id', memberId);
+    final events =
+        eventsRes.map((j) => TimelineEventModel.fromJson(j)).toList();
 
     final List<UnifiedEvent> timeline = [];
-    
+
     for (var event in events) {
       timeline.add(UnifiedEvent(
         id: event.id,

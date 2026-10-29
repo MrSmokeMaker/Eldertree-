@@ -4,58 +4,38 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/router/app_router.dart';
 import 'core/utils/notification_service.dart';
-
-
-
+import 'root_widget.dart' as root;
 
 Future<void> main() async {
-  // Load environment variables (supabase credentials, etc.)
-  await dotenv.load();
-
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Supabase with error handling
+  // Load environment variables (.env file)
+  await dotenv.load(fileName: '.env');
+
+  // Initialize Supabase with credentials from .env
   try {
     await Supabase.initialize(
-      url: const String.fromEnvironment('SUPABASE_URL', defaultValue: dotenv.get('SUPABASE_URL', fallback: 'YOUR_SUPABASE_URL')),
-      anonKey: const String.fromEnvironment('SUPABASE_ANON_KEY', defaultValue: dotenv.get('SUPABASE_ANON_KEY', fallback: 'YOUR_SUPABASE_ANON_KEY')),
+      url: dotenv.get('SUPABASE_URL', fallback: 'YOUR_SUPABASE_URL'),
+      anonKey:
+          dotenv.get('SUPABASE_ANON_KEY', fallback: 'YOUR_SUPABASE_ANON_KEY'),
     );
   } catch (e, stack) {
-    // Log the error and exit gracefully
-    print('Supabase initialization failed: $e');
-    debugPrintStack(stack: stack);
-    // Optionally, you could show a UI error screen here.
+    debugPrint('Supabase initialization failed: $e\n$stack');
     return;
   }
 
-  // Initialize notification service with error handling
+  // Initialize notification service
   final container = ProviderContainer();
   try {
     await container.read(notificationServiceProvider).init();
   } catch (e) {
-    print('Notification service init failed: $e');
+    debugPrint('Notification service init failed: $e');
   }
 
   runApp(
     UncontrolledProviderScope(
       container: container,
-      child: const FamilyTreeApp(),
-    ),
-  );
-  WidgetsFlutterBinding.ensureInitialized();
-
-  await Supabase.initialize(
-    url: supabaseUrl,
-    anonKey: supabaseAnonKey,
-  );
-
-  final container = ProviderContainer();
-  await container.read(notificationServiceProvider).init();
-
-  runApp(
-    UncontrolledProviderScope(
-      container: container,
-      child: const FamilyTreeApp(),
+      child: const root.RootWidget(),
     ),
   );
 }
@@ -68,7 +48,7 @@ class FamilyTreeApp extends ConsumerWidget {
     final router = ref.watch(appRouterProvider);
 
     return MaterialApp.router(
-      title: 'Family Tree',
+      title: 'Eldertree',
       routerConfig: router,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(

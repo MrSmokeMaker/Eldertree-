@@ -10,11 +10,13 @@ class RelationshipModel with _$RelationshipModel {
     required String id,
     @JsonKey(name: 'member1_id') required String member1Id,
     @JsonKey(name: 'member2_id') required String member2Id,
-    @JsonKey(name: 'relationship_type') required RelationshipType relationshipType,
+    @JsonKey(name: 'relationship_type')
+    required RelationshipType relationshipType,
     @JsonKey(name: 'is_active') @Default(true) bool isActive,
     @JsonKey(name: 'end_date') DateTime? endDate,
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _RelationshipModel;
 
-  factory RelationshipModel.fromJson(Map<String, dynamic> json) => _$RelationshipModelFromJson(json);
+  factory RelationshipModel.fromJson(Map<String, dynamic> json) =>
+      _$RelationshipModelFromJson(json);
 }

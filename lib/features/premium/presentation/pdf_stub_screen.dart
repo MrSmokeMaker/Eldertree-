@@ -14,16 +14,29 @@ class PdfStubScreen extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
-                width: 200, height: 280,
+                width: 200,
+                height: 280,
                 decoration: BoxDecoration(
                   color: Theme.of(context).colorScheme.surfaceContainerHighest,
                   border: Border.all(color: const Color(0xFFD4AF37), width: 4),
-                  boxShadow: const [BoxShadow(color: Colors.black26, blurRadius: 20, offset: Offset(0, 10))],
+                  boxShadow: const [
+                    BoxShadow(
+                        color: Colors.black26,
+                        blurRadius: 20,
+                        offset: Offset(0, 10))
+                  ],
                 ),
-                child: Center(child: Icon(Icons.account_tree, size: 64, color: Theme.of(context).colorScheme.primary.withOpacity(0.5))),
+                child: Center(
+                    child: Icon(Icons.account_tree,
+                        size: 64,
+                        color: Theme.of(context)
+                            .colorScheme
+                            .primary
+                            .withOpacity(0.5))),
               ),
               const SizedBox(height: 40),
-              const Text('Heirloom Quality Poster', style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
+              const Text('Heirloom Quality Poster',
+                  style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold)),
               const SizedBox(height: 16),
               const Text(
                 'Generate a high-resolution, print-ready PDF of your entire family tree. Perfect for framing or family reunions.',
@@ -35,7 +48,9 @@ class PdfStubScreen extends StatelessWidget {
                 onPressed: () => Navigator.pop(context),
                 icon: const Icon(Icons.hourglass_bottom),
                 label: const Text('Coming in next update'),
-                style: ElevatedButton.styleFrom(padding: const EdgeInsets.symmetric(horizontal: 32, vertical: 16)),
+                style: ElevatedButton.styleFrom(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 32, vertical: 16)),
               ),
             ],
           ),

@@ -17,14 +17,13 @@ class InterviewState {
     this.isSaving = false,
   });
 
-  InterviewQuestion? get currentQuestion => 
-      pendingQuestions.isNotEmpty && currentIndex < pendingQuestions.length 
-          ? pendingQuestions[currentIndex] 
+  InterviewQuestion? get currentQuestion =>
+      pendingQuestions.isNotEmpty && currentIndex < pendingQuestions.length
+          ? pendingQuestions[currentIndex]
           : null;
-          
-  double get progress => pendingQuestions.isEmpty 
-      ? 1.0 
-      : currentIndex / pendingQuestions.length;
+
+  double get progress =>
+      pendingQuestions.isEmpty ? 1.0 : currentIndex / pendingQuestions.length;
 }
 
 @riverpod
@@ -32,8 +31,10 @@ class InterviewController extends _$InterviewController {
   @override
   FutureOr<InterviewState> build(String memberId) async {
     final client = ref.watch(supabaseProvider);
-    final factsRes = await client.from('facts').select('category').eq('member_id', memberId);
-    final existingCategories = factsRes.map((f) => f['category'] as String).toSet();
+    final factsRes =
+        await client.from('facts').select('category').eq('member_id', memberId);
+    final existingCategories =
+        factsRes.map((f) => f['category'] as String).toSet();
 
     final pending = defaultInterviewQuestions.where((q) {
       if (q.isMultipleAllowed) return true;

@@ -14,5 +14,6 @@ class SubscriptionModel with _$SubscriptionModel {
     @JsonKey(name: 'created_at') required DateTime createdAt,
   }) = _SubscriptionModel;
 
-  factory SubscriptionModel.fromJson(Map<String, dynamic> json) => _$SubscriptionModelFromJson(json);
+  factory SubscriptionModel.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionModelFromJson(json);
 }

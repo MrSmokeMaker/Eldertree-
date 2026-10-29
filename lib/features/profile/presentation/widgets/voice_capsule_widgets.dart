@@ -13,7 +13,8 @@ class VoiceRecorderButton extends StatefulWidget {
   State<VoiceRecorderButton> createState() => _VoiceRecorderButtonState();
 }
 
-class _VoiceRecorderButtonState extends State<VoiceRecorderButton> with SingleTickerProviderStateMixin {
+class _VoiceRecorderButtonState extends State<VoiceRecorderButton>
+    with SingleTickerProviderStateMixin {
   final AudioRecorder _record = AudioRecorder();
   bool _isRecording = false;
   late AnimationController _pulseController;
@@ -23,7 +24,9 @@ class _VoiceRecorderButtonState extends State<VoiceRecorderButton> with SingleTi
   @override
   void initState() {
     super.initState();
-    _pulseController = AnimationController(vsync: this, duration: const Duration(seconds: 1))..repeat(reverse: true);
+    _pulseController =
+        AnimationController(vsync: this, duration: const Duration(seconds: 1))
+          ..repeat(reverse: true);
   }
 
   @override
@@ -38,13 +41,16 @@ class _VoiceRecorderButtonState extends State<VoiceRecorderButton> with SingleTi
     if (await _record.hasPermission()) {
       HapticFeedback.heavyImpact();
       final tempDir = await getTemporaryDirectory();
-      final path = '${tempDir.path}/temp_record_${DateTime.now().millisecondsSinceEpoch}.m4a';
-      await _record.start(const RecordConfig(encoder: AudioEncoder.aacLc), path: path);
+      final path =
+          '${tempDir.path}/temp_record_${DateTime.now().millisecondsSinceEpoch}.m4a';
+      await _record.start(const RecordConfig(encoder: AudioEncoder.aacLc),
+          path: path);
       setState(() {
         _isRecording = true;
         _recordDuration = 0;
       });
-      _timer = Timer.periodic(const Duration(seconds: 1), (Timer t) => setState(() => _recordDuration++));
+      _timer = Timer.periodic(const Duration(seconds: 1),
+          (Timer t) => setState(() => _recordDuration++));
     }
   }
 
@@ -69,18 +75,31 @@ class _VoiceRecorderButtonState extends State<VoiceRecorderButton> with SingleTi
         duration: const Duration(milliseconds: 200),
         padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
         decoration: BoxDecoration(
-          color: _isRecording ? Theme.of(context).colorScheme.error : Theme.of(context).colorScheme.primary,
+          color: _isRecording
+              ? Theme.of(context).colorScheme.error
+              : Theme.of(context).colorScheme.primary,
           borderRadius: BorderRadius.circular(32),
-          boxShadow: _isRecording ? [BoxShadow(color: Colors.red.withOpacity(0.5), blurRadius: 20, spreadRadius: 5)] : [],
+          boxShadow: _isRecording
+              ? [
+                  BoxShadow(
+                      color: Colors.red.withOpacity(0.5),
+                      blurRadius: 20,
+                      spreadRadius: 5)
+                ]
+              : [],
         ),
         child: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Icon(_isRecording ? Icons.mic : Icons.mic_none, color: Colors.white),
+            Icon(_isRecording ? Icons.mic : Icons.mic_none,
+                color: Colors.white),
             const SizedBox(width: 8),
             Text(
-              _isRecording ? 'Recording 00:${_recordDuration.toString().padLeft(2, '0')}' : 'Hold to record',
-              style: const TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+              _isRecording
+                  ? 'Recording 00:${_recordDuration.toString().padLeft(2, '0')}'
+                  : 'Hold to record',
+              style: const TextStyle(
+                  color: Colors.white, fontWeight: FontWeight.bold),
             ),
           ],
         ),
@@ -136,18 +155,24 @@ class _VoicePlayerWidgetState extends State<VoicePlayerWidget> {
       child: Row(
         children: [
           IconButton(
-            icon: Icon(_isPlaying ? Icons.pause_circle_filled : Icons.play_circle_fill),
+            icon: Icon(_isPlaying
+                ? Icons.pause_circle_filled
+                : Icons.play_circle_fill),
             color: Theme.of(context).colorScheme.primary,
             iconSize: 36,
             onPressed: () {
-              _isPlaying ? _player.pause() : _player.play(UrlSource(widget.audioUrl));
+              _isPlaying
+                  ? _player.pause()
+                  : _player.play(UrlSource(widget.audioUrl));
             },
           ),
           Expanded(
             child: Slider(
               value: _position.inSeconds.toDouble(),
               min: 0.0,
-              max: _duration.inSeconds.toDouble() > 0 ? _duration.inSeconds.toDouble() : 1.0,
+              max: _duration.inSeconds.toDouble() > 0
+                  ? _duration.inSeconds.toDouble()
+                  : 1.0,
               onChanged: (val) {
                 _player.seek(Duration(seconds: val.toInt()));
               },

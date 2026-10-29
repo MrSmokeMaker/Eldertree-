@@ -6,7 +6,7 @@ class GraphNode {
   int level = 0;
   double x = 0.0;
   double y = 0.0;
-  
+
   final List<GraphNode> spouses = [];
   final List<GraphNode> parents = [];
   final List<GraphNode> children = [];

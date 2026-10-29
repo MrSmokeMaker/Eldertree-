@@ -14,8 +14,12 @@ class MemberRepository {
   MemberRepository(this._client);
 
   Future<void> deleteMember(String memberId) async {
-    final member = await _client.from('members').select('avatar_url').eq('id', memberId).single();
-    
+    final member = await _client
+        .from('members')
+        .select('avatar_url')
+        .eq('id', memberId)
+        .single();
+
     final avatarUrl = member['avatar_url'] as String?;
     if (avatarUrl != null && avatarUrl.isNotEmpty) {
       try {

@@ -26,7 +26,11 @@ class SubscriptionScreen extends ConsumerWidget {
             context,
             title: 'Free',
             price: '\$0',
-            features: ['Up to 15 family members', 'Basic text facts', 'Standard tree export'],
+            features: [
+              'Up to 15 family members',
+              'Basic text facts',
+              'Standard tree export'
+            ],
             isCurrent: currentTier == TierLevel.free,
           ),
           const SizedBox(height: 16),
@@ -34,7 +38,11 @@ class SubscriptionScreen extends ConsumerWidget {
             context,
             title: 'Standard',
             price: '\$4.99/mo',
-            features: ['Up to 100 family members', 'Full text interview', 'Photo uploads'],
+            features: [
+              'Up to 100 family members',
+              'Full text interview',
+              'Photo uploads'
+            ],
             isCurrent: currentTier == TierLevel.standard,
           ),
           const SizedBox(height: 16),
@@ -43,16 +51,26 @@ class SubscriptionScreen extends ConsumerWidget {
               borderRadius: BorderRadius.circular(24),
               gradient: const LinearGradient(
                 colors: [Color(0xFFD4AF37), Color(0xFFE5C158)],
-                begin: Alignment.topLeft, end: Alignment.bottomRight,
+                begin: Alignment.topLeft,
+                end: Alignment.bottomRight,
               ),
-              boxShadow: [BoxShadow(color: const Color(0xFFD4AF37).withOpacity(0.3), blurRadius: 20)],
+              boxShadow: [
+                BoxShadow(
+                    color: const Color(0xFFD4AF37).withOpacity(0.3),
+                    blurRadius: 20)
+              ],
             ),
             padding: const EdgeInsets.all(3),
             child: _buildTierCard(
               context,
               title: 'Pro',
               price: '\$9.99/mo',
-              features: ['Unlimited members', 'Voice capsules & Reminders', 'Print-ready PDF Export', 'Seasonal Themes'],
+              features: [
+                'Unlimited members',
+                'Voice capsules & Reminders',
+                'Print-ready PDF Export',
+                'Seasonal Themes'
+              ],
               isCurrent: currentTier == TierLevel.pro,
               isPro: true,
             ),
@@ -62,7 +80,8 @@ class SubscriptionScreen extends ConsumerWidget {
     );
   }
 
-  Widget _buildTierCard(BuildContext context, {
+  Widget _buildTierCard(
+    BuildContext context, {
     required String title,
     required String price,
     required List<String> features,
@@ -81,24 +100,40 @@ class SubscriptionScreen extends ConsumerWidget {
         children: [
           Row(
             children: [
-              Text(title, style: TextStyle(fontSize: 22, fontWeight: FontWeight.bold, color: isPro ? const Color(0xFFD4AF37) : null)),
-              if (isPro) const Padding(padding: EdgeInsets.only(left: 8), child: Icon(Icons.workspace_premium, color: Color(0xFFD4AF37))),
+              Text(title,
+                  style: TextStyle(
+                      fontSize: 22,
+                      fontWeight: FontWeight.bold,
+                      color: isPro ? const Color(0xFFD4AF37) : null)),
+              if (isPro)
+                const Padding(
+                    padding: EdgeInsets.only(left: 8),
+                    child: Icon(Icons.workspace_premium,
+                        color: Color(0xFFD4AF37))),
               const Spacer(),
-              if (isCurrent) 
-                Chip(label: const Text('Current', style: TextStyle(fontSize: 12)), backgroundColor: Theme.of(context).colorScheme.primary.withOpacity(0.1)),
+              if (isCurrent)
+                Chip(
+                    label:
+                        const Text('Current', style: TextStyle(fontSize: 12)),
+                    backgroundColor:
+                        Theme.of(context).colorScheme.primary.withOpacity(0.1)),
             ],
           ),
           const SizedBox(height: 8),
-          Text(price, style: const TextStyle(fontSize: 28, fontWeight: FontWeight.w900)),
+          Text(price,
+              style:
+                  const TextStyle(fontSize: 28, fontWeight: FontWeight.w900)),
           const SizedBox(height: 16),
           ...features.map((f) => Padding(
-            padding: const EdgeInsets.only(bottom: 8),
-            child: Row(children: [
-              Icon(Icons.check_circle, size: 16, color: isPro ? const Color(0xFFD4AF37) : Colors.grey),
-              const SizedBox(width: 12),
-              Expanded(child: Text(f)),
-            ]),
-          )),
+                padding: const EdgeInsets.only(bottom: 8),
+                child: Row(children: [
+                  Icon(Icons.check_circle,
+                      size: 16,
+                      color: isPro ? const Color(0xFFD4AF37) : Colors.grey),
+                  const SizedBox(width: 12),
+                  Expanded(child: Text(f)),
+                ]),
+              )),
           const SizedBox(height: 16),
           SizedBox(
             width: double.infinity,

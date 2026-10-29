@@ -62,7 +62,8 @@ class _AuthScreenState extends ConsumerState<AuthScreen> {
             children: [
               Text(
                 _isLogin ? 'Welcome Back' : 'Create Archive',
-                style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                style:
+                    const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
                 textAlign: TextAlign.center,
               ),
               const SizedBox(height: 32),

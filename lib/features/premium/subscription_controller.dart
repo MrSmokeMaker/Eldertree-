@@ -14,10 +14,18 @@ class SubscriptionController extends _$SubscriptionController {
     if (userId == null) throw Exception('Not authenticated');
 
     try {
-      final res = await client.from('subscriptions').select().eq('user_id', userId).single();
+      final res = await client
+          .from('subscriptions')
+          .select()
+          .eq('user_id', userId)
+          .single();
       return SubscriptionModel.fromJson(res);
     } catch (e) {
-      return SubscriptionModel(id: 'temp', userId: userId, createdAt: DateTime.now(), tierLevel: TierLevel.free);
+      return SubscriptionModel(
+          id: 'temp',
+          userId: userId,
+          createdAt: DateTime.now(),
+          tierLevel: TierLevel.free);
     }
   }
 
@@ -28,6 +36,8 @@ class SubscriptionController extends _$SubscriptionController {
     return currentCount < 15;
   }
 
-  bool get canUseAudio => (state.value?.tierLevel ?? TierLevel.free) == TierLevel.pro;
-  bool get canExportPdf => (state.value?.tierLevel ?? TierLevel.free) == TierLevel.pro;
+  bool get canUseAudio =>
+      (state.value?.tierLevel ?? TierLevel.free) == TierLevel.pro;
+  bool get canExportPdf =>
+      (state.value?.tierLevel ?? TierLevel.free) == TierLevel.pro;
 }

@@ -38,7 +38,8 @@ class ParallaxBackground extends StatelessWidget {
                   width: 2048,
                   height: 2048,
                   fit: BoxFit.cover,
-                  errorBuilder: (c, e, s) => const SizedBox(width: 2048, height: 2048),
+                  errorBuilder: (c, e, s) =>
+                      const SizedBox(width: 2048, height: 2048),
                 ),
               ),
             ),
@@ -48,11 +49,14 @@ class ParallaxBackground extends StatelessWidget {
               child: Opacity(
                 opacity: 0.06,
                 child: Image.asset(
-                  isDark ? 'assets/background/bg_grain_dark.png' : 'assets/background/bg_grain_light.png',
+                  isDark
+                      ? 'assets/background/bg_grain_dark.png'
+                      : 'assets/background/bg_grain_light.png',
                   repeat: ImageRepeat.repeat,
                   width: 4000,
                   height: 4000,
-                  errorBuilder: (c, e, s) => const SizedBox(width: 4000, height: 4000),
+                  errorBuilder: (c, e, s) =>
+                      const SizedBox(width: 4000, height: 4000),
                 ),
               ),
             ),

@@ -5,15 +5,19 @@ class AddRelativeSheet extends StatefulWidget {
   final String relationType;
   final Function(String name, Gender gender) onAdd;
 
-  const AddRelativeSheet({super.key, required this.relationType, required this.onAdd});
+  const AddRelativeSheet(
+      {super.key, required this.relationType, required this.onAdd});
 
-  static void show(BuildContext context, String relationType, Function(String, Gender) onAdd) {
+  static void show(BuildContext context, String relationType,
+      Function(String, Gender) onAdd) {
     showModalBottomSheet(
       context: context,
       isScrollControlled: true,
       backgroundColor: Theme.of(context).colorScheme.surface,
-      shape: const RoundedRectangleBorder(borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
-      builder: (_) => AddRelativeSheet(relationType: relationType, onAdd: onAdd),
+      shape: const RoundedRectangleBorder(
+          borderRadius: BorderRadius.vertical(top: Radius.circular(28))),
+      builder: (_) =>
+          AddRelativeSheet(relationType: relationType, onAdd: onAdd),
     );
   }
 
@@ -35,19 +39,24 @@ class _AddRelativeSheetState extends State<AddRelativeSheet> {
     return Padding(
       padding: EdgeInsets.only(
         bottom: MediaQuery.of(context).viewInsets.bottom,
-        left: 24, right: 24, top: 24,
+        left: 24,
+        right: 24,
+        top: 24,
       ),
       child: Column(
         mainAxisSize: MainAxisSize.min,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
-          Text(title, style: const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
+          Text(title,
+              style:
+                  const TextStyle(fontSize: 20, fontWeight: FontWeight.bold)),
           const SizedBox(height: 16),
           TextField(
             controller: _nameController,
             decoration: const InputDecoration(
               labelText: 'First Name',
-              border: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(12))),
+              border: OutlineInputBorder(
+                  borderRadius: BorderRadius.all(Radius.circular(12))),
             ),
             autofocus: true,
           ),

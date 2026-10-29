@@ -8,6 +8,7 @@ import '../domain/services/tree_layout_service.dart';
 import '../domain/services/audio_service.dart';
 import '../tree_graph_controller.dart';
 import '../lens_controller.dart';
+import '../search_provider.dart';
 import '../../../core/utils/notification_service.dart';
 import '../../../data/models/enums.dart';
 import '../domain/models/graph_node.dart';
@@ -27,10 +28,13 @@ class TreeCanvasScreen extends ConsumerStatefulWidget {
 }
 
 class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
-  final TransformationController _transformationController = TransformationController();
+  final TransformationController _transformationController =
+      TransformationController();
+  final TextEditingController _searchController = TextEditingController();
   bool _isScrolling = false;
   String? _selectedMemberId;
   StreamSubscription? _notifSubscription;
+  bool _searchVisible = false;
 
   @override
   void initState() {
@@ -38,7 +42,10 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
     _transformationController.addListener(_onCanvasTransformed);
     WidgetsBinding.instance.addPostFrameCallback((_) => _centerCamera());
 
-    _notifSubscription = ref.read(notificationServiceProvider).onNotificationTap.listen((memberId) {
+    _notifSubscription = ref
+        .read(notificationServiceProvider)
+        .onNotificationTap
+        .listen((memberId) {
       final state = ref.read(treeGraphControllerProvider).value;
       if (state != null) {
         try {
@@ -64,12 +71,24 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
 
   void _centerCamera() {
     final size = MediaQuery.of(context).size;
-    _transformationController.value = Matrix4.identity()..translate(size.width / 2, size.height / 2);
+    _transformationController.value = Matrix4.identity()
+      ..translate(size.width / 2, size.height / 2);
+  }
+
+  void _toggleSearch() {
+    setState(() {
+      _searchVisible = !_searchVisible;
+      if (!_searchVisible) {
+        _searchController.clear();
+        ref.read(searchQueryProvider.notifier).state = '';
+      }
+    });
   }
 
   @override
   void dispose() {
     _transformationController.dispose();
+    _searchController.dispose();
     _notifSubscription?.cancel();
     super.dispose();
   }
@@ -78,8 +97,10 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
   Widget build(BuildContext context) {
     final currentTree = ref.watch(currentTreeControllerProvider);
     final isDark = Theme.of(context).brightness == Brightness.dark;
+    final searchQuery = ref.watch(searchQueryProvider).toLowerCase().trim();
 
-    if (currentTree == null) return const Scaffold(body: Center(child: Text('No tree selected')));
+    if (currentTree == null)
+      return const Scaffold(body: Center(child: Text('No tree selected')));
     final graphStateAsync = ref.watch(treeGraphControllerProvider);
 
     return Scaffold(
@@ -94,8 +115,13 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
           if (members.isEmpty) {
             return Center(
               child: ElevatedButton(
-                onPressed: () => ref.read(treeGraphControllerProvider.notifier)
-                    .addRelative(targetMemberId: '', firstName: 'Me', gender: Gender.male, relationType: 'self'),
+                onPressed: () => ref
+                    .read(treeGraphControllerProvider.notifier)
+                    .addRelative(
+                        targetMemberId: '',
+                        firstName: 'Me',
+                        gender: Gender.male,
+                        relationType: 'self'),
                 child: const Text('Initialize Tree (Add Me)'),
               ),
             );
@@ -104,75 +130,118 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
           final lensState = ref.watch(lensControllerProvider);
           int minYear = DateTime.now().year;
           for (var m in members) {
-            if (m.birthDate != null && m.birthDate!.year < minYear) minYear = m.birthDate!.year;
+            if (m.birthDate != null && m.birthDate!.year < minYear)
+              minYear = m.birthDate!.year;
           }
           if (minYear == DateTime.now().year) minYear = 1900;
-          
+
           final Set<String> hiddenNodeIds = {};
           if (lensState.isActive) {
             for (var m in members) {
-              if (m.birthDate != null && m.birthDate!.year > lensState.year) hiddenNodeIds.add(m.id);
+              if (m.birthDate != null && m.birthDate!.year > lensState.year)
+                hiddenNodeIds.add(m.id);
             }
           }
 
-          final positions = ref.watch(treeLayoutServiceProvider).calculatePositions(
-            ownerId: rootId, members: members, relationships: rels,
-          );
-          
-          final dummyNodes = { 
-            for (var m in members) 
+          // Filter by search query
+          final Set<String> searchHiddenIds = {};
+          if (searchQuery.isNotEmpty) {
+            for (var m in members) {
+              final fullName =
+                  '${m.firstName ?? ''} ${m.lastName ?? ''}'.toLowerCase();
+              if (!fullName.contains(searchQuery)) {
+                searchHiddenIds.add(m.id);
+              }
+            }
+          }
+
+          final allHiddenIds = hiddenNodeIds.union(searchHiddenIds);
+
+          final positions =
+              ref.watch(treeLayoutServiceProvider).calculatePositions(
+                    ownerId: rootId,
+                    members: members,
+                    relationships: rels,
+                  );
+
+          final dummyNodes = {
+            for (var m in members)
               m.id: GraphNode(m)
                 ..x = (positions[m.id]?.dx ?? 0)
-                ..y = (positions[m.id]?.dy ?? 0) 
+                ..y = (positions[m.id]?.dy ?? 0)
           };
 
           return Stack(
             children: [
-              ParallaxBackground(controller: _transformationController, isDark: isDark),
+              ParallaxBackground(
+                  controller: _transformationController, isDark: isDark),
               GestureDetector(
                 onTap: () => setState(() => _selectedMemberId = null),
                 child: InteractiveViewer(
                   transformationController: _transformationController,
-                  minScale: 0.1, maxScale: 2.5, constrained: false, boundaryMargin: const EdgeInsets.all(5000),
+                  minScale: 0.1,
+                  maxScale: 2.5,
+                  constrained: false,
+                  boundaryMargin: const EdgeInsets.all(5000),
                   child: Stack(
                     clipBehavior: Clip.none,
                     children: [
                       CustomPaint(
                         painter: BranchPainter(
-                          nodes: dummyNodes, 
-                          relationships: rels, 
-                          isDark: isDark, 
-                          hiddenNodeIds: hiddenNodeIds,
+                          nodes: dummyNodes,
+                          relationships: rels,
+                          isDark: isDark,
+                          hiddenNodeIds: allHiddenIds,
                         ),
                       ),
                       ...members.map((m) {
                         final pos = positions[m.id] ?? Offset.zero;
-                        final isVisible = !hiddenNodeIds.contains(m.id);
-                        
+                        final isVisible = !allHiddenIds.contains(m.id);
+                        final isHighlighted = searchQuery.isNotEmpty &&
+                            !searchHiddenIds.contains(m.id);
+
                         return Positioned(
-                          left: pos.dx - 60, top: pos.dy - 60,
+                          left: pos.dx - 60,
+                          top: pos.dy - 60,
                           child: IgnorePointer(
                             ignoring: !isVisible,
-                            child: MemberNodeWidget(
-                              member: m,
-                              isSelected: _selectedMemberId == m.id,
-                              isVisible: isVisible,
-                              onTap: () => setState(() => _selectedMemberId = m.id),
-                              onAddTap: (relationType) async {
-                                AddRelativeSheet.show(context, relationType, (name, gender) async {
-                                  await ref.read(treeGraphControllerProvider.notifier).addRelative(
-                                    targetMemberId: m.id, 
-                                    firstName: name, 
-                                    gender: gender, 
-                                    relationType: relationType,
-                                  );
-                                  ref.read(audioServiceProvider).playAddMemberChime();
-                                  final state = ref.read(treeGraphControllerProvider).value;
-                                  if (state != null && state.members.length == 2) {
-                                    await ref.read(notificationServiceProvider).requestPermissionGently(context);
-                                  }
-                                });
-                              },
+                            child: AnimatedOpacity(
+                              duration: const Duration(milliseconds: 250),
+                              opacity: isVisible ? 1.0 : 0.0,
+                              child: MemberNodeWidget(
+                                member: m,
+                                isSelected: _selectedMemberId == m.id,
+                                isVisible: isVisible,
+                                isHighlighted: isHighlighted,
+                                onTap: () =>
+                                    setState(() => _selectedMemberId = m.id),
+                                onAddTap: (relationType) async {
+                                  AddRelativeSheet.show(context, relationType,
+                                      (name, gender) async {
+                                    await ref
+                                        .read(treeGraphControllerProvider
+                                            .notifier)
+                                        .addRelative(
+                                          targetMemberId: m.id,
+                                          firstName: name,
+                                          gender: gender,
+                                          relationType: relationType,
+                                        );
+                                    ref
+                                        .read(audioServiceProvider)
+                                        .playAddMemberChime();
+                                    final state = ref
+                                        .read(treeGraphControllerProvider)
+                                        .value;
+                                    if (state != null &&
+                                        state.members.length == 2) {
+                                      await ref
+                                          .read(notificationServiceProvider)
+                                          .requestPermissionGently(context);
+                                    }
+                                  });
+                                },
+                              ),
                             ),
                           ),
                         );
@@ -181,28 +250,98 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                   ),
                 ),
               ),
+              // Search bar overlay
               Positioned(
-                bottom: 40, left: 0, right: 0,
+                top: 0,
+                left: 0,
+                right: 0,
+                child: SafeArea(
+                  child: Padding(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 12, vertical: 8),
+                    child: Row(
+                      children: [
+                        IconButton(
+                          icon: const Icon(Icons.arrow_back),
+                          onPressed: () => context.pop(),
+                          style: IconButton.styleFrom(
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(0.85),
+                          ),
+                        ),
+                        const SizedBox(width: 8),
+                        if (_searchVisible)
+                          Expanded(
+                            child: TextField(
+                              controller: _searchController,
+                              autofocus: true,
+                              decoration: InputDecoration(
+                                hintText: 'Поиск члена семьи...',
+                                filled: true,
+                                fillColor: Theme.of(context)
+                                    .colorScheme
+                                    .surface
+                                    .withOpacity(0.92),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(12),
+                                  borderSide: BorderSide.none,
+                                ),
+                                contentPadding: const EdgeInsets.symmetric(
+                                    horizontal: 16, vertical: 10),
+                                suffixIcon: IconButton(
+                                  icon: const Icon(Icons.clear),
+                                  onPressed: () {
+                                    _searchController.clear();
+                                    ref
+                                        .read(searchQueryProvider.notifier)
+                                        .state = '';
+                                  },
+                                ),
+                              ),
+                              onChanged: (v) => ref
+                                  .read(searchQueryProvider.notifier)
+                                  .state = v,
+                            ),
+                          )
+                        else
+                          const Spacer(),
+                        IconButton(
+                          icon: Icon(
+                              _searchVisible ? Icons.search_off : Icons.search),
+                          onPressed: _toggleSearch,
+                          style: IconButton.styleFrom(
+                            backgroundColor: Theme.of(context)
+                                .colorScheme
+                                .surface
+                                .withOpacity(0.85),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+              Positioned(
+                bottom: 40,
+                left: 0,
+                right: 0,
                 child: Center(
                   child: LensOverlayWidget(
-                    minYear: minYear, 
+                    minYear: minYear,
                     maxYear: DateTime.now().year,
                   ),
                 ),
               ),
               Positioned(
-                bottom: 100, right: 24,
+                bottom: 100,
+                right: 24,
                 child: FloatingActionButton(
                   onPressed: _centerCamera,
-                  backgroundColor: Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                  backgroundColor:
+                      Theme.of(context).colorScheme.surface.withOpacity(0.8),
                   child: const Icon(Icons.my_location),
-                ),
-              ),
-              Positioned(
-                top: 50, left: 16,
-                child: IconButton(
-                  icon: const Icon(Icons.arrow_back),
-                  onPressed: () => context.pop(),
                 ),
               ),
             ],

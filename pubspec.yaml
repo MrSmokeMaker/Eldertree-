@@ -53,3 +53,13 @@ flutter:
     - assets/foliage/
     - assets/background/
     - assets/sounds/
+
+  # Web-specific configuration
+  web:
+    renderer: canvaskit
+    resources:
+      - assets/textures/branch/
+      - assets/particles/
+      - assets/foliage/
+      - assets/background/
+      - assets/sounds/

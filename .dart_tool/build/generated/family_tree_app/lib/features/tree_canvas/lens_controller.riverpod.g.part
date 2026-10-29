@@ -1,0 +1,22 @@
+// **************************************************************************
+// RiverpodGenerator
+// **************************************************************************
+
+String _$lensControllerHash() => r'70364c228486bb4b54aaabf85135a343dde58f5e';
+
+/// See also [LensController].
+@ProviderFor(LensController)
+final lensControllerProvider =
+    AutoDisposeNotifierProvider<LensController, LensState>.internal(
+  LensController.new,
+  name: r'lensControllerProvider',
+  debugGetCreateSourceHash: const bool.fromEnvironment('dart.vm.product')
+      ? null
+      : _$lensControllerHash,
+  dependencies: null,
+  allTransitiveDependencies: null,
+);
+
+typedef _$LensController = AutoDisposeNotifier<LensState>;
+// ignore_for_file: type=lint
+// ignore_for_file: subtype_of_sealed_class, invalid_use_of_internal_member, invalid_use_of_visible_for_testing_member

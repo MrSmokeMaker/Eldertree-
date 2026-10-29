@@ -3,6 +3,13 @@ import re
 import subprocess
 import sys
 
+if sys.platform == 'win32':
+    try:
+        sys.stdout.reconfigure(encoding='utf-8')
+        sys.stderr.reconfigure(encoding='utf-8')
+    except Exception:
+        pass
+
 def unpack_markdown(md_filename):
     if not os.path.exists(md_filename):
         print(f"❌ Файл {md_filename} не найден!")

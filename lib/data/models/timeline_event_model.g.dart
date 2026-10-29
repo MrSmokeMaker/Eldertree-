@@ -1,0 +1,35 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'timeline_event_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$TimelineEventModelImpl _$$TimelineEventModelImplFromJson(
+        Map<String, dynamic> json) =>
+    _$TimelineEventModelImpl(
+      id: json['id'] as String,
+      memberId: json['member_id'] as String,
+      eventDate: json['event_date'] == null
+          ? null
+          : DateTime.parse(json['event_date'] as String),
+      title: json['title'] as String,
+      description: json['description'] as String?,
+      imageUrl: json['image_url'] as String?,
+      audioUrl: json['audio_url'] as String?,
+      createdAt: DateTime.parse(json['created_at'] as String),
+    );
+
+Map<String, dynamic> _$$TimelineEventModelImplToJson(
+        _$TimelineEventModelImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'member_id': instance.memberId,
+      'event_date': instance.eventDate?.toIso8601String(),
+      'title': instance.title,
+      'description': instance.description,
+      'image_url': instance.imageUrl,
+      'audio_url': instance.audioUrl,
+      'created_at': instance.createdAt.toIso8601String(),
+    };

@@ -12,7 +12,7 @@ echo Step 3: Running code generation...
 flutter pub run build_runner build --delete-conflicting-outputs
 
 echo Step 4: Building web release...
-flutter build web --release --base-href /Eldertree/
+flutter build web --release --base-href /Eldertree-/
 
 echo.
 echo ========================================

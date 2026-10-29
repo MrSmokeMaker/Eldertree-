@@ -24,6 +24,7 @@ dependencies:
   audioplayers: ^6.1.0
   record: ^5.1.2
   flutter_svg: ^2.0.10
+  flutter_dotenv: ^5.0.2
   google_fonts: ^6.2.1
 
   flutter_local_notifications: ^17.1.2
@@ -54,12 +55,4 @@ flutter:
     - assets/background/
     - assets/sounds/
 
-  # Web-specific configuration
-  web:
-    renderer: canvaskit
-    resources:
-      - assets/textures/branch/
-      - assets/particles/
-      - assets/foliage/
-      - assets/background/
-      - assets/sounds/
+

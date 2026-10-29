@@ -51,6 +51,7 @@ flutter:
   uses-material-design: true
   assets:
     - .env
+    - assets/icons/
     - assets/textures/branch/
     - assets/particles/
     - assets/foliage/

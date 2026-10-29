@@ -1,7 +1,5 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/config/supabase_providers.dart';
-import '../../data/models/fact_model.dart';
-import '../../data/models/enums.dart';
 import 'domain/interview_question.dart';
 
 part 'interview_controller.g.dart';

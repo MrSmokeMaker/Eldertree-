@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:family_tree_app/features/onboarding/onboarding_provider.dart';
 
 class OnboardingScreen extends ConsumerStatefulWidget {
@@ -17,29 +18,29 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
     _OnboardingPageData(
       title: 'Добро пожаловать в Eldertree',
       description:
-          'Сохраняйте историю вашей семьи в интерактивном дереве поколений.',
-      icon: Icons.family_restroom,
+          'Сохраняйте живую историю вашего рода, сплетая поколения в интерактивном древе памяти.',
+      svgAsset: 'assets/icons/heraldic_tree.svg',
       color: Color(0xFF2D4A3E),
     ),
     _OnboardingPageData(
-      title: 'Навигация',
+      title: 'Навигация во времени',
       description:
-          'Нажимайте на узлы для просмотра профилей, масштабируйте и перемещайте дерево жестами.',
-      icon: Icons.touch_app,
-      color: Color(0xFF4A6741),
+          'Свободно исследуйте ветви предков, открывайте профили и возвращайтесь в эпохи с помощью временной линзы.',
+      svgAsset: 'assets/icons/family_compass.svg',
+      color: Color(0xFF385648),
     ),
     _OnboardingPageData(
       title: 'Голосовые капсулы',
       description:
-          'Записывайте воспоминания голосом — они будут сохранены навсегда в профиле каждого члена семьи.',
-      icon: Icons.mic,
-      color: Color(0xFF6B4226),
+          'Записывайте живые голоса, интонации и рассказы родных — они навсегда останутся звучать в профилях.',
+      svgAsset: 'assets/icons/voice_capsule.svg',
+      color: Color(0xFF423326),
     ),
     _OnboardingPageData(
-      title: 'Начать',
+      title: 'Ваше родовое наследие',
       description:
-          'Всё готово! Создайте своё первое семейное дерево прямо сейчас.',
-      icon: Icons.park,
+          'Начните писать летопись своей семьи прямо сейчас — добавьте себя и первых родственников.',
+      svgAsset: 'assets/icons/heritage_shield.svg',
       color: Color(0xFF2D4A3E),
     ),
   ];
@@ -53,8 +54,8 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   void _onNext() {
     if (_currentPage < _pages.length - 1) {
       _pageController.nextPage(
-        duration: const Duration(milliseconds: 350),
-        curve: Curves.easeInOut,
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOutCubic,
       );
     } else {
       _finish();
@@ -68,7 +69,11 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
   @override
   Widget build(BuildContext context) {
     final colorScheme = Theme.of(context).colorScheme;
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Scaffold(
+      backgroundColor:
+          isDark ? const Color(0xFF0F1115) : const Color(0xFFF9F8F6),
       body: Stack(
         children: [
           PageView.builder(
@@ -88,16 +93,17 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: List.generate(_pages.length, (i) {
+                final isSelected = _currentPage == i;
                 return AnimatedContainer(
                   duration: const Duration(milliseconds: 300),
-                  margin: const EdgeInsets.symmetric(horizontal: 4),
-                  width: _currentPage == i ? 24 : 8,
-                  height: 8,
+                  margin: const EdgeInsets.symmetric(horizontal: 5),
+                  width: isSelected ? 28 : 8,
+                  height: 6,
                   decoration: BoxDecoration(
-                    color: _currentPage == i
-                        ? colorScheme.primary
-                        : colorScheme.primary.withOpacity(0.3),
-                    borderRadius: BorderRadius.circular(4),
+                    color: isSelected
+                        ? const Color(0xFFD4AF37)
+                        : colorScheme.primary.withValues(alpha: 0.25),
+                    borderRadius: BorderRadius.circular(3),
                   ),
                 );
               }),
@@ -115,27 +121,49 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
                   TextButton(
                     onPressed: () => _pageController.previousPage(
                       duration: const Duration(milliseconds: 350),
-                      curve: Curves.easeInOut,
+                      curve: Curves.easeInOutCubic,
                     ),
-                    child: const Text('Назад'),
+                    style: TextButton.styleFrom(
+                      foregroundColor:
+                          colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                    child: const Text('Назад', style: TextStyle(fontSize: 15)),
                   )
                 else
                   const SizedBox(width: 80),
                 ElevatedButton(
                   onPressed: _onNext,
                   style: ElevatedButton.styleFrom(
+                    backgroundColor: const Color(0xFF2D4A3E),
+                    foregroundColor: const Color(0xFFF9F8F6),
+                    elevation: 3,
+                    shadowColor: const Color(0xFF2D4A3E).withValues(alpha: 0.4),
                     padding: const EdgeInsets.symmetric(
-                        horizontal: 32, vertical: 14),
+                        horizontal: 36, vertical: 14),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16),
+                      side:
+                          const BorderSide(color: Color(0xFFD4AF37), width: 1),
+                    ),
                   ),
                   child: Text(
                     _currentPage == _pages.length - 1 ? 'Начать' : 'Далее',
-                    style: const TextStyle(fontSize: 16),
+                    style: const TextStyle(
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
+                      letterSpacing: 0.5,
+                    ),
                   ),
                 ),
                 if (_currentPage < _pages.length - 1)
                   TextButton(
                     onPressed: _finish,
-                    child: const Text('Пропустить'),
+                    style: TextButton.styleFrom(
+                      foregroundColor:
+                          colorScheme.onSurface.withValues(alpha: 0.6),
+                    ),
+                    child: const Text('Пропустить',
+                        style: TextStyle(fontSize: 15)),
                   )
                 else
                   const SizedBox(width: 80),
@@ -151,13 +179,13 @@ class _OnboardingScreenState extends ConsumerState<OnboardingScreen> {
 class _OnboardingPageData {
   final String title;
   final String description;
-  final IconData icon;
+  final String svgAsset;
   final Color color;
 
   const _OnboardingPageData({
     required this.title,
     required this.description,
-    required this.icon,
+    required this.svgAsset,
     required this.color,
   });
 }
@@ -169,14 +197,16 @@ class _OnboardingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final isDark = Theme.of(context).brightness == Brightness.dark;
+
     return Container(
       decoration: BoxDecoration(
         gradient: LinearGradient(
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           colors: [
-            data.color.withOpacity(0.15),
-            Theme.of(context).colorScheme.surface,
+            data.color.withValues(alpha: isDark ? 0.35 : 0.12),
+            isDark ? const Color(0xFF0F1115) : const Color(0xFFF9F8F6),
           ],
         ),
       ),
@@ -186,34 +216,64 @@ class _OnboardingPage extends StatelessWidget {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
+              // Medallion with luxury border & SVG
               Container(
-                padding: const EdgeInsets.all(28),
+                width: 150,
+                height: 150,
+                padding: const EdgeInsets.all(20),
                 decoration: BoxDecoration(
-                  color: data.color.withOpacity(0.12),
                   shape: BoxShape.circle,
+                  color: isDark ? const Color(0xFF161A20) : Colors.white,
+                  border: Border.all(
+                    color: const Color(0xFFD4AF37).withValues(alpha: 0.5),
+                    width: 1.5,
+                  ),
+                  boxShadow: [
+                    BoxShadow(
+                      color: const Color(0xFFD4AF37).withValues(alpha: 0.18),
+                      blurRadius: 28,
+                      spreadRadius: 2,
+                    ),
+                    BoxShadow(
+                      color:
+                          Colors.black.withValues(alpha: isDark ? 0.4 : 0.05),
+                      blurRadius: 15,
+                      offset: const Offset(0, 6),
+                    ),
+                  ],
                 ),
-                child: Icon(data.icon, size: 80, color: data.color),
+                child: SvgPicture.asset(
+                  data.svgAsset,
+                  fit: BoxFit.contain,
+                ),
               ),
-              const SizedBox(height: 40),
+              const SizedBox(height: 44),
               Text(
                 data.title,
                 textAlign: TextAlign.center,
                 style: Theme.of(context).textTheme.headlineSmall?.copyWith(
                       fontWeight: FontWeight.bold,
-                      color: data.color,
+                      letterSpacing: -0.3,
+                      color: isDark
+                          ? const Color(0xFFEDEBE7)
+                          : const Color(0xFF1B2A24),
                     ),
               ),
               const SizedBox(height: 16),
-              Text(
-                data.description,
-                textAlign: TextAlign.center,
-                style: Theme.of(context).textTheme.bodyLarge?.copyWith(
-                      color: Theme.of(context)
-                          .colorScheme
-                          .onSurface
-                          .withOpacity(0.75),
-                      height: 1.5,
-                    ),
+              ConstrainedBox(
+                constraints: const BoxConstraints(maxWidth: 380),
+                child: Text(
+                  data.description,
+                  textAlign: TextAlign.center,
+                  style: Theme.of(context).textTheme.bodyLarge?.copyWith(
+                        color: Theme.of(context)
+                            .colorScheme
+                            .onSurface
+                            .withValues(alpha: 0.72),
+                        height: 1.55,
+                        fontSize: 16,
+                      ),
+                ),
               ),
             ],
           ),

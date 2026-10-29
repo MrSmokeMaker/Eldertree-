@@ -18,18 +18,18 @@ class BranchPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final goldBase = const Color(0xFFD4AF37);
-    final greenBase = const Color(0xFF2D4A3E);
+    const goldBase = Color(0xFFD4AF37);
+    const greenBase = Color(0xFF2D4A3E);
     final accentColor = isDark ? goldBase : greenBase;
 
     final parentPaint = Paint()
-      ..color = accentColor.withOpacity(0.6)
+      ..color = accentColor.withValues(alpha: 0.6)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 3.0
       ..strokeCap = StrokeCap.round;
 
     final spousePaint = Paint()
-      ..color = accentColor.withOpacity(0.4)
+      ..color = accentColor.withValues(alpha: 0.4)
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0
       ..strokeCap = StrokeCap.round;

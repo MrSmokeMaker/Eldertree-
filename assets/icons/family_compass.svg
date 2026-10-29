@@ -1,0 +1,47 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Outer Gauge Ring -->
+  <circle cx="60" cy="60" r="54" stroke="#2D4A3E" stroke-width="1.5"/>
+  <circle cx="60" cy="60" r="50" stroke="#D4AF37" stroke-width="1" stroke-dasharray="1 4"/>
+  <circle cx="60" cy="60" r="46" stroke="#2D4A3E" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Compass Cardinal Ticks -->
+  <line x1="60" y1="8" x2="60" y2="16" stroke="#D4AF37" stroke-width="2"/>
+  <line x1="60" y1="104" x2="60" y2="112" stroke="#D4AF37" stroke-width="2"/>
+  <line x1="8" y1="60" x2="16" y2="60" stroke="#D4AF37" stroke-width="2"/>
+  <line x1="104" y1="60" x2="112" y2="60" stroke="#D4AF37" stroke-width="2"/>
+
+  <!-- Diagonal Sub-ticks -->
+  <line x1="24" y1="24" x2="29" y2="29" stroke="#2D4A3E" stroke-width="1.2"/>
+  <line x1="96" y1="24" x2="91" y2="29" stroke="#2D4A3E" stroke-width="1.2"/>
+  <line x1="24" y1="96" x2="29" y2="91" stroke="#2D4A3E" stroke-width="1.2"/>
+  <line x1="96" y1="96" x2="91" y2="91" stroke="#2D4A3E" stroke-width="1.2"/>
+
+  <!-- Concentric Orbital Generation Rings -->
+  <circle cx="60" cy="60" r="34" stroke="#D4AF37" stroke-width="1" stroke-dasharray="3 3" opacity="0.8"/>
+  <ellipse cx="60" cy="60" rx="42" ry="16" stroke="#2D4A3E" stroke-width="1.2" transform="rotate(-30 60 60)" opacity="0.6"/>
+  <ellipse cx="60" cy="60" rx="42" ry="16" stroke="#2D4A3E" stroke-width="1.2" transform="rotate(30 60 60)" opacity="0.6"/>
+
+  <!-- Compass Star Needle -->
+  <!-- North Arrow (Gold & Emerald) -->
+  <polygon points="60,20 65,56 60,60" fill="#D4AF37"/>
+  <polygon points="60,20 55,56 60,60" fill="#2D4A3E"/>
+  
+  <!-- South Arrow -->
+  <polygon points="60,100 65,64 60,60" fill="#2D4A3E" opacity="0.7"/>
+  <polygon points="60,100 55,64 60,60" fill="#D4AF37" opacity="0.7"/>
+
+  <!-- East & West facets -->
+  <polygon points="100,60 64,56 60,60" fill="#D4AF37" opacity="0.5"/>
+  <polygon points="100,60 64,64 60,60" fill="#2D4A3E" opacity="0.5"/>
+  <polygon points="20,60 56,56 60,60" fill="#2D4A3E" opacity="0.5"/>
+  <polygon points="20,60 56,64 60,60" fill="#D4AF37" opacity="0.5"/>
+
+  <!-- Central Pivot Jewel -->
+  <circle cx="60" cy="60" r="6" fill="#F9F8F6" stroke="#2D4A3E" stroke-width="1.5"/>
+  <circle cx="60" cy="60" r="3" fill="#D4AF37"/>
+  
+  <!-- Delicate Touch Fingerprint / Orbit Nodes -->
+  <circle cx="60" cy="20" r="2" fill="#D4AF37"/>
+  <circle cx="95" cy="40" r="2.5" fill="#2D4A3E"/>
+  <circle cx="25" cy="80" r="2.5" fill="#2D4A3E"/>
+</svg>

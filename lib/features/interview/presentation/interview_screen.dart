@@ -89,8 +89,10 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
                 children: [
                   LinearProgressIndicator(
                     value: state.progress,
-                    backgroundColor:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                    backgroundColor: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1),
                     borderRadius: BorderRadius.circular(4),
                   ),
                   const SizedBox(height: 32),
@@ -138,7 +140,7 @@ class _InterviewScreenState extends ConsumerState<InterviewScreen> {
                             ? Theme.of(context)
                                 .colorScheme
                                 .primary
-                                .withOpacity(0.2)
+                                .withValues(alpha: 0.2)
                             : null,
                       ),
                       const Spacer(),

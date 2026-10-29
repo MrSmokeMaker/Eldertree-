@@ -23,18 +23,18 @@ class LensOverlayWidget extends ConsumerWidget {
       duration: const Duration(milliseconds: 300),
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
       decoration: BoxDecoration(
-        color:
-            (isDark ? const Color(0xFF1A1D24) : Colors.white).withOpacity(0.85),
+        color: (isDark ? const Color(0xFF1A1D24) : Colors.white)
+            .withValues(alpha: 0.85),
         borderRadius: BorderRadius.circular(32),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.1),
+            color: Colors.black.withValues(alpha: 0.1),
             blurRadius: 20,
             spreadRadius: 5,
           )
         ],
         border: Border.all(
-          color: Theme.of(context).colorScheme.primary.withOpacity(0.2),
+          color: Theme.of(context).colorScheme.primary.withValues(alpha: 0.2),
         ),
       ),
       child: Row(
@@ -47,7 +47,7 @@ class LensOverlayWidget extends ConsumerWidget {
               style: TextStyle(fontWeight: FontWeight.bold, fontSize: 14)),
           Switch(
             value: lensState.isActive,
-            activeColor: Theme.of(context).colorScheme.primary,
+            activeThumbColor: Theme.of(context).colorScheme.primary,
             onChanged: (val) {
               HapticFeedback.lightImpact();
               ref.read(lensControllerProvider.notifier).toggle(val);
@@ -57,7 +57,7 @@ class LensOverlayWidget extends ConsumerWidget {
             Container(
                 width: 1,
                 height: 24,
-                color: Colors.grey.withOpacity(0.3),
+                color: Colors.grey.withValues(alpha: 0.3),
                 margin: const EdgeInsets.symmetric(horizontal: 8)),
             SizedBox(
               width: 150,
@@ -79,7 +79,10 @@ class LensOverlayWidget extends ConsumerWidget {
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 12, vertical: 6),
               decoration: BoxDecoration(
-                color: Theme.of(context).colorScheme.primary.withOpacity(0.1),
+                color: Theme.of(context)
+                    .colorScheme
+                    .primary
+                    .withValues(alpha: 0.1),
                 borderRadius: BorderRadius.circular(12),
               ),
               child: Text(

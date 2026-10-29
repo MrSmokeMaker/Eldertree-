@@ -56,7 +56,7 @@ class SubscriptionScreen extends ConsumerWidget {
               ),
               boxShadow: [
                 BoxShadow(
-                    color: const Color(0xFFD4AF37).withOpacity(0.3),
+                    color: const Color(0xFFD4AF37).withValues(alpha: 0.3),
                     blurRadius: 20)
               ],
             ),
@@ -115,8 +115,10 @@ class SubscriptionScreen extends ConsumerWidget {
                 Chip(
                     label:
                         const Text('Current', style: TextStyle(fontSize: 12)),
-                    backgroundColor:
-                        Theme.of(context).colorScheme.primary.withOpacity(0.1)),
+                    backgroundColor: Theme.of(context)
+                        .colorScheme
+                        .primary
+                        .withValues(alpha: 0.1)),
             ],
           ),
           const SizedBox(height: 8),

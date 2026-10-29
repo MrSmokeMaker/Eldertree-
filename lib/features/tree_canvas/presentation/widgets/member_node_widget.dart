@@ -53,17 +53,17 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
         isDark ? const Color(0xFF1A1D24) : const Color(0xFFFFFFFF);
     final accentColor =
         isDark ? const Color(0xFFD4AF37) : const Color(0xFF2D4A3E);
-    final searchHighlightColor = const Color(0xFFD4AF37);
+    const searchHighlightColor = Color(0xFFD4AF37);
 
     Color glowColor;
     if (widget.isHighlighted) {
-      glowColor = searchHighlightColor.withOpacity(0.7);
+      glowColor = searchHighlightColor.withValues(alpha: 0.7);
     } else if (_isDeceased) {
-      glowColor = Colors.grey.withOpacity(0.4);
+      glowColor = Colors.grey.withValues(alpha: 0.4);
     } else if (_isBirthday) {
-      glowColor = accentColor.withOpacity(0.8);
+      glowColor = accentColor.withValues(alpha: 0.8);
     } else {
-      glowColor = accentColor.withOpacity(0.1);
+      glowColor = accentColor.withValues(alpha: 0.1);
     }
 
     return AnimatedOpacity(
@@ -137,8 +137,8 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                       color: widget.isHighlighted
                           ? searchHighlightColor
                           : (_isDeceased
-                              ? Colors.grey.withOpacity(0.3)
-                              : accentColor.withOpacity(0.5)),
+                              ? Colors.grey.withValues(alpha: 0.3)
+                              : accentColor.withValues(alpha: 0.5)),
                       width: widget.isHighlighted ? 2.5 : 1.5,
                     ),
                   ),
@@ -147,7 +147,7 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                     children: [
                       CircleAvatar(
                         radius: 28,
-                        backgroundColor: accentColor.withOpacity(0.1),
+                        backgroundColor: accentColor.withValues(alpha: 0.1),
                         backgroundImage: widget.member.avatarUrl != null
                             ? NetworkImage(widget.member.avatarUrl!)
                             : null,

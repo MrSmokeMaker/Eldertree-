@@ -62,8 +62,8 @@ class ParallaxBackground extends StatelessWidget {
             ),
             if (scale < 0.4)
               Container(
-                color: (isDark ? Colors.black : Colors.white).withOpacity(
-                  (0.4 - scale).clamp(0.0, 0.7),
+                color: (isDark ? Colors.black : Colors.white).withValues(
+                  alpha: (0.4 - scale).clamp(0.0, 0.7),
                 ),
               ),
           ],

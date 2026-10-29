@@ -51,7 +51,7 @@ class ProfileScreen extends ConsumerWidget {
                           width: 40,
                           height: 4,
                           decoration: BoxDecoration(
-                              color: Colors.grey.withOpacity(0.3),
+                              color: Colors.grey.withValues(alpha: 0.3),
                               borderRadius: BorderRadius.circular(2))),
                       const SizedBox(height: 24),
                       CircleAvatar(
@@ -59,7 +59,7 @@ class ProfileScreen extends ConsumerWidget {
                         backgroundColor: Theme.of(context)
                             .colorScheme
                             .primary
-                            .withOpacity(0.1),
+                            .withValues(alpha: 0.1),
                         backgroundImage: member.avatarUrl != null
                             ? NetworkImage(member.avatarUrl!)
                             : null,
@@ -150,10 +150,13 @@ class ProfileScreen extends ConsumerWidget {
           child: Container(
             padding: const EdgeInsets.all(16),
             decoration: BoxDecoration(
-              color: Theme.of(context).colorScheme.primary.withOpacity(0.05),
+              color:
+                  Theme.of(context).colorScheme.primary.withValues(alpha: 0.05),
               border: Border.all(
-                  color:
-                      Theme.of(context).colorScheme.primary.withOpacity(0.2)),
+                  color: Theme.of(context)
+                      .colorScheme
+                      .primary
+                      .withValues(alpha: 0.2)),
               borderRadius: BorderRadius.circular(16),
             ),
             child: Row(
@@ -199,7 +202,7 @@ class ProfileScreen extends ConsumerWidget {
                         color: Theme.of(context)
                             .colorScheme
                             .primary
-                            .withOpacity(0.3))),
+                            .withValues(alpha: 0.3))),
             ],
           ),
           const SizedBox(width: 16),

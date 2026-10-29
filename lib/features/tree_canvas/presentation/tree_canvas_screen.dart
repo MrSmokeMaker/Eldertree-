@@ -99,8 +99,9 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
     final isDark = Theme.of(context).brightness == Brightness.dark;
     final searchQuery = ref.watch(searchQueryProvider).toLowerCase().trim();
 
-    if (currentTree == null)
+    if (currentTree == null) {
       return const Scaffold(body: Center(child: Text('No tree selected')));
+    }
     final graphStateAsync = ref.watch(treeGraphControllerProvider);
 
     return Scaffold(
@@ -130,16 +131,18 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
           final lensState = ref.watch(lensControllerProvider);
           int minYear = DateTime.now().year;
           for (var m in members) {
-            if (m.birthDate != null && m.birthDate!.year < minYear)
+            if (m.birthDate != null && m.birthDate!.year < minYear) {
               minYear = m.birthDate!.year;
+            }
           }
           if (minYear == DateTime.now().year) minYear = 1900;
 
           final Set<String> hiddenNodeIds = {};
           if (lensState.isActive) {
             for (var m in members) {
-              if (m.birthDate != null && m.birthDate!.year > lensState.year)
+              if (m.birthDate != null && m.birthDate!.year > lensState.year) {
                 hiddenNodeIds.add(m.id);
+              }
             }
           }
 
@@ -268,7 +271,7 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                             backgroundColor: Theme.of(context)
                                 .colorScheme
                                 .surface
-                                .withOpacity(0.85),
+                                .withValues(alpha: 0.85),
                           ),
                         ),
                         const SizedBox(width: 8),
@@ -283,7 +286,7 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                                 fillColor: Theme.of(context)
                                     .colorScheme
                                     .surface
-                                    .withOpacity(0.92),
+                                    .withValues(alpha: 0.92),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(12),
                                   borderSide: BorderSide.none,
@@ -315,7 +318,7 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                             backgroundColor: Theme.of(context)
                                 .colorScheme
                                 .surface
-                                .withOpacity(0.85),
+                                .withValues(alpha: 0.85),
                           ),
                         ),
                       ],
@@ -339,8 +342,10 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                 right: 24,
                 child: FloatingActionButton(
                   onPressed: _centerCamera,
-                  backgroundColor:
-                      Theme.of(context).colorScheme.surface.withOpacity(0.8),
+                  backgroundColor: Theme.of(context)
+                      .colorScheme
+                      .surface
+                      .withValues(alpha: 0.8),
                   child: const Icon(Icons.my_location),
                 ),
               ),

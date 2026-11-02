@@ -5,6 +5,7 @@ import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/router/app_router.dart';
 import 'core/utils/notification_service.dart';
 import 'root_widget.dart' as root;
+import 'theme_config.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -52,7 +53,7 @@ class FamilyTreeApp extends ConsumerWidget {
       routerConfig: router,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
-          seedColor: const Color(0xFF2D4A3E),
+          seedColor: ref.watch(defaultSeedColorProvider),
           surface: const Color(0xFFF9F8F6),
         ),
         useMaterial3: true,
@@ -60,7 +61,7 @@ class FamilyTreeApp extends ConsumerWidget {
       darkTheme: ThemeData(
         colorScheme: ColorScheme.fromSeed(
           brightness: Brightness.dark,
-          seedColor: const Color(0xFFD4AF37),
+          seedColor: ref.watch(defaultSeedColorProvider),
           surface: const Color(0xFF0F1115),
         ),
         useMaterial3: true,

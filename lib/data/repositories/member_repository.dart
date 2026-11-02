@@ -1,6 +1,8 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/config/supabase_providers.dart';
+import '../../data/models/member_model.dart';
+import '../../data/models/relationship_model.dart';
 
 part 'member_repository.g.dart';
 
@@ -12,6 +14,22 @@ MemberRepository memberRepository(MemberRepositoryRef ref) {
 class MemberRepository {
   final SupabaseClient _client;
   MemberRepository(this._client);
+
+  Future<List<MemberModel>> getMembers(String treeId) async {
+    final response =
+        await _client.from('members').select().eq('tree_id', treeId);
+    return (response as List)
+        .map((json) => MemberModel.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
+
+  Future<List<RelationshipModel>> getRelationships(String treeId) async {
+    final response =
+        await _client.from('relationships').select().eq('tree_id', treeId);
+    return (response as List)
+        .map((json) => RelationshipModel.fromJson(json as Map<String, dynamic>))
+        .toList();
+  }
 
   Future<void> deleteMember(String memberId) async {
     final member = await _client

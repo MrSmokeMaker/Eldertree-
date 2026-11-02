@@ -151,7 +151,7 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
           if (searchQuery.isNotEmpty) {
             for (var m in members) {
               final fullName =
-                  '${m.firstName ?? ''} ${m.lastName ?? ''}'.toLowerCase();
+                  '${m.firstName} ${m.lastName ?? ''}'.toLowerCase();
               if (!fullName.contains(searchQuery)) {
                 searchHiddenIds.add(m.id);
               }

@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Outer Filigree Ring -->
+  <circle cx="60" cy="60" r="56" stroke="#D4AF37" stroke-width="1.2" stroke-dasharray="2 3" opacity="0.6"/>
+  <circle cx="60" cy="60" r="52" stroke="#2D4A3E" stroke-width="1.5"/>
+  <circle cx="60" cy="60" r="49" stroke="#D4AF37" stroke-width="0.8" opacity="0.4"/>
+
+  <!-- Roots -->
+  <path d="M60 88 C55 92 48 95 40 96 M60 88 C65 92 72 95 80 96 M60 85 C57 91 52 98 47 101 M60 85 C63 91 68 98 73 101" 
+        stroke="#2D4A3E" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- Trunk -->
+  <path d="M56 88 C57 74 54 66 50 58 C53 60 57 60 60 56 C63 60 67 60 70 58 C66 66 63 74 64 88 Z" 
+        fill="#2D4A3E" stroke="#D4AF37" stroke-width="1.2" stroke-linejoin="round"/>
+  
+  <!-- Trunk Core Ring lines -->
+  <path d="M58 82 Q60 81 62 82 M57 76 Q60 75 63 76 M58 70 Q60 69 62 70" 
+        stroke="#D4AF37" stroke-width="1" stroke-linecap="round" opacity="0.8"/>
+
+  <!-- Main Boughs -->
+  <!-- Left Branch -->
+  <path d="M52 59 C44 55 35 52 28 44 C26 41 27 36 32 37 C38 39 44 45 49 52" 
+        stroke="#2D4A3E" stroke-width="2" stroke-linecap="round"/>
+  <path d="M38 46 C34 40 28 35 23 35 C24 39 28 44 33 47" 
+        stroke="#D4AF37" stroke-width="1.4" stroke-linecap="round"/>
+  
+  <!-- Right Branch -->
+  <path d="M68 59 C76 55 85 52 92 44 C94 41 93 36 88 37 C82 39 76 45 71 52" 
+        stroke="#2D4A3E" stroke-width="2" stroke-linecap="round"/>
+  <path d="M82 46 C86 40 92 35 97 35 C96 39 92 44 87 47" 
+        stroke="#D4AF37" stroke-width="1.4" stroke-linecap="round"/>
+
+  <!-- Upper Crown Branches -->
+  <path d="M58 55 C54 46 47 38 48 26 C53 30 55 38 58 45" 
+        stroke="#2D4A3E" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M62 55 C66 46 73 38 72 26 C67 30 65 38 62 45" 
+        stroke="#2D4A3E" stroke-width="1.8" stroke-linecap="round"/>
+  <path d="M60 48 L60 22" stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
+
+  <!-- Heritage Gold Leaves / Acorns (Jeweled Dots & Leaves) -->
+  <circle cx="60" cy="20" r="3.5" fill="#D4AF37"/>
+  <circle cx="48" cy="24" r="2.8" fill="#D4AF37"/>
+  <circle cx="72" cy="24" r="2.8" fill="#D4AF37"/>
+  <circle cx="23" cy="34" r="2.5" fill="#D4AF37"/>
+  <circle cx="97" cy="34" r="2.5" fill="#D4AF37"/>
+  <circle cx="31" cy="36" r="3" fill="#2D4A3E" stroke="#D4AF37" stroke-width="1"/>
+  <circle cx="89" cy="36" r="3" fill="#2D4A3E" stroke="#D4AF37" stroke-width="1"/>
+  
+  <!-- Small Star at Top (Guiding Ancestor Star) -->
+  <path d="M60 8 L61.5 13 L66 14.5 L61.5 16 L60 21 L58.5 16 L54 14.5 L58.5 13 Z" 
+        fill="#D4AF37"/>
+</svg>

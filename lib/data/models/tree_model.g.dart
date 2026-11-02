@@ -1,0 +1,23 @@
+// GENERATED CODE - DO NOT MODIFY BY HAND
+
+part of 'tree_model.dart';
+
+// **************************************************************************
+// JsonSerializableGenerator
+// **************************************************************************
+
+_$TreeModelImpl _$$TreeModelImplFromJson(Map<String, dynamic> json) =>
+    _$TreeModelImpl(
+      id: json['id'] as String,
+      ownerId: json['owner_id'] as String,
+      name: json['name'] as String,
+      createdAt: DateTime.parse(json['created_at'] as String),
+    );
+
+Map<String, dynamic> _$$TreeModelImplToJson(_$TreeModelImpl instance) =>
+    <String, dynamic>{
+      'id': instance.id,
+      'owner_id': instance.ownerId,
+      'name': instance.name,
+      'created_at': instance.createdAt.toIso8601String(),
+    };

@@ -1,0 +1,30 @@
+# Build outputs
+/build/
+/.dart_tool/
+/.flutter-plugins
+/.flutter-plugins-dependencies
+/.packages
+/.pub-cache/
+
+# Generated files
+*.g.dart
+*.freezed.dart
+*.gr.dart
+*.gen.dart
+
+# VS Code
+.vscode/
+
+# Android
+android/app/debug.keystore
+
+# iOS
+ios/Pods/
+ios/Flutter/Generated.xcconfig
+
+# Web
+/web/.dart_tool/
+
+# Misc
+.idea/
+*.log

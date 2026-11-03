@@ -1,5 +1,6 @@
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import '../../core/config/supabase_providers.dart';
+import 'config/tree_config.dart';
 import '../../core/utils/notification_service.dart';
 import '../../data/models/member_model.dart';
 import '../../data/models/relationship_model.dart';
@@ -25,7 +26,7 @@ class TreeGraphController extends _$TreeGraphController {
 
     final membersRes =
         await client.from('members').select().eq('tree_id', currentTree.id);
-    final members = membersRes.map((j) => MemberModel.fromJson(j)).toList();
+    final members = membersRes.map((j) => MemberModel.fromJson(j)).take(maxTreeNodeCount).toList();
 
     List<RelationshipModel> relationships = [];
     if (members.isNotEmpty) {

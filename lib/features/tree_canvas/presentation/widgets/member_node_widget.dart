@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../data/models/member_model.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import '../../../profile/presentation/profile_screen.dart';
 
 class MemberNodeWidget extends StatefulWidget {
@@ -149,7 +150,7 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                         radius: 28,
                         backgroundColor: accentColor.withValues(alpha: 0.1),
                         backgroundImage: widget.member.avatarUrl != null
-                            ? NetworkImage(widget.member.avatarUrl!)
+                            ? CachedNetworkImageProvider(widget.member.avatarUrl!)
                             : null,
                         child: widget.member.avatarUrl == null
                             ? Text(

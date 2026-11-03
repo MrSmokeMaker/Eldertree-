@@ -1,6 +1,8 @@
+// Tree repository with caching and export support
 import 'package:riverpod_annotation/riverpod_annotation.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import '../../core/config/supabase_providers.dart';
+import '../../core/cache/cache_manager.dart';
 import '../models/tree_model.dart';
 
 part 'tree_repository.g.dart';
@@ -14,10 +16,26 @@ class TreeRepository {
   final SupabaseClient _client;
   TreeRepository(this._client);
 
+  // Fetch trees with cache fallback
+  Future<List<TreeModel>> getTreesCached() async {
+    final cached = CacheManager.getTrees();
+    if (cached != null && cached.isNotEmpty) return cached;
+    final userId = _client.auth.currentUser?.id;
+    if (userId == null) throw Exception('Not authenticated');
+    final response = await _client
+        .from('trees')
+        .select()
+        .eq('owner_id', userId)
+        .order('created_at');
+    final trees = response.map((json) => TreeModel.fromJson(json)).toList();
+    CacheManager.putTrees(trees);
+    return trees;
+  }
+
+  // Direct fetch without cache (used by controller)
   Future<List<TreeModel>> getTrees() async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) throw Exception('Not authenticated');
-
     final response = await _client
         .from('trees')
         .select()
@@ -26,10 +44,10 @@ class TreeRepository {
     return response.map((json) => TreeModel.fromJson(json)).toList();
   }
 
+  // Create a new tree
   Future<TreeModel> createTree(String name) async {
     final userId = _client.auth.currentUser?.id;
     if (userId == null) throw Exception('Not authenticated');
-
     final response = await _client
         .from('trees')
         .insert({
@@ -41,10 +59,10 @@ class TreeRepository {
     return TreeModel.fromJson(response);
   }
 
+  // Export tree data
   Future<Map<String, dynamic>> getTreeExportData(String treeId) async {
     final tree = await _client.from('trees').select().eq('id', treeId).single();
-    final members =
-        await _client.from('members').select().eq('tree_id', treeId);
+    final members = await _client.from('members').select().eq('tree_id', treeId);
     final memberIds = members.map((m) => m['id'] as String).toList();
 
     List<dynamic> relationships = [];
@@ -56,12 +74,8 @@ class TreeRepository {
           .from('relationships')
           .select()
           .inFilter('member1_id', memberIds);
-      facts =
-          await _client.from('facts').select().inFilter('member_id', memberIds);
-      events = await _client
-          .from('timeline_events')
-          .select()
-          .inFilter('member_id', memberIds);
+      facts = await _client.from('facts').select().inFilter('member_id', memberIds);
+      events = await _client.from('timeline_events').select().inFilter('member_id', memberIds);
     }
 
     return {

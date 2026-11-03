@@ -15,6 +15,7 @@ class GoRouterRefreshStream extends ChangeNotifier {
     notifyListeners();
     _subscription = stream.asBroadcastStream().listen((_) => notifyListeners());
   }
+
   late final StreamSubscription<dynamic> _subscription;
 
   @override
@@ -53,9 +54,20 @@ GoRouter appRouter(AppRouterRef ref) {
         path: '/canvas',
         builder: (context, state) => const TreeCanvasScreen(),
       ),
+      // Catch‑all route redirecting unknown paths to /auth
+      GoRoute(
+        path: '*',
+        redirect: (BuildContext context, GoRouterState state) => '/auth',
+      ),
     ],
   );
 
   ref.onDispose(router.dispose);
   return router;
+}
+
+// Extension for testing to expose current location
+extension GoRouterLocationExtension on GoRouter {
+  /// Returns the current location URI as a string.
+  String get location => routerDelegate.currentConfiguration.uri.toString();
 }

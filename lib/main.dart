@@ -3,9 +3,10 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'core/router/app_router.dart';
+import 'core/theme/theme.dart';
 import 'core/utils/notification_service.dart';
 import 'root_widget.dart' as root;
-import 'theme_config.dart';
+import 'core/cache/cache_manager.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -33,6 +34,7 @@ Future<void> main() async {
     debugPrint('Notification service init failed: $e');
   }
 
+  await CacheManager.init();
   runApp(
     UncontrolledProviderScope(
       container: container,
@@ -51,21 +53,8 @@ class FamilyTreeApp extends ConsumerWidget {
     return MaterialApp.router(
       title: 'Eldertree',
       routerConfig: router,
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          seedColor: ref.watch(defaultSeedColorProvider),
-          surface: const Color(0xFFF9F8F6),
-        ),
-        useMaterial3: true,
-      ),
-      darkTheme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(
-          brightness: Brightness.dark,
-          seedColor: ref.watch(defaultSeedColorProvider),
-          surface: const Color(0xFF0F1115),
-        ),
-        useMaterial3: true,
-      ),
+      theme: AppTheme.light,
+      darkTheme: AppTheme.dark,
       themeMode: ThemeMode.system,
     );
   }

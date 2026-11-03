@@ -1,0 +1,51 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Outer Aura / Sound Waves -->
+  <circle cx="60" cy="50" r="48" stroke="#D4AF37" stroke-width="0.8" stroke-dasharray="2 4" opacity="0.4"/>
+  
+  <!-- Left Sound Arc Waves -->
+  <path d="M26 38 C20 45 20 55 26 62" stroke="#2D4A3E" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M18 30 C10 42 10 58 18 70" stroke="#D4AF37" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Right Sound Arc Waves -->
+  <path d="M94 38 C100 45 100 55 94 62" stroke="#2D4A3E" stroke-width="1.5" stroke-linecap="round" opacity="0.7"/>
+  <path d="M102 30 C110 42 110 58 102 70" stroke="#D4AF37" stroke-width="1.2" stroke-linecap="round" opacity="0.6"/>
+
+  <!-- Capsule Pod Outer Frame (Vintage Ribbon/Ring) -->
+  <rect x="42" y="22" width="36" height="54" rx="18" 
+        fill="#F9F8F6" stroke="#2D4A3E" stroke-width="2"/>
+  
+  <!-- Inner Gold Mesh / Grille Lines -->
+  <line x1="48" y1="32" x2="72" y2="32" stroke="#D4AF37" stroke-width="1" stroke-linecap="round"/>
+  <line x1="46" y1="38" x2="74" y2="38" stroke="#D4AF37" stroke-width="1" stroke-linecap="round"/>
+  <line x1="45" y1="44" x2="75" y2="44" stroke="#D4AF37" stroke-width="1" stroke-linecap="round"/>
+  <line x1="46" y1="50" x2="74" y2="50" stroke="#D4AF37" stroke-width="1" stroke-linecap="round"/>
+  <line x1="48" y1="56" x2="72" y2="56" stroke="#D4AF37" stroke-width="1" stroke-linecap="round"/>
+  <line x1="52" y1="62" x2="68" y2="62" stroke="#D4AF37" stroke-width="1" stroke-linecap="round"/>
+  
+  <!-- Vertical Grille Ribs -->
+  <line x1="60" y1="24" x2="60" y2="72" stroke="#2D4A3E" stroke-width="1.2" opacity="0.8"/>
+  <line x1="53" y1="26" x2="53" y2="70" stroke="#2D4A3E" stroke-width="0.8" opacity="0.5"/>
+  <line x1="67" y1="26" x2="67" y2="70" stroke="#2D4A3E" stroke-width="0.8" opacity="0.5"/>
+
+  <!-- Vintage Art-Deco U-Bracket / Stand Mount -->
+  <path d="M35 48 C35 72 45 84 60 84 C75 84 85 72 85 48" 
+        stroke="#D4AF37" stroke-width="2.2" stroke-linecap="round"/>
+  <!-- Pivot screws -->
+  <circle cx="35" cy="48" r="2.5" fill="#2D4A3E" stroke="#D4AF37" stroke-width="1"/>
+  <circle cx="85" cy="48" r="2.5" fill="#2D4A3E" stroke="#D4AF37" stroke-width="1"/>
+
+  <!-- Stem & Base Stand -->
+  <line x1="60" y1="84" x2="60" y2="102" stroke="#2D4A3E" stroke-width="2.5" stroke-linecap="round"/>
+  <!-- Decorative Collar Ring -->
+  <rect x="56" y="90" width="8" height="3" rx="1.5" fill="#D4AF37"/>
+  
+  <!-- Cast Brass Pedestal Base -->
+  <path d="M42 106 C42 102 52 102 60 102 C68 102 78 102 78 106 L82 110 L38 110 Z" 
+        fill="#2D4A3E" stroke="#D4AF37" stroke-width="1.2"/>
+  <line x1="34" y1="110" x2="86" y2="110" stroke="#D4AF37" stroke-width="2" stroke-linecap="round"/>
+
+  <!-- Gem / Recording Sparkle indicator -->
+  <circle cx="60" cy="14" r="3" fill="#D4AF37"/>
+  <line x1="60" y1="8" x2="60" y2="20" stroke="#D4AF37" stroke-width="0.8"/>
+  <line x1="54" y1="14" x2="66" y2="14" stroke="#D4AF37" stroke-width="0.8"/>
+</svg>

@@ -1,0 +1,44 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 120 120" fill="none">
+  <!-- Laurel / Oak Leaf Wreath (Left Side) -->
+  <path d="M22 68 C20 54 26 38 38 28" stroke="#2D4A3E" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Leaf Pairs Left -->
+  <path d="M22 64 C17 61 17 55 22 53 C25 57 24 62 22 64 Z" fill="#D4AF37"/>
+  <path d="M25 50 C21 46 22 40 27 39 C29 43 28 48 25 50 Z" fill="#2D4A3E"/>
+  <path d="M32 38 C29 33 32 27 37 28 C38 32 35 36 32 38 Z" fill="#D4AF37"/>
+  <path d="M42 27 C40 21 45 17 50 19 C49 23 46 26 42 27 Z" fill="#2D4A3E"/>
+
+  <!-- Laurel / Oak Leaf Wreath (Right Side) -->
+  <path d="M98 68 C100 54 94 38 82 28" stroke="#2D4A3E" stroke-width="1.5" stroke-linecap="round"/>
+  <!-- Leaf Pairs Right -->
+  <path d="M98 64 C103 61 103 55 98 53 C95 57 96 62 98 64 Z" fill="#D4AF37"/>
+  <path d="M95 50 C99 46 98 40 93 39 C91 43 92 48 95 50 Z" fill="#2D4A3E"/>
+  <path d="M88 38 C91 33 88 27 83 28 C82 32 85 36 88 38 Z" fill="#D4AF37"/>
+  <path d="M78 27 C80 21 75 17 70 19 C71 23 74 26 78 27 Z" fill="#2D4A3E"/>
+
+  <!-- Wreath Ribbon Tie at Bottom -->
+  <path d="M54 104 C46 108 40 106 38 112 M66 104 C74 108 80 106 82 112" 
+        stroke="#D4AF37" stroke-width="1.5" stroke-linecap="round"/>
+  <circle cx="60" cy="103" r="3" fill="#D4AF37"/>
+
+  <!-- Heraldic Crest Shield -->
+  <!-- Outer Shield Border -->
+  <path d="M38 28 L82 28 C82 58 76 82 60 96 C44 82 38 58 38 28 Z" 
+        fill="#F9F8F6" stroke="#2D4A3E" stroke-width="2" stroke-linejoin="round"/>
+  <!-- Inner Gold Inlay Rim -->
+  <path d="M43 33 L77 33 C77 58 72 77 60 88 C48 77 43 58 43 33 Z" 
+        stroke="#D4AF37" stroke-width="1" stroke-dasharray="2 3"/>
+
+  <!-- Heraldic Charge: Stylized Sacred Sprout / Monogram Tree -->
+  <path d="M60 42 L60 76" stroke="#2D4A3E" stroke-width="2" stroke-linecap="round"/>
+  <path d="M60 54 C54 50 48 52 48 58 C54 58 58 56 60 54 Z" fill="#D4AF37"/>
+  <path d="M60 54 C66 50 72 52 72 58 C66 58 62 56 60 54 Z" fill="#D4AF37"/>
+  <path d="M60 64 C53 60 49 63 50 69 C55 69 58 66 60 64 Z" fill="#2D4A3E"/>
+  <path d="M60 64 C67 60 71 63 70 69 C65 69 62 66 60 64 Z" fill="#2D4A3E"/>
+  
+  <!-- Crown of Shield (Three-pointed Heritage Coronet) -->
+  <path d="M50 24 L52 16 L60 20 L68 16 L70 24 Z" 
+        fill="#D4AF37" stroke="#2D4A3E" stroke-width="1" stroke-linejoin="round"/>
+  <circle cx="52" cy="15" r="1.5" fill="#2D4A3E"/>
+  <circle cx="60" cy="19" r="1.5" fill="#2D4A3E"/>
+  <circle cx="68" cy="15" r="1.5" fill="#2D4A3E"/>
+</svg>

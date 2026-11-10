@@ -1,64 +1,73 @@
-# GitHub Pages Setup Instructions
+# GitHub Pages Setup
 
-The repository is now configured for GitHub Pages deployment. Follow these steps to enable it:
+The app is published from the **`gh-pages` branch** (Settings → Pages → Source →
+"Deploy from a branch" → `gh-pages` / `root`).
 
-## 1. Enable GitHub Pages in Repository Settings
-1. Go to your GitHub repository: https://github.com/MrSmokeMaker/Eldertree
-2. Click on **Settings** tab
-3. Scroll down to **Pages** section in the left sidebar
-4. Under **Source**, select **GitHub Actions**
-5. The workflow will automatically deploy to GitHub Pages
+- Repository: <https://github.com/MrSmokeMaker/Eldertree-> (trailing dash!)
+- Live URL: <https://mrsmokemaker.github.io/Eldertree-/>
 
-## 2. First Deployment
-The first deployment will trigger automatically after pushing the workflow file. You can:
-1. Check the Actions tab: https://github.com/MrSmokeMaker/Eldertree/actions
-2. Look for the "Deploy to GitHub Pages" workflow
-3. Wait for it to complete (build may take 5-10 minutes)
+## Why the base href matters
 
-## 3. Live URL
-Once deployed, your app will be available at:
-**https://mrsmokemaker.github.io/Eldertree/**
+The repository name contains a trailing dash, so GitHub Pages serves the site
+from `/Eldertree-/`. Every build must use exactly that prefix:
 
-## 4. Manual Deployment
-If you want to trigger a deployment manually:
-1. Go to **Actions** tab
-2. Select **Deploy to GitHub Pages** workflow
-3. Click **Run workflow**
-4. Select **main** branch and run
+```
+flutter build web --release --base-href /Eldertree-/
+```
 
-## 5. Testing Locally
-To test the web build locally:
-1. Run `build_web.bat` (Windows) or create similar script for other OS
-2. The built files will be in `build/web/`
-3. Serve them locally with a web server:
-   ```bash
-   # Using Python
-   python -m http.server 8000 --directory build/web
-   
-   # Or using Node.js
-   npx serve build/web
-   ```
+With a wrong base href (`/Eldertree/` without the dash) the browser asks for
+`/Eldertree/main.dart.js`, gets a 404 from GitHub Pages and the app never boots —
+only an empty page (or Flutter's grey release `ErrorWidget`) is visible.
+`build_web.bat` verifies the generated `index.html` and fails the build if the
+base href is wrong.
 
-## 6. Custom Domain (Optional)
-If you want to use a custom domain:
-1. Go to **Settings > Pages**
-2. Under **Custom domain**, enter your domain
-3. Follow the DNS configuration instructions
+## Supabase credentials
 
-## 7. Troubleshooting
-- **Build fails**: Check Flutter version compatibility
-- **404 errors**: Ensure `404.html` is present and base-href is correct
-- **Assets not loading**: Verify asset paths in `pubspec.yaml`
-- **Workflow not running**: Check repository permissions and workflow file syntax
+`assets/.env` contains placeholders, and it is **not** a place to keep real keys
+in a public repository. Pass the values at build time instead:
 
-## 8. Notes
-- The app uses `canvaskit` renderer for better performance
-- Base href is set to `/Eldertree/` for proper routing
-- `.nojekyll` file prevents Jekyll processing
-- 404.html handles SPA routing for direct URL access
+```
+set SUPABASE_URL=https://<project>.supabase.co
+set SUPABASE_ANON_KEY=<anon-key>
+build_web.bat
+```
 
-## 9. Support
-For issues with GitHub Pages deployment, check:
-- GitHub Actions logs
-- Flutter web build output
-- Repository settings for Pages configuration
+or on any platform:
+
+```
+flutter build web --release --base-href /Eldertree-/ \
+  --dart-define=SUPABASE_URL=https://<project>.supabase.co \
+  --dart-define=SUPABASE_ANON_KEY=<anon-key>
+```
+
+`--dart-define` wins over `assets/.env`. If neither is set, the app still starts
+and shows a configuration screen with these instructions instead of a blank page.
+
+## Deploying
+
+1. `build_web.bat` (or the `flutter build web` command above).
+2. Copy the contents of `build/web/` to the **root** of the `gh-pages` branch
+   (the branch stores the compiled site, not only the sources).
+3. Commit and push `gh-pages`.
+4. Wait for the Pages build, then hard-reload the site (Ctrl+F5): the old service
+   worker or HTTP cache may still serve the previous bundle.
+
+## Local check before publishing
+
+```
+python -m http.server 8080
+```
+
+The site is built for the `/Eldertree-/` prefix, so serve it and open
+<http://127.0.0.1:8080/Eldertree-/> — or use any static server that maps
+`/Eldertree-/*` onto `build/web`.
+
+## Troubleshooting
+
+| Symptom | Cause |
+| --- | --- |
+| Blank / grey page, console shows `Null check operator used on a null value` | A widget branch was mounted outside `MaterialApp` (no `Directionality`). The first frame fails and Flutter renders its grey release `ErrorWidget`. |
+| `404` for `main.dart.js`, `flutter.js` | Base href does not match the repository name. |
+| "Eldertree is not configured" screen | `SUPABASE_URL` / `SUPABASE_ANON_KEY` are missing; rebuild with `--dart-define`. |
+| Old version keeps loading after a deploy | Service worker / HTTP cache; hard reload or clear site data. |
+| `This project is not configured for the web` | The `web/` template folder is missing from the checked out branch. |

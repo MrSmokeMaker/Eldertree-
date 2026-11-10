@@ -1,15 +1,30 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
   <head>
     <meta charset="utf-8">
-    <title>Eldertree - Family Tree App</title>
-    <meta http-equiv="refresh" content="0; url=/Eldertree-/">
-    <link rel="canonical" href="/Eldertree-/">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Eldertree — Family Tree App</title>
     <script>
-      window.location.href = '/Eldertree-/';
+      // GitHub Pages answers unknown paths with this file.
+      // Send the visitor back into the app while preserving the requested path
+      // in the URL fragment, so the router can restore the route instead of
+      // silently landing on the home screen.
+      (function () {
+        var base = '/Eldertree-/';
+        var rest = location.pathname.indexOf(base) === 0
+          ? location.pathname.slice(base.length)
+          : '';
+        if (rest === 'index.html') {
+          rest = '';
+        }
+        location.replace(base + (rest ? '#/' + rest : '') + location.search);
+      })();
     </script>
   </head>
   <body>
-    <p>If you are not redirected automatically, follow this <a href="/Eldertree-/">link</a>.</p>
+    <p>
+      Redirecting to the app…
+      <a href="/Eldertree-/">Open Eldertree</a>
+    </p>
   </body>
 </html>

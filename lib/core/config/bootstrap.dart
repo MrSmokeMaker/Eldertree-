@@ -8,7 +8,8 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 ///   --dart-define=SUPABASE_URL=https://<project>.supabase.co \
 ///   --dart-define=SUPABASE_ANON_KEY=<anon-key>
 /// ```
-/// `--dart-define` wins over `assets/.env`.
+/// `--dart-define` wins over the `.env` file (the root file declared in
+/// `pubspec.yaml`; at runtime the bundle serves it as `assets/.env`).
 const String kSupabaseUrlFromEnv = String.fromEnvironment('SUPABASE_URL');
 const String kSupabaseAnonKeyFromEnv = String.fromEnvironment('SUPABASE_ANON_KEY');
 

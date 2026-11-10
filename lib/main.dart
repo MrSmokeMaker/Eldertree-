@@ -9,6 +9,9 @@ import 'core/theme/theme.dart';
 import 'core/utils/notification_service.dart';
 import 'root_widget.dart' as root;
 
+/// Ни один шаг инициализации не должен держать первый кадр дольше этого срока.
+const Duration _initTimeout = Duration(seconds: 10);
+
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
@@ -22,17 +25,13 @@ Future<void> main() async {
     overrides: <Override>[bootstrapResultProvider.overrideWithValue(result)],
   );
 
-  // Services that may be unavailable on the web must not prevent startup.
-  try {
-    await container.read(notificationServiceProvider).init();
-  } catch (error) {
-    debugPrint('Notification service init failed: $error');
-  }
-  try {
-    await CacheManager.init();
-  } catch (error) {
-    debugPrint('Cache init failed: $error');
-  }
+  // Services that may be unavailable (or slow) on the web must not prevent
+  // startup: each is bounded by a timeout and its failure is only logged.
+  await _bestEffort(
+    'Notification service init',
+    container.read(notificationServiceProvider).init,
+  );
+  await _bestEffort('Cache init', CacheManager.init);
 
   runApp(
     UncontrolledProviderScope(
@@ -40,6 +39,15 @@ Future<void> main() async {
       child: const root.RootWidget(),
     ),
   );
+}
+
+/// Runs a startup step without letting it block or break the first frame.
+Future<void> _bestEffort(String label, Future<void> Function() action) async {
+  try {
+    await action().timeout(_initTimeout);
+  } catch (error) {
+    debugPrint('$label failed: $error');
+  }
 }
 
 /// Initializes Supabase. Never throws and never prevents `runApp`: without a
@@ -55,7 +63,8 @@ Future<BootstrapResult> _initializeSupabase() async {
   }
 
   try {
-    await Supabase.initialize(url: config.url, anonKey: config.anonKey);
+    await Supabase.initialize(url: config.url, anonKey: config.anonKey)
+        .timeout(_initTimeout);
   } catch (error, stack) {
     debugPrint('Supabase initialization failed: $error\n$stack');
     return BootstrapResult.failed('Не удалось инициализировать Supabase: $error');
@@ -74,7 +83,7 @@ Widget _buildReadableErrorWidget(FlutterErrorDetails details) {
       alignment: Alignment.center,
       padding: const EdgeInsets.all(24),
       child: Text(
-        'Interface error:\n${details.exceptionAsString()}',
+        'Ошибка интерфейса:\n${details.exceptionAsString()}',
         textAlign: TextAlign.center,
         style: const TextStyle(color: Color(0xFFE6E6E6), fontSize: 14),
       ),

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
-/// Shown while the onboarding flag is still being read from storage.
-/// Rendered inside a `MaterialApp`, so Theme/Directionality are available.
+/// Показывается, пока флаг онбординга читается из хранилища.
+/// Рендерится внутри `MaterialApp`, поэтому Theme/Directionality доступны.
 class AppSplashScreen extends StatelessWidget {
   const AppSplashScreen({super.key});
 
@@ -16,8 +16,8 @@ class AppSplashScreen extends StatelessWidget {
   }
 }
 
-/// Replaces the silent grey screen: explains what is missing before the app
-/// can talk to its backend.
+/// Заменяет молчаливый серый экран: объясняет, чего не хватает приложению,
+/// чтобы работать с бэкендом.
 class AppConfigurationScreen extends StatelessWidget {
   const AppConfigurationScreen({super.key, required this.message});
 
@@ -43,7 +43,7 @@ class AppConfigurationScreen extends StatelessWidget {
                 ),
                 const SizedBox(height: 20),
                 Text(
-                  'Eldertree is not configured',
+                  'Eldertree не настроен',
                   style: theme.textTheme.headlineMedium,
                   textAlign: TextAlign.center,
                 ),

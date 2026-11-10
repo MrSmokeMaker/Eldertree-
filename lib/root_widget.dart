@@ -34,7 +34,7 @@ class RootWidget extends ConsumerWidget {
     if (!bootstrap.ready) {
       return _materialApp(
         home: AppConfigurationScreen(
-          message: bootstrap.message ?? 'Unknown initialization error.',
+          message: bootstrap.message ?? 'Неизвестная ошибка инициализации.',
         ),
       );
     }

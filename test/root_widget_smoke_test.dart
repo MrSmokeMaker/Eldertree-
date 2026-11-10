@@ -42,7 +42,7 @@ void main() {
       ProviderScope(
         overrides: <Override>[
           bootstrapResultProvider.overrideWithValue(
-            const BootstrapResult.failed('missing keys'),
+            const BootstrapResult.failed('нет ключей'),
           ),
         ],
         child: const app.RootWidget(),
@@ -51,7 +51,7 @@ void main() {
     await tester.pumpAndSettle();
 
     expect(tester.takeException(), isNull);
-    expect(find.text('Eldertree is not configured'), findsOneWidget);
-    expect(find.textContaining('missing keys'), findsOneWidget);
+    expect(find.text('Eldertree не настроен'), findsOneWidget);
+    expect(find.textContaining('нет ключей'), findsOneWidget);
   });
 }

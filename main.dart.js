@@ -10330,7 +10330,7 @@ n=A.U(i)
 m=A.ag(i)
 A.ag6().$1("Supabase initialization failed: "+A.i(n)+"\n"+A.i(m))
 j=A.i(n)
-q=new A.oy(!1,"Could not initialize Supabase: "+j)
+q=new A.oy(!1,"\u041d\u0435 \u0443\u0434\u0430\u043b\u043e\u0441\u044c \u0438\u043d\u0438\u0446\u0438\u0430\u043b\u0438\u0437\u0438\u0440\u043e\u0432\u0430\u0442\u044c Supabase: "+j)
 s=1
 break
 s=7
@@ -57574,7 +57574,7 @@ A.U1.prototype={
 K(a){return B.aaE}}
 A.U_.prototype={
 K(a){var s=null
-return A.BZ(s,s,A.e1(new A.fg(B.GL,A.bbo(A.eK(A.b([B.Pk,B.DV,A.c0("Eldertree is not configured",s,s,s,s,A.O(a).ok.e,B.cf,s,s),B.acR,A.c0(this.c,s,s,s,s,s,B.cf,s,s),B.hM,B.aaP],t.p),B.Q,B.bD,B.a2),B.iR),s),s,s),s)}}
+return A.BZ(s,s,A.e1(new A.fg(B.GL,A.bbo(A.eK(A.b([B.Pk,B.DV,A.c0("Eldertree \u043d\u0435 \u043d\u0430\u0441\u0442\u0440\u043e\u0435\u043d",s,s,s,s,A.O(a).ok.e,B.cf,s,s),B.acR,A.c0(this.c,s,s,s,s,s,B.cf,s,s),B.hM,B.aaP],t.p),B.Q,B.bD,B.a2),B.iR),s),s,s),s)}}
 A.ji.prototype={
 I(){return"Gender."+this.b}}
 A.Kf.prototype={
@@ -59360,7 +59360,7 @@ if(o!==!0){s=o==null?B.Fu:B.a8F
 r=$.b1e()
 return A.ba1($.b1d(),!1,s,r,B.kk,p)}q=b.eR($.b6S(),t.Zd)
 if(!q.a){s=q.b
-if(s==null)s="Unknown initialization error."
+if(s==null)s="\u041d\u0435\u0438\u0437\u0432\u0435\u0441\u0442\u043d\u0430\u044f \u043e\u0448\u0438\u0431\u043a\u0430 \u0438\u043d\u0438\u0446\u0438\u0430\u043b\u0438\u0437\u0430\u0446\u0438\u0438."
 r=$.b1e()
 return A.ba1($.b1d(),!1,new A.U_(s,null),r,B.kk,p)}return B.Og}}
 A.ake.prototype={}
@@ -127480,7 +127480,7 @@ B.Go=new A.dj(5,"srcIn")
 B.pl=new A.dj(6,"dstIn")
 B.pm=new A.dj(9,"srcATop")
 B.c2=new A.UA(0,"normal")
-B.Gt=new A.oy(!1,"SUPABASE_URL and SUPABASE_ANON_KEY are not set.\n\nFill in assets/.env or pass the values at build time with --dart-define (see the command below).")
+B.Gt=new A.oy(!1,"\u041d\u0435 \u0437\u0430\u0434\u0430\u043d\u044b SUPABASE_URL \u0438 SUPABASE_ANON_KEY.\n\n\u0417\u0430\u043f\u043e\u043b\u043d\u0438\u0442\u0435 assets/.env \u0438\u043b\u0438 \u043f\u0435\u0440\u0435\u0434\u0430\u0439\u0442\u0435 \u0437\u043d\u0430\u0447\u0435\u043d\u0438\u044f \u043f\u0440\u0438 \u0441\u0431\u043e\u0440\u043a\u0435 \u0447\u0435\u0440\u0435\u0437 --dart-define (\u043a\u043e\u043c\u0430\u043d\u0434\u0430 \u0443\u043a\u0430\u0437\u0430\u043d\u0430 \u043d\u0438\u0436\u0435).")
 B.Gu=new A.oy(!0,null)
 B.e_=new A.aT(8,8)
 B.l8=new A.dk(B.e_,B.e_,B.e_,B.e_)

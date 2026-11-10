@@ -48,9 +48,9 @@ Future<BootstrapResult> _initializeSupabase() async {
   final SupabaseConfig config = await loadSupabaseConfig();
   if (!config.isValid) {
     return const BootstrapResult.failed(
-      'SUPABASE_URL and SUPABASE_ANON_KEY are not set.\n\n'
-      'Fill in assets/.env or pass the values at build time with '
-      '--dart-define (see the command below).',
+      'Не заданы SUPABASE_URL и SUPABASE_ANON_KEY.\n\n'
+      'Заполните assets/.env или передайте значения при сборке через '
+      '--dart-define (команда указана ниже).',
     );
   }
 
@@ -58,7 +58,7 @@ Future<BootstrapResult> _initializeSupabase() async {
     await Supabase.initialize(url: config.url, anonKey: config.anonKey);
   } catch (error, stack) {
     debugPrint('Supabase initialization failed: $error\n$stack');
-    return BootstrapResult.failed('Could not initialize Supabase: $error');
+    return BootstrapResult.failed('Не удалось инициализировать Supabase: $error');
   }
 
   return const BootstrapResult.ready();

@@ -68,6 +68,6 @@ The site is built for the `/Eldertree-/` prefix, so serve it and open
 | --- | --- |
 | Blank / grey page, console shows `Null check operator used on a null value` | A widget branch was mounted outside `MaterialApp` (no `Directionality`). The first frame fails and Flutter renders its grey release `ErrorWidget`. |
 | `404` for `main.dart.js`, `flutter.js` | Base href does not match the repository name. |
-| "Eldertree is not configured" screen | `SUPABASE_URL` / `SUPABASE_ANON_KEY` are missing; rebuild with `--dart-define`. |
+| "Eldertree не настроен" screen | `SUPABASE_URL` / `SUPABASE_ANON_KEY` are missing; rebuild with `--dart-define`. |
 | Old version keeps loading after a deploy | Service worker / HTTP cache; hard reload or clear site data. |
 | `This project is not configured for the web` | The `web/` template folder is missing from the checked out branch. |

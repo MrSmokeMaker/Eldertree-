@@ -23,12 +23,16 @@ base href is wrong.
 
 ## Supabase credentials
 
-`assets/.env` contains placeholders, and it is **not** a place to keep real keys
-in a public repository. Pass the values at build time instead:
+The app needs `SUPABASE_URL` and `SUPABASE_PUBLISHABLE_KEY` (the `sb_publishable_…`
+client key; `SUPABASE_ANON_KEY` is accepted as a legacy alias). The publishable key
+is public by design — it ships inside the web bundle, and the data is protected by
+Row Level Security, not by hiding it. Never put a `service_role` key in the client.
+
+Pass the values at build time:
 
 ```
 set SUPABASE_URL=https://<project>.supabase.co
-set SUPABASE_ANON_KEY=<anon-key>
+set SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 build_web.bat
 ```
 
@@ -37,11 +41,13 @@ or on any platform:
 ```
 flutter build web --release --base-href /Eldertree-/ \
   --dart-define=SUPABASE_URL=https://<project>.supabase.co \
-  --dart-define=SUPABASE_ANON_KEY=<anon-key>
+  --dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 ```
 
-`--dart-define` wins over `assets/.env`. If neither is set, the app still starts
-and shows a configuration screen with these instructions instead of a blank page.
+`--dart-define` wins over the `.env` file (`.env` is the template declared in
+`pubspec.yaml`, served at runtime as `assets/.env`). If neither is set, the app
+still starts and shows a configuration screen with these instructions instead of a
+blank page.
 
 ## Deploying
 

@@ -53,7 +53,7 @@ class AppConfigurationScreen extends StatelessWidget {
                 const SelectableText(
                   'flutter build web --release --base-href /Eldertree-/ \\\n'
                   '  --dart-define=SUPABASE_URL=<project-url> \\\n'
-                  '  --dart-define=SUPABASE_ANON_KEY=<anon-key>',
+                  '  --dart-define=SUPABASE_PUBLISHABLE_KEY=<publishable-key>',
                   style: TextStyle(fontFamily: 'monospace', fontSize: 13),
                 ),
               ],

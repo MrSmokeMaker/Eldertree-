@@ -56,15 +56,17 @@ Future<BootstrapResult> _initializeSupabase() async {
   final SupabaseConfig config = await loadSupabaseConfig();
   if (!config.isValid) {
     return const BootstrapResult.failed(
-      'Не заданы SUPABASE_URL и SUPABASE_ANON_KEY.\n\n'
-      'Заполните assets/.env или передайте значения при сборке через '
+      'Не заданы SUPABASE_URL и SUPABASE_PUBLISHABLE_KEY.\n\n'
+      'Заполните .env или передайте значения при сборке через '
       '--dart-define (команда указана ниже).',
     );
   }
 
   try {
-    await Supabase.initialize(url: config.url, anonKey: config.anonKey)
-        .timeout(_initTimeout);
+    await Supabase.initialize(
+      url: config.url,
+      publishableKey: config.publishableKey,
+    ).timeout(_initTimeout);
   } catch (error, stack) {
     debugPrint('Supabase initialization failed: $error\n$stack');
     return BootstrapResult.failed('Не удалось инициализировать Supabase: $error');

@@ -6,12 +6,18 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 /// ```
 /// flutter build web --release --base-href /Eldertree-/ \
 ///   --dart-define=SUPABASE_URL=https://<project>.supabase.co \
-///   --dart-define=SUPABASE_ANON_KEY=<anon-key>
+///   --dart-define=SUPABASE_PUBLISHABLE_KEY=sb_publishable_...
 /// ```
 /// `--dart-define` wins over the `.env` file (the root file declared in
 /// `pubspec.yaml`; at runtime the bundle serves it as `assets/.env`).
+///
+/// `SUPABASE_ANON_KEY` is still accepted as a legacy alias.
 const String kSupabaseUrlFromEnv = String.fromEnvironment('SUPABASE_URL');
-const String kSupabaseAnonKeyFromEnv = String.fromEnvironment('SUPABASE_ANON_KEY');
+
+const String kSupabaseKeyFromEnv = String.fromEnvironment(
+  'SUPABASE_PUBLISHABLE_KEY',
+  defaultValue: String.fromEnvironment('SUPABASE_ANON_KEY'),
+);
 
 /// Bootstrap outcome for the current run. Overridden in `main()` before `runApp()`.
 final bootstrapResultProvider = Provider<BootstrapResult>(
@@ -35,12 +41,12 @@ class BootstrapResult {
 
 @immutable
 class SupabaseConfig {
-  const SupabaseConfig({required this.url, required this.anonKey});
+  const SupabaseConfig({required this.url, required this.publishableKey});
 
   final String url;
-  final String anonKey;
+  final String publishableKey;
 
-  bool get isValid => !_isPlaceholder(url) && !_isPlaceholder(anonKey);
+  bool get isValid => !_isPlaceholder(url) && !_isPlaceholder(publishableKey);
 }
 
 /// Empty value or an unfilled placeholder shipped with the `.env` template.
@@ -53,11 +59,11 @@ bool _isPlaceholder(String value) {
 }
 
 /// Reads the Supabase configuration from `--dart-define`, falling back to
-/// `assets/.env`. Never throws: a missing configuration must not stop the app
-/// from starting and showing a readable explanation.
+/// `.env`. Never throws: a missing configuration must not stop the app from
+/// starting and showing a readable explanation.
 Future<SupabaseConfig> loadSupabaseConfig() async {
   String url = kSupabaseUrlFromEnv;
-  String key = kSupabaseAnonKeyFromEnv;
+  String key = kSupabaseKeyFromEnv;
 
   if (_isPlaceholder(url) || _isPlaceholder(key)) {
     try {
@@ -66,12 +72,14 @@ Future<SupabaseConfig> loadSupabaseConfig() async {
         url = dotenv.env['SUPABASE_URL'] ?? '';
       }
       if (_isPlaceholder(key)) {
-        key = dotenv.env['SUPABASE_ANON_KEY'] ?? '';
+        key = dotenv.env['SUPABASE_PUBLISHABLE_KEY'] ??
+            dotenv.env['SUPABASE_ANON_KEY'] ??
+            '';
       }
     } catch (error) {
       debugPrint('dotenv.load() failed: $error');
     }
   }
 
-  return SupabaseConfig(url: url.trim(), anonKey: key.trim());
+  return SupabaseConfig(url: url.trim(), publishableKey: key.trim());
 }

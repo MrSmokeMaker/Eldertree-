@@ -92,13 +92,13 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                 const Offset(0, -96),
                 'parent',
                 Icons.account_tree_outlined,
-                'Родитель',
+                'Родитель (к корням)',
               ),
               _buildAddBtn(
                 const Offset(0, 96),
                 'child',
                 Icons.child_care_outlined,
-                'Потомок',
+                'Потомок (в крону)',
               ),
               _buildAddBtn(
                 const Offset(-96, 0),
@@ -106,35 +106,78 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                 Icons.favorite_rounded,
                 'Супруг(а)',
               ),
-              // Кнопка быстрого перехода в карточку профиля
+              // Кнопка быстрого перехода в карточку профиля (справа)
               Positioned(
-                left: 60 - 18 + 96,
-                top: 60 - 18,
+                left: 64 - 20 + 96,
+                top: 64 - 20,
+                child: Tooltip(
+                  message: 'Открыть летопись / профиль',
+                  child: GestureDetector(
+                    onTap: () {
+                      HapticFeedback.lightImpact();
+                      ProfileScreen.show(context, widget.member);
+                    },
+                    child: Container(
+                      width: 40,
+                      height: 40,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        gradient: const LinearGradient(
+                          colors: [goldLight, goldPrimary],
+                          begin: Alignment.topLeft,
+                          end: Alignment.bottomRight,
+                        ),
+                        boxShadow: [
+                          BoxShadow(
+                            color: goldPrimary.withValues(alpha: 0.6),
+                            blurRadius: 10,
+                            offset: const Offset(0, 3),
+                          ),
+                        ],
+                        border: Border.all(color: Colors.white, width: 1.5),
+                      ),
+                      child: const Icon(Icons.menu_book_rounded, size: 20, color: Color(0xFF1A1A1A)),
+                    ),
+                  ),
+                ),
+              ),
+              // Информационная плашка "Открыть профиль" под карточкой
+              Positioned(
+                top: 142,
                 child: GestureDetector(
                   onTap: () {
                     HapticFeedback.lightImpact();
                     ProfileScreen.show(context, widget.member);
                   },
                   child: Container(
-                    width: 36,
-                    height: 36,
+                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      gradient: const LinearGradient(
-                        colors: [goldLight, goldPrimary],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
-                      ),
+                      color: surfaceColor.withValues(alpha: 0.95),
+                      borderRadius: BorderRadius.circular(20),
+                      border: Border.all(color: goldPrimary, width: 1.2),
                       boxShadow: [
                         BoxShadow(
-                          color: goldPrimary.withValues(alpha: 0.5),
+                          color: Colors.black.withValues(alpha: 0.25),
                           blurRadius: 8,
-                          offset: const Offset(0, 2),
+                          offset: const Offset(0, 3),
                         ),
                       ],
-                      border: Border.all(color: Colors.white, width: 1.5),
                     ),
-                    child: const Icon(Icons.person, size: 18, color: Color(0xFF1A1A1A)),
+                    child: const Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Icon(Icons.history_edu_rounded, size: 15, color: goldPrimary),
+                        SizedBox(width: 6),
+                        Text(
+                          'Летопись персоны',
+                          style: TextStyle(
+                            fontSize: 12,
+                            fontWeight: FontWeight.bold,
+                            color: goldPrimary,
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
               ),
@@ -142,6 +185,10 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
 
             // Основная карточка-медальон персоны
             GestureDetector(
+              onDoubleTap: () {
+                HapticFeedback.lightImpact();
+                ProfileScreen.show(context, widget.member);
+              },
               onTapDown: (_) {
                 HapticFeedback.selectionClick();
                 setState(() => _isPressed = true);
@@ -149,7 +196,11 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
               onTapUp: (_) {
                 HapticFeedback.lightImpact();
                 setState(() => _isPressed = false);
-                widget.onTap();
+                if (widget.isSelected) {
+                  ProfileScreen.show(context, widget.member);
+                } else {
+                  widget.onTap();
+                }
               },
               onTapCancel: () => setState(() => _isPressed = false),
               child: AnimatedScale(
@@ -336,8 +387,8 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
     const goldDark = Color(0xFF9E7710);
 
     return Positioned(
-      left: 60 - 18 + offset.dx,
-      top: 60 - 18 + offset.dy,
+      left: 64 - 18 + offset.dx,
+      top: 64 - 18 + offset.dy,
       child: Tooltip(
         message: tooltip,
         child: GestureDetector(

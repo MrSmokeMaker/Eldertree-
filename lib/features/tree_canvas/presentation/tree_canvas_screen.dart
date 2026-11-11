@@ -114,17 +114,129 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
           final rootId = currentTree.ownerId;
 
           if (members.isEmpty) {
-            return Center(
-              child: ElevatedButton(
-                onPressed: () => ref
-                    .read(treeGraphControllerProvider.notifier)
-                    .addRelative(
-                        targetMemberId: '',
-                        firstName: 'Me',
-                        gender: Gender.male,
-                        relationType: 'self'),
-                child: const Text('Initialize Tree (Add Me)'),
-              ),
+            return Stack(
+              children: [
+                ParallaxBackground(
+                    controller: _transformationController, isDark: isDark),
+                Center(
+                  child: Container(
+                    margin: const EdgeInsets.symmetric(horizontal: 24),
+                    padding: const EdgeInsets.all(28),
+                    constraints: const BoxConstraints(maxWidth: 420),
+                    decoration: BoxDecoration(
+                      color: (isDark ? const Color(0xFF141820) : Colors.white)
+                          .withValues(alpha: 0.94),
+                      borderRadius: BorderRadius.circular(24),
+                      border: Border.all(
+                        color: const Color(0xFFD4AF37).withValues(alpha: 0.6),
+                        width: 1.5,
+                      ),
+                      boxShadow: [
+                        BoxShadow(
+                          color: const Color(0xFFD4AF37).withValues(alpha: 0.2),
+                          blurRadius: 24,
+                          offset: const Offset(0, 8),
+                        ),
+                      ],
+                    ),
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          width: 64,
+                          height: 64,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            color: const Color(0xFF2D4A3E).withValues(alpha: 0.15),
+                            border: Border.all(
+                              color: const Color(0xFFD4AF37),
+                              width: 1.5,
+                            ),
+                          ),
+                          child: const Icon(
+                            Icons.nature_people_rounded,
+                            size: 36,
+                            color: Color(0xFFD4AF37),
+                          ),
+                        ),
+                        const SizedBox(height: 18),
+                        Text(
+                          currentTree.name,
+                          textAlign: TextAlign.center,
+                          style: const TextStyle(
+                            fontSize: 22,
+                            fontWeight: FontWeight.bold,
+                            letterSpacing: 0.3,
+                          ),
+                        ),
+                        const SizedBox(height: 8),
+                        Text(
+                          'Древо пока пусто. Добавьте первого человека (основателя), от которого потянутся корни предков и ветви потомков.',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontSize: 14,
+                            height: 1.4,
+                            color: Theme.of(context)
+                                .textTheme
+                                .bodyMedium
+                                ?.color
+                                ?.withValues(alpha: 0.8),
+                          ),
+                        ),
+                        const SizedBox(height: 24),
+                        ElevatedButton.icon(
+                          onPressed: () {
+                            AddRelativeSheet.show(
+                              context,
+                              'self',
+                              ({
+                                required firstName,
+                                lastName,
+                                required gender,
+                                birthDate,
+                              }) async {
+                                await ref
+                                    .read(treeGraphControllerProvider.notifier)
+                                    .addRelative(
+                                      targetMemberId: '',
+                                      firstName: firstName,
+                                      lastName: lastName,
+                                      gender: gender,
+                                      birthDate: birthDate,
+                                      relationType: 'self',
+                                    );
+                                ref
+                                    .read(audioServiceProvider)
+                                    .playAddMemberChime();
+                              },
+                            );
+                          },
+                          icon: const Icon(Icons.add),
+                          label: const Text(
+                            'Посадить древо рода',
+                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          ),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color(0xFF2D4A3E),
+                            foregroundColor: const Color(0xFFF9F8F6),
+                            padding: const EdgeInsets.symmetric(
+                              horizontal: 24,
+                              vertical: 14,
+                            ),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(14),
+                              side: const BorderSide(
+                                color: Color(0xFFD4AF37),
+                                width: 1,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             );
           }
 
@@ -204,8 +316,8 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                             !searchHiddenIds.contains(m.id);
 
                         return Positioned(
-                          left: pos.dx - 60,
-                          top: pos.dy - 60,
+                          left: pos.dx - 64,
+                          top: pos.dy - 64,
                           child: IgnorePointer(
                             ignoring: !isVisible,
                             child: AnimatedOpacity(
@@ -219,30 +331,40 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                                 onTap: () =>
                                     setState(() => _selectedMemberId = m.id),
                                 onAddTap: (relationType) async {
-                                  AddRelativeSheet.show(context, relationType,
-                                      (name, gender) async {
-                                    await ref
-                                        .read(treeGraphControllerProvider
-                                            .notifier)
-                                        .addRelative(
-                                          targetMemberId: m.id,
-                                          firstName: name,
-                                          gender: gender,
-                                          relationType: relationType,
-                                        );
-                                    ref
-                                        .read(audioServiceProvider)
-                                        .playAddMemberChime();
-                                    final state = ref
-                                        .read(treeGraphControllerProvider)
-                                        .value;
-                                    if (state != null &&
-                                        state.members.length == 2) {
+                                  AddRelativeSheet.show(
+                                    context,
+                                    relationType,
+                                    ({
+                                      required firstName,
+                                      lastName,
+                                      required gender,
+                                      birthDate,
+                                    }) async {
                                       await ref
-                                          .read(notificationServiceProvider)
-                                          .requestPermissionGently(context);
-                                    }
-                                  });
+                                          .read(treeGraphControllerProvider
+                                              .notifier)
+                                          .addRelative(
+                                            targetMemberId: m.id,
+                                            firstName: firstName,
+                                            lastName: lastName,
+                                            gender: gender,
+                                            birthDate: birthDate,
+                                            relationType: relationType,
+                                          );
+                                      ref
+                                          .read(audioServiceProvider)
+                                          .playAddMemberChime();
+                                      final state = ref
+                                          .read(treeGraphControllerProvider)
+                                          .value;
+                                      if (state != null &&
+                                          state.members.length == 2) {
+                                        await ref
+                                            .read(notificationServiceProvider)
+                                            .requestPermissionGently(context);
+                                      }
+                                    },
+                                  );
                                 },
                               ),
                             ),

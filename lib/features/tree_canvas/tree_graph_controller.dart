@@ -109,9 +109,9 @@ class TreeGraphController extends _$TreeGraphController {
     final user = client.auth.currentUser;
 
     if (user == null || currentTree.id.startsWith('demo-tree')) {
-      // Режим тестирования: возвращаем локальных персон и связи
+      // Режим тестирования: возвращаем локальных персон и связи строго для выбранного древа
       final members = _demoMembers
-          .where((m) => m.treeId == currentTree.id || currentTree.id.startsWith('demo-tree'))
+          .where((m) => m.treeId == currentTree.id)
           .take(maxTreeNodeCount)
           .toList();
       final memberIds = members.map((m) => m.id).toSet();
@@ -154,6 +154,9 @@ class TreeGraphController extends _$TreeGraphController {
   Future<void> addRelative({
     required String targetMemberId,
     required String firstName,
+    String? lastName,
+    DateTime? birthDate,
+    DateTime? deathDate,
     required Gender gender,
     required String relationType,
   }) async {
@@ -168,12 +171,15 @@ class TreeGraphController extends _$TreeGraphController {
         id: 'demo-m-${DateTime.now().millisecondsSinceEpoch}',
         treeId: currentTree.id,
         firstName: firstName,
+        lastName: lastName,
+        birthDate: birthDate,
+        deathDate: deathDate,
         gender: gender,
         createdAt: DateTime.now(),
       );
       _demoMembers.add(newMember);
 
-      if (relationType != 'self') {
+      if (relationType != 'self' && targetMemberId.isNotEmpty) {
         RelationshipModel rel;
         if (relationType == 'parent') {
           rel = RelationshipModel(
@@ -215,6 +221,9 @@ class TreeGraphController extends _$TreeGraphController {
         .insert({
           'tree_id': currentTree.id,
           'first_name': firstName,
+          'last_name': lastName,
+          'birth_date': birthDate?.toIso8601String(),
+          'death_date': deathDate?.toIso8601String(),
           'gender': gender.name,
         })
         .select()
@@ -222,7 +231,7 @@ class TreeGraphController extends _$TreeGraphController {
 
     final newMember = MemberModel.fromJson(newMemberRes);
 
-    if (relationType != 'self') {
+    if (relationType != 'self' && targetMemberId.isNotEmpty) {
       Map<String, dynamic> relData;
       if (relationType == 'parent') {
         relData = {

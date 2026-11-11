@@ -13,7 +13,7 @@ AudioService audioService(AudioServiceRef ref) {
 class AudioService {
   final AudioPlayer _scrollPlayer = AudioPlayer();
   final AudioPlayer _sfxPlayer = AudioPlayer();
-  bool _isSoundEnabled = true;
+  bool _isSoundEnabled = false; // Отключено по умолчанию для стабильности в Web
 
   AudioService() {
     _scrollPlayer.setReleaseMode(ReleaseMode.loop);
@@ -42,7 +42,10 @@ class AudioService {
   }
 
   Future<void> stopScrollLeaves() async {
-    await _scrollPlayer.pause();
+    if (!_isSoundEnabled) return;
+    try {
+      await _scrollPlayer.pause();
+    } catch (_) {}
   }
 
   Future<void> playAddMemberChime() async {

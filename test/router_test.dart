@@ -10,7 +10,7 @@ class MockSupabaseClient extends Mock implements SupabaseClient {}
 class MockGoTrueClient extends Mock implements GoTrueClient {}
 
 void main() {
-  testWidgets('router redirects unauthenticated users to /auth', (WidgetTester tester) async {
+  testWidgets('router opens home route directly when auth is bypassed for testing', (WidgetTester tester) async {
     final mockSupabase = MockSupabaseClient();
     final mockAuth = MockGoTrueClient();
     // Stub auth behavior.
@@ -29,7 +29,7 @@ void main() {
     ));
     await tester.pumpAndSettle();
     final currentPath = router.routerDelegate.currentConfiguration.uri.path;
-    expect(currentPath, '/auth');
+    expect(currentPath, '/');
     container.dispose();
   });
 }

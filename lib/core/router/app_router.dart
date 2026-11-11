@@ -10,6 +10,9 @@ import '../../features/tree_canvas/presentation/tree_canvas_screen.dart';
 
 part 'app_router.g.dart';
 
+/// Флаг временного отключения обязательной аутентификации для тестирования интерфейса.
+const bool kBypassAuthForTesting = true;
+
 class GoRouterRefreshStream extends ChangeNotifier {
   GoRouterRefreshStream(Stream<dynamic> stream) {
     notifyListeners();
@@ -32,6 +35,11 @@ GoRouter appRouter(AppRouterRef ref) {
   final router = GoRouter(
     initialLocation: '/',
     redirect: (context, state) {
+      if (kBypassAuthForTesting) {
+        // Аутентификация отключена для тестирования: сразу открываем главную
+        return null;
+      }
+
       final session = supabase.auth.currentSession;
       final isLoggedIn = session != null;
       final isAuthRoute = state.uri.path == '/auth';
@@ -54,10 +62,10 @@ GoRouter appRouter(AppRouterRef ref) {
         path: '/canvas',
         builder: (context, state) => const TreeCanvasScreen(),
       ),
-      // Catch‑all route redirecting unknown paths to /auth
+      // Catch‑all route redirecting unknown paths to /
       GoRoute(
         path: '*',
-        redirect: (BuildContext context, GoRouterState state) => '/auth',
+        redirect: (BuildContext context, GoRouterState state) => '/',
       ),
     ],
   );

@@ -10,7 +10,6 @@ import '../tree_graph_controller.dart';
 import '../lens_controller.dart';
 import '../search_provider.dart';
 import '../../../core/utils/notification_service.dart';
-import '../../../data/models/enums.dart';
 import '../domain/models/graph_node.dart';
 import '../../profile/presentation/profile_screen.dart';
 
@@ -147,7 +146,8 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                           height: 64,
                           decoration: BoxDecoration(
                             shape: BoxShape.circle,
-                            color: const Color(0xFF2D4A3E).withValues(alpha: 0.15),
+                            color:
+                                const Color(0xFF2D4A3E).withValues(alpha: 0.15),
                             border: Border.all(
                               color: const Color(0xFFD4AF37),
                               width: 1.5,
@@ -214,7 +214,8 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                           icon: const Icon(Icons.add),
                           label: const Text(
                             'Посадить древо рода',
-                            style: TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: const Color(0xFF2D4A3E),
@@ -357,7 +358,8 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                                       final state = ref
                                           .read(treeGraphControllerProvider)
                                           .value;
-                                      if (state != null &&
+                                      if (context.mounted &&
+                                          state != null &&
                                           state.members.length == 2) {
                                         await ref
                                             .read(notificationServiceProvider)

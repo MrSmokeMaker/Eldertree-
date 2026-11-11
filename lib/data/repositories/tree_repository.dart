@@ -96,7 +96,8 @@ class TreeRepository {
     }
 
     final tree = await _client.from('trees').select().eq('id', treeId).single();
-    final members = await _client.from('members').select().eq('tree_id', treeId);
+    final members =
+        await _client.from('members').select().eq('tree_id', treeId);
     final memberIds = members.map((m) => m['id'] as String).toList();
 
     List<dynamic> relationships = [];
@@ -108,8 +109,12 @@ class TreeRepository {
           .from('relationships')
           .select()
           .inFilter('member1_id', memberIds);
-      facts = await _client.from('facts').select().inFilter('member_id', memberIds);
-      events = await _client.from('timeline_events').select().inFilter('member_id', memberIds);
+      facts =
+          await _client.from('facts').select().inFilter('member_id', memberIds);
+      events = await _client
+          .from('timeline_events')
+          .select()
+          .inFilter('member_id', memberIds);
     }
 
     return {

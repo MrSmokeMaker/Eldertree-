@@ -45,7 +45,8 @@ class ProfileController extends _$ProfileController {
   @override
   FutureOr<ProfileState> build(String memberId) async {
     final client = ref.watch(supabaseProvider);
-    final isGuest = client.auth.currentUser == null || memberId.startsWith('demo-');
+    final isGuest =
+        client.auth.currentUser == null || memberId.startsWith('demo-');
 
     final List<UnifiedEvent> timeline = [];
     final List<FactModel> facts = [];
@@ -100,7 +101,8 @@ class ProfileController extends _$ProfileController {
           id: 'df-3',
           memberId: memberId,
           category: FactCategory.story,
-          value: 'Передал правнукам старинные серебряные карманные часы с гербом',
+          value:
+              'Передал правнукам старинные серебряные карманные часы с гербом',
           createdAt: DateTime.now(),
         ),
       ]);
@@ -178,15 +180,20 @@ class ProfileController extends _$ProfileController {
     String? videoUrl,
   }) async {
     final client = ref.watch(supabaseProvider);
-    final isGuest = client.auth.currentUser == null || memberId.startsWith('demo-');
+    final isGuest =
+        client.auth.currentUser == null || memberId.startsWith('demo-');
 
     final newEvent = UnifiedEvent(
       id: 'custom-${DateTime.now().millisecondsSinceEpoch}',
       date: date,
       title: title,
       description: description,
-      imageUrl: (imageUrl != null && imageUrl.trim().isNotEmpty) ? imageUrl.trim() : null,
-      videoUrl: (videoUrl != null && videoUrl.trim().isNotEmpty) ? videoUrl.trim() : null,
+      imageUrl: (imageUrl != null && imageUrl.trim().isNotEmpty)
+          ? imageUrl.trim()
+          : null,
+      videoUrl: (videoUrl != null && videoUrl.trim().isNotEmpty)
+          ? videoUrl.trim()
+          : null,
     );
 
     // Сохраняем локально для мгновенного отображения

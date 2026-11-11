@@ -19,7 +19,6 @@ class ParallaxBackground extends StatelessWidget {
         final matrix = controller.value;
         final dx = matrix.getTranslation().x;
         final dy = matrix.getTranslation().y;
-        final scale = matrix.getMaxScaleOnAxis();
 
         // Скорости параллакса
         final treeOffset = Offset(dx * 0.10, dy * 0.10);
@@ -35,8 +34,13 @@ class ParallaxBackground extends StatelessWidget {
 
             // 2. Сгенерированная художественная картина векового дерева (Grand Eldertree)
             Positioned(
-              left: (MediaQuery.of(context).size.width / 2) - 1300 + treeOffset.dx,
-              top: (MediaQuery.of(context).size.height / 2) - 1300 + treeOffset.dy + 80,
+              left: (MediaQuery.of(context).size.width / 2) -
+                  1300 +
+                  treeOffset.dx,
+              top: (MediaQuery.of(context).size.height / 2) -
+                  1300 +
+                  treeOffset.dy +
+                  80,
               width: 2600,
               height: 2600,
               child: Opacity(
@@ -64,7 +68,9 @@ class ParallaxBackground extends StatelessWidget {
                     ),
                     radius: 1.3,
                     colors: [
-                      (isDark ? const Color(0xFF1B3B2B) : const Color(0xFFD4AF37))
+                      (isDark
+                              ? const Color(0xFF1B3B2B)
+                              : const Color(0xFFD4AF37))
                           .withValues(alpha: isDark ? 0.25 : 0.15),
                       Colors.transparent,
                     ],
@@ -92,7 +98,9 @@ class ParallaxBackground extends StatelessWidget {
                     radius: 1.25,
                     colors: [
                       Colors.transparent,
-                      (isDark ? const Color(0xFF05070A) : const Color(0xFFCDC2AE))
+                      (isDark
+                              ? const Color(0xFF05070A)
+                              : const Color(0xFFCDC2AE))
                           .withValues(alpha: 0.55),
                     ],
                     stops: const [0.65, 1.0],
@@ -116,16 +124,23 @@ class _LivingSporesPainter extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final goldColor = isDark ? const Color(0xFFE5C158) : const Color(0xFFB8860B);
+    final goldColor =
+        isDark ? const Color(0xFFE5C158) : const Color(0xFFB8860B);
     final paint = Paint()..style = PaintingStyle.fill;
 
     const count = 45;
     for (int i = 0; i < count; i++) {
-      final seedX = (math.sin(i * 811.0) * 0.5 + 0.5) * (size.width + 600) - 300;
-      final seedY = (math.cos(i * 577.0) * 0.5 + 0.5) * (size.height + 600) - 300;
+      final seedX =
+          (math.sin(i * 811.0) * 0.5 + 0.5) * (size.width + 600) - 300;
+      final seedY =
+          (math.cos(i * 577.0) * 0.5 + 0.5) * (size.height + 600) - 300;
 
-      final x = (seedX + offset.dx * (0.9 + (i % 4) * 0.1)) % (size.width + 200) - 100;
-      final y = (seedY + offset.dy * (0.9 + (i % 4) * 0.1)) % (size.height + 200) - 100;
+      final x =
+          (seedX + offset.dx * (0.9 + (i % 4) * 0.1)) % (size.width + 200) -
+              100;
+      final y =
+          (seedY + offset.dy * (0.9 + (i % 4) * 0.1)) % (size.height + 200) -
+              100;
 
       final radius = 1.0 + (i % 3) * 1.0;
       final alpha = isDark ? (0.25 + (i % 5) * 0.14) : (0.18 + (i % 5) * 0.1);

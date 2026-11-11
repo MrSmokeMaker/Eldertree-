@@ -69,7 +69,8 @@ Future<BootstrapResult> _initializeSupabase() async {
     ).timeout(_initTimeout);
   } catch (error, stack) {
     debugPrint('Supabase initialization failed: $error\n$stack');
-    return BootstrapResult.failed('Не удалось инициализировать Supabase: $error');
+    return BootstrapResult.failed(
+        'Не удалось инициализировать Supabase: $error');
   }
 
   return const BootstrapResult.ready();

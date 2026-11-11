@@ -6,7 +6,8 @@ import 'package:family_tree_app/features/tree_canvas/domain/services/tree_layout
 
 void main() {
   group('TreeLayoutService', () {
-    test('fans out children upward into canopy and parents downward into roots', () {
+    test('fans out children upward into canopy and parents downward into roots',
+        () {
       final layoutService = TreeLayoutService();
 
       final founder = MemberModel(

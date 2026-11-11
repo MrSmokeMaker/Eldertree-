@@ -5,7 +5,8 @@ import 'package:family_tree_app/core/theme/theme.dart';
 import 'package:family_tree_app/features/auth/presentation/auth_screen.dart';
 
 void main() {
-  testWidgets('AuthScreen renders styled elements and theme properly', (WidgetTester tester) async {
+  testWidgets('AuthScreen renders styled elements and theme properly',
+      (WidgetTester tester) async {
     await tester.pumpWidget(
       ProviderScope(
         child: MaterialApp(

@@ -20,14 +20,12 @@ class BranchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     const goldPrimary = Color(0xFFD4AF37);
-    const goldLight = Color(0xFFF7E8B5);
     const emeraldDeep = Color(0xFF183326);
-    const emeraldBright = Color(0xFF2E634A);
-    const barkDark = Color(0xFF241C15);
 
     final barkBase = isDark ? emeraldDeep : const Color(0xFF2C3E33);
     final goldAccent = isDark ? goldPrimary : const Color(0xFFB38822);
-    final leafGreen = isDark ? const Color(0xFF3B7D58) : const Color(0xFF2E754E);
+    final leafGreen =
+        isDark ? const Color(0xFF3B7D58) : const Color(0xFF2E754E);
 
     const cardRadius = 64.0; // Половина ширины карточки-медальона (128px)
 
@@ -52,7 +50,7 @@ class BranchPainter extends CustomPainter {
         // Ребенок находится выше (меньший Y, в кроне)
         final isParentBelow = p1.dy >= p2.dy;
         final startP = isParentBelow ? p1 : p2; // Нижняя точка (ствол/родитель)
-        final endP = isParentBelow ? p2 : p1;   // Верхняя точка (крона/ребенок)
+        final endP = isParentBelow ? p2 : p1; // Верхняя точка (крона/ребенок)
 
         final level = (isParentBelow ? node2.level : node1.level);
 
@@ -77,7 +75,6 @@ class BranchPainter extends CustomPainter {
         final path = Path()..moveTo(startP.dx, startY);
 
         // Органический s-образный изгиб ветви дуба
-        final deltaX = endP.dx - startP.dx;
         final controlDistY = (startY - endY).abs() * 0.55;
         final wobbleX = math.sin((startP.dx + endP.dx) * 0.02) * 22.0;
 
@@ -92,7 +89,8 @@ class BranchPainter extends CustomPainter {
 
         // А. Мягкая объемная тень ветви
         final shadowPaint = Paint()
-          ..color = (isDark ? Colors.black : const Color(0xFF6E6457)).withValues(alpha: 0.38)
+          ..color = (isDark ? Colors.black : const Color(0xFF6E6457))
+              .withValues(alpha: 0.38)
           ..style = PaintingStyle.stroke
           ..strokeWidth = branchThickness + 5.0
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5.0)
@@ -127,13 +125,15 @@ class BranchPainter extends CustomPainter {
         );
 
         // Д. Ложе/поддерживающий сучок под верхним медальоном
-        _drawBranchSupportFoot(canvas, Offset(endP.dx, endY), branchThickness, barkBase, goldAccent);
-
+        _drawBranchSupportFoot(canvas, Offset(endP.dx, endY), branchThickness,
+            barkBase, goldAccent);
       } else if (rel.relationshipType == RelationshipType.spouse) {
         // 2. Супружеская ветвь (боковое переплетение на одном ярусе)
         final isLeftToRight = p1.dx < p2.dx;
-        final startX = isLeftToRight ? p1.dx + cardRadius - 6 : p1.dx - cardRadius + 6;
-        final endX = isLeftToRight ? p2.dx - cardRadius + 6 : p2.dx + cardRadius - 6;
+        final startX =
+            isLeftToRight ? p1.dx + cardRadius - 6 : p1.dx - cardRadius + 6;
+        final endX =
+            isLeftToRight ? p2.dx - cardRadius + 6 : p2.dx + cardRadius - 6;
 
         final path = Path()..moveTo(startX, p1.dy + 8);
         final midX = (startX + endX) / 2;
@@ -143,7 +143,8 @@ class BranchPainter extends CustomPainter {
 
         // Тень
         final spouseShadow = Paint()
-          ..color = (isDark ? Colors.black : const Color(0xFF6E6457)).withValues(alpha: 0.3)
+          ..color = (isDark ? Colors.black : const Color(0xFF6E6457))
+              .withValues(alpha: 0.3)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 7.0
           ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4.0);
@@ -164,7 +165,8 @@ class BranchPainter extends CustomPainter {
         canvas.drawPath(path, spouseGold);
 
         // Брачные переплетенные кольца в центре дуги союза
-        _drawWeddingWreath(canvas, Offset(midX, arcDipY - 14), goldAccent, leafGreen, isDark);
+        _drawWeddingWreath(
+            canvas, Offset(midX, arcDipY - 14), goldAccent, leafGreen, isDark);
       }
     }
   }
@@ -186,8 +188,10 @@ class BranchPainter extends CustomPainter {
       ..style = PaintingStyle.fill;
 
     // Расширение ветви под основанием карточки
-    final rect = Rect.fromCenter(center: Offset(pos.dx, pos.dy + 2), width: branchWidth + 8, height: 6);
-    canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(3)), supportPaint);
+    final rect = Rect.fromCenter(
+        center: Offset(pos.dx, pos.dy + 2), width: branchWidth + 8, height: 6);
+    canvas.drawRRect(
+        RRect.fromRectAndRadius(rect, const Radius.circular(3)), supportPaint);
     canvas.drawCircle(Offset(pos.dx, pos.dy), 2.5, goldCap);
   }
 
@@ -211,16 +215,20 @@ class BranchPainter extends CustomPainter {
     // Левый дубовый листик
     final leftLeaf = Path()
       ..moveTo(pos.dx, pos.dy)
-      ..cubicTo(pos.dx - 12, pos.dy - 6, pos.dx - 18, pos.dy - 1, pos.dx - 16, pos.dy + 5)
-      ..cubicTo(pos.dx - 12, pos.dy + 10, pos.dx - 4, pos.dy + 4, pos.dx, pos.dy);
+      ..cubicTo(pos.dx - 12, pos.dy - 6, pos.dx - 18, pos.dy - 1, pos.dx - 16,
+          pos.dy + 5)
+      ..cubicTo(
+          pos.dx - 12, pos.dy + 10, pos.dx - 4, pos.dy + 4, pos.dx, pos.dy);
     canvas.drawPath(leftLeaf, leafFill);
     canvas.drawPath(leftLeaf, goldVein);
 
     // Правый листик
     final rightLeaf = Path()
       ..moveTo(pos.dx, pos.dy)
-      ..cubicTo(pos.dx + 12, pos.dy - 6, pos.dx + 18, pos.dy - 1, pos.dx + 16, pos.dy + 5)
-      ..cubicTo(pos.dx + 12, pos.dy + 10, pos.dx + 4, pos.dy + 4, pos.dx, pos.dy);
+      ..cubicTo(pos.dx + 12, pos.dy - 6, pos.dx + 18, pos.dy - 1, pos.dx + 16,
+          pos.dy + 5)
+      ..cubicTo(
+          pos.dx + 12, pos.dy + 10, pos.dx + 4, pos.dy + 4, pos.dx, pos.dy);
     canvas.drawPath(rightLeaf, leafFill);
     canvas.drawPath(rightLeaf, goldVein);
 

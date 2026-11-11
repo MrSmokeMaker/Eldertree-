@@ -145,9 +145,8 @@ class TreeLayoutService {
     }
 
     // 5. Центрирование всего древа относительно основателя / корня (root)
-    final rootCenterX = root.spouses.isNotEmpty
-        ? (root.x + root.spouses.first.x) / 2
-        : root.x;
+    final rootCenterX =
+        root.spouses.isNotEmpty ? (root.x + root.spouses.first.x) / 2 : root.x;
     for (var node in allNodes.values) {
       node.x -= rootCenterX;
     }
@@ -189,7 +188,8 @@ class TreeLayoutService {
     Map<String, GraphNode> allNodes,
     Set<String> placed,
   ) {
-    final nodesAtLevel = allNodes.values.where((n) => n.level == level).toList();
+    final nodesAtLevel =
+        allNodes.values.where((n) => n.level == level).toList();
     if (nodesAtLevel.isEmpty) return;
 
     // Группируем детей по их родительским парам / родителям
@@ -208,11 +208,12 @@ class TreeLayoutService {
       double parentCenterX = 0.0;
       final parents = group.first.parents;
       if (parents.isNotEmpty) {
-        parentCenterX = parents.map((p) => p.x).reduce((a, b) => a + b) / parents.length;
+        parentCenterX =
+            parents.map((p) => p.x).reduce((a, b) => a + b) / parents.length;
       }
 
       final count = group.length;
-      final spread = nodeSpacing;
+      const spread = nodeSpacing;
       for (int i = 0; i < count; i++) {
         final child = group[i];
         final offsetFromCenter = (i - (count - 1) / 2.0) * spread;
@@ -241,7 +242,8 @@ class TreeLayoutService {
     Map<String, GraphNode> allNodes,
     Set<String> placed,
   ) {
-    final nodesAtLevel = allNodes.values.where((n) => n.level == level).toList();
+    final nodesAtLevel =
+        allNodes.values.where((n) => n.level == level).toList();
     if (nodesAtLevel.isEmpty) return;
 
     // Группируем предков по их детям на предыдущем уровне
@@ -298,9 +300,8 @@ class TreeLayoutService {
       final prev = nodes[i - 1];
       final curr = nodes[i];
 
-      final double minDistance = (prev.spouses.contains(curr))
-          ? spouseSpacing
-          : nodeSpacing;
+      final double minDistance =
+          (prev.spouses.contains(curr)) ? spouseSpacing : nodeSpacing;
 
       final double requiredX = prev.x + minDistance;
       if (curr.x < requiredX) {

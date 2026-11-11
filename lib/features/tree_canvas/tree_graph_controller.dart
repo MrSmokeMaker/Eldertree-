@@ -116,7 +116,9 @@ class TreeGraphController extends _$TreeGraphController {
           .toList();
       final memberIds = members.map((m) => m.id).toSet();
       final relationships = _demoRelationships
-          .where((r) => memberIds.contains(r.member1Id) && memberIds.contains(r.member2Id))
+          .where((r) =>
+              memberIds.contains(r.member1Id) &&
+              memberIds.contains(r.member2Id))
           .toList();
 
       return TreeGraphState(members, relationships);

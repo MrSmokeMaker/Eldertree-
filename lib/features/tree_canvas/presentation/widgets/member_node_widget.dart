@@ -136,7 +136,8 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                         ],
                         border: Border.all(color: Colors.white, width: 1.5),
                       ),
-                      child: const Icon(Icons.menu_book_rounded, size: 20, color: Color(0xFF1A1A1A)),
+                      child: const Icon(Icons.menu_book_rounded,
+                          size: 20, color: Color(0xFF1A1A1A)),
                     ),
                   ),
                 ),
@@ -150,7 +151,8 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                     ProfileScreen.show(context, widget.member);
                   },
                   child: Container(
-                    padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
                     decoration: BoxDecoration(
                       color: surfaceColor.withValues(alpha: 0.95),
                       borderRadius: BorderRadius.circular(20),
@@ -166,7 +168,8 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                     child: const Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(Icons.history_edu_rounded, size: 15, color: goldPrimary),
+                        Icon(Icons.history_edu_rounded,
+                            size: 15, color: goldPrimary),
                         SizedBox(width: 6),
                         Text(
                           'Летопись персоны',
@@ -217,7 +220,9 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                       // Мягкое благородное свечение
                       BoxShadow(
                         color: glowColor,
-                        blurRadius: (widget.isHighlighted || _isBirthday || widget.isSelected)
+                        blurRadius: (widget.isHighlighted ||
+                                _isBirthday ||
+                                widget.isSelected)
                             ? 24
                             : 12,
                         spreadRadius: widget.isSelected ? 3 : 0,
@@ -225,7 +230,8 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                       ),
                       // Тень основания
                       BoxShadow(
-                        color: Colors.black.withValues(alpha: isDark ? 0.45 : 0.08),
+                        color: Colors.black
+                            .withValues(alpha: isDark ? 0.45 : 0.08),
                         blurRadius: 10,
                         offset: const Offset(0, 5),
                       ),
@@ -235,7 +241,9 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                       color: widget.isHighlighted
                           ? goldLight
                           : (widget.isSelected ? goldPrimary : cardBorderColor),
-                      width: (widget.isSelected || widget.isHighlighted) ? 2.2 : 1.4,
+                      width: (widget.isSelected || widget.isHighlighted)
+                          ? 2.2
+                          : 1.4,
                     ),
                   ),
                   child: Stack(
@@ -249,7 +257,9 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                             borderRadius: BorderRadius.circular(22),
                             border: Border.all(
                               color: goldPrimary.withValues(
-                                alpha: widget.isSelected ? 0.6 : (isDark ? 0.2 : 0.3),
+                                alpha: widget.isSelected
+                                    ? 0.6
+                                    : (isDark ? 0.2 : 0.3),
                               ),
                               width: 0.8,
                             ),
@@ -259,7 +269,8 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
 
                       // Контент узла
                       Padding(
-                        padding: const EdgeInsets.symmetric(horizontal: 8.0, vertical: 10.0),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 8.0, vertical: 10.0),
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
                           children: [
@@ -270,14 +281,19 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                                 shape: BoxShape.circle,
                                 gradient: LinearGradient(
                                   colors: _isDeceased
-                                      ? const [Color(0xFF8A939E), Color(0xFF5E6570)]
+                                      ? const [
+                                          Color(0xFF8A939E),
+                                          Color(0xFF5E6570)
+                                        ]
                                       : const [goldLight, goldDark],
                                   begin: Alignment.topLeft,
                                   end: Alignment.bottomRight,
                                 ),
                                 boxShadow: [
                                   BoxShadow(
-                                    color: (_isDeceased ? Colors.black : goldPrimary)
+                                    color: (_isDeceased
+                                            ? Colors.black
+                                            : goldPrimary)
                                         .withValues(alpha: 0.3),
                                     blurRadius: 6,
                                   ),
@@ -289,7 +305,8 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                                     ? const Color(0xFF1C222D)
                                     : const Color(0xFFF7F4EE),
                                 backgroundImage: widget.member.avatarUrl != null
-                                    ? CachedNetworkImageProvider(widget.member.avatarUrl!)
+                                    ? CachedNetworkImageProvider(
+                                        widget.member.avatarUrl!)
                                     : null,
                                 child: widget.member.avatarUrl == null
                                     ? Text(
@@ -298,7 +315,9 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                                             : '?',
                                         style: TextStyle(
                                           color: _isDeceased
-                                              ? (isDark ? Colors.grey[400] : Colors.grey[700])
+                                              ? (isDark
+                                                  ? Colors.grey[400]
+                                                  : Colors.grey[700])
                                               : goldPrimary,
                                           fontWeight: FontWeight.bold,
                                           fontSize: 19,
@@ -355,7 +374,9 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                           child: Icon(
                             Icons.history_edu,
                             size: 13,
-                            color: isDark ? const Color(0xFF8B949E) : const Color(0xFF6B7280),
+                            color: isDark
+                                ? const Color(0xFF8B949E)
+                                : const Color(0xFF6B7280),
                           ),
                         ),
 
@@ -381,7 +402,8 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
   }
 
   /// Золотая сургучная печать-кнопка для добавления родственников
-  Widget _buildAddBtn(Offset offset, String type, IconData icon, String tooltip) {
+  Widget _buildAddBtn(
+      Offset offset, String type, IconData icon, String tooltip) {
     const goldPrimary = Color(0xFFD4AF37);
     const goldLight = Color(0xFFF7E7B4);
     const goldDark = Color(0xFF9E7710);

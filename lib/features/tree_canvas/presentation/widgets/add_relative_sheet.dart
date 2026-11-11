@@ -33,7 +33,8 @@ class AddRelativeSheet extends StatefulWidget {
       shape: const RoundedRectangleBorder(
         borderRadius: BorderRadius.vertical(top: Radius.circular(28)),
       ),
-      builder: (_) => AddRelativeSheet(relationType: relationType, onAdd: onAdd),
+      builder: (_) =>
+          AddRelativeSheet(relationType: relationType, onAdd: onAdd),
     );
   }
 
@@ -153,7 +154,11 @@ class _AddRelativeSheetState extends State<AddRelativeSheet> {
               _subtitle,
               style: TextStyle(
                 fontSize: 13,
-                color: Theme.of(context).textTheme.bodySmall?.color?.withValues(alpha: 0.8),
+                color: Theme.of(context)
+                    .textTheme
+                    .bodySmall
+                    ?.color
+                    ?.withValues(alpha: 0.8),
               ),
             ),
             const SizedBox(height: 20),

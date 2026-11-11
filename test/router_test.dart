@@ -7,16 +7,20 @@ import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:mocktail/mocktail.dart';
 
 class MockSupabaseClient extends Mock implements SupabaseClient {}
+
 class MockGoTrueClient extends Mock implements GoTrueClient {}
 
 void main() {
-  testWidgets('router opens home route directly when auth is bypassed for testing', (WidgetTester tester) async {
+  testWidgets(
+      'router opens home route directly when auth is bypassed for testing',
+      (WidgetTester tester) async {
     final mockSupabase = MockSupabaseClient();
     final mockAuth = MockGoTrueClient();
     // Stub auth behavior.
     when(() => mockSupabase.auth).thenReturn(mockAuth);
     when(() => mockAuth.currentSession).thenReturn(null);
-    when(() => mockAuth.onAuthStateChange).thenAnswer((_) => const Stream.empty());
+    when(() => mockAuth.onAuthStateChange)
+        .thenAnswer((_) => const Stream.empty());
 
     final container = ProviderContainer(overrides: [
       supabaseProvider.overrideWithValue(mockSupabase),

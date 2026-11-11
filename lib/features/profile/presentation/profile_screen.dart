@@ -40,7 +40,8 @@ class ProfileScreen extends ConsumerWidget {
         return StatefulBuilder(
           builder: (ctx, setDialogState) {
             final isDark = Theme.of(ctx).brightness == Brightness.dark;
-            final dateStr = DateFormat('d MMMM yyyy г.', 'ru').format(selectedDate);
+            final dateStr =
+                DateFormat('d MMMM yyyy г.', 'ru').format(selectedDate);
 
             return AlertDialog(
               backgroundColor: isDark ? const Color(0xFF1A1F29) : Colors.white,
@@ -51,14 +52,16 @@ class ProfileScreen extends ConsumerWidget {
                   width: 1.2,
                 ),
               ),
-              title: Row(
+              title: const Row(
                 children: [
-                  const Icon(Icons.bookmark_add_rounded, color: AppTheme.primaryGold, size: 26),
+                  const Icon(Icons.bookmark_add_rounded,
+                      color: AppTheme.primaryGold, size: 26),
                   const SizedBox(width: 10),
                   const Expanded(
                     child: Text(
                       'Память в летопись',
-                      style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style:
+                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
                     ),
                   ),
                 ],
@@ -73,11 +76,14 @@ class ProfileScreen extends ConsumerWidget {
                       // Выбор даты
                       ListTile(
                         contentPadding: EdgeInsets.zero,
-                        leading: const Icon(Icons.calendar_month_rounded, color: AppTheme.primaryGold),
-                        title: const Text('Дата события:', style: TextStyle(fontSize: 13, color: Colors.grey)),
+                        leading: const Icon(Icons.calendar_month_rounded,
+                            color: AppTheme.primaryGold),
+                        title: const Text('Дата события:',
+                            style: TextStyle(fontSize: 13, color: Colors.grey)),
                         subtitle: Text(
                           dateStr,
-                          style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                          style: const TextStyle(
+                              fontSize: 16, fontWeight: FontWeight.bold),
                         ),
                         trailing: OutlinedButton(
                           onPressed: () async {
@@ -85,7 +91,8 @@ class ProfileScreen extends ConsumerWidget {
                               context: ctx,
                               initialDate: selectedDate,
                               firstDate: DateTime(1700),
-                              lastDate: DateTime.now().add(const Duration(days: 365)),
+                              lastDate:
+                                  DateTime.now().add(const Duration(days: 365)),
                             );
                             if (picked != null) {
                               setDialogState(() => selectedDate = picked);
@@ -132,7 +139,8 @@ class ProfileScreen extends ConsumerWidget {
                               : (memoryTypeIndex == 2
                                   ? 'Видеохроника юбилея'
                                   : 'Важная памятная дата'),
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)),
                         ),
                       ),
                       const SizedBox(height: 14),
@@ -143,8 +151,10 @@ class ProfileScreen extends ConsumerWidget {
                         maxLines: 3,
                         decoration: InputDecoration(
                           labelText: 'Описание / воспоминание',
-                          hintText: 'Расскажите об этом дне, участниках и атмосфере...',
-                          border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                          hintText:
+                              'Расскажите об этом дне, участниках и атмосфере...',
+                          border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(12)),
                         ),
                       ),
 
@@ -157,7 +167,8 @@ class ProfileScreen extends ConsumerWidget {
                             labelText: 'Ссылка на изображение (URL)',
                             hintText: 'https://example.com/photo.jpg',
                             prefixIcon: const Icon(Icons.image_outlined),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
                             suffixIcon: IconButton(
                               icon: const Icon(Icons.auto_fix_high),
                               tooltip: 'Пример семейного фото',
@@ -176,8 +187,10 @@ class ProfileScreen extends ConsumerWidget {
                           decoration: InputDecoration(
                             labelText: 'Ссылка на видео (YouTube / mp4)',
                             hintText: 'https://youtu.be/... или ссылка на файл',
-                            prefixIcon: const Icon(Icons.video_library_outlined),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12)),
+                            prefixIcon:
+                                const Icon(Icons.video_library_outlined),
+                            border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(12)),
                           ),
                         ),
                       ],
@@ -198,10 +211,13 @@ class ProfileScreen extends ConsumerWidget {
                     final description = descriptionController.text.trim();
                     final mediaUrl = mediaUrlController.text.trim();
 
-                    ref.read(profileControllerProvider(member.id).notifier).addTimelineMemory(
+                    ref
+                        .read(profileControllerProvider(member.id).notifier)
+                        .addTimelineMemory(
                           date: selectedDate,
                           title: title,
-                          description: description.isNotEmpty ? description : null,
+                          description:
+                              description.isNotEmpty ? description : null,
                           imageUrl: memoryTypeIndex == 1 ? mediaUrl : null,
                           videoUrl: memoryTypeIndex == 2 ? mediaUrl : null,
                         );
@@ -268,11 +284,15 @@ class ProfileScreen extends ConsumerWidget {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: const LinearGradient(
-                            colors: [AppTheme.primaryGoldLight, AppTheme.primaryGoldDark],
+                            colors: [
+                              AppTheme.primaryGoldLight,
+                              AppTheme.primaryGoldDark
+                            ],
                           ),
                           boxShadow: [
                             BoxShadow(
-                              color: AppTheme.primaryGold.withValues(alpha: 0.35),
+                              color:
+                                  AppTheme.primaryGold.withValues(alpha: 0.35),
                               blurRadius: 16,
                             ),
                           ],
@@ -287,7 +307,9 @@ class ProfileScreen extends ConsumerWidget {
                               : null,
                           child: member.avatarUrl == null
                               ? Text(
-                                  member.firstName.isNotEmpty ? member.firstName[0] : '?',
+                                  member.firstName.isNotEmpty
+                                      ? member.firstName[0]
+                                      : '?',
                                   style: const TextStyle(
                                     fontSize: 38,
                                     fontWeight: FontWeight.bold,
@@ -300,7 +322,8 @@ class ProfileScreen extends ConsumerWidget {
                       const SizedBox(height: 16),
                       Text(
                         member.firstName,
-                        style: const TextStyle(fontSize: 28, fontWeight: FontWeight.bold),
+                        style: const TextStyle(
+                            fontSize: 28, fontWeight: FontWeight.bold),
                       ),
                       if (member.birthDate != null)
                         Padding(
@@ -323,9 +346,11 @@ class ProfileScreen extends ConsumerWidget {
                             style: FilledButton.styleFrom(
                               backgroundColor: AppTheme.primaryGold,
                               foregroundColor: const Color(0xFF10141A),
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
-                            icon: const Icon(Icons.bookmark_add_rounded, size: 18),
+                            icon: const Icon(Icons.bookmark_add_rounded,
+                                size: 18),
                             label: const Text('Добавить веху'),
                           ),
                           const SizedBox(width: 12),
@@ -333,13 +358,15 @@ class ProfileScreen extends ConsumerWidget {
                             onPressed: () => Navigator.push(
                               context,
                               MaterialPageRoute(
-                                builder: (context) => InterviewScreen(member: member),
+                                builder: (context) =>
+                                    InterviewScreen(member: member),
                               ),
                             ),
                             icon: const Icon(Icons.forum_outlined, size: 18),
                             label: const Text('Интервью рода'),
                             style: OutlinedButton.styleFrom(
-                              shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(12)),
                             ),
                           ),
                         ],
@@ -360,11 +387,13 @@ class ProfileScreen extends ConsumerWidget {
                   padding: const EdgeInsets.fromLTRB(24, 16, 24, 8),
                   child: Row(
                     children: [
-                      const Icon(Icons.history_edu_rounded, color: AppTheme.primaryGold, size: 22),
+                      const Icon(Icons.history_edu_rounded,
+                          color: AppTheme.primaryGold, size: 22),
                       const SizedBox(width: 8),
                       const Text(
                         'Летопись и хроника',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                        style: TextStyle(
+                            fontSize: 18, fontWeight: FontWeight.bold),
                       ),
                       const Spacer(),
                       TextButton.icon(
@@ -379,7 +408,8 @@ class ProfileScreen extends ConsumerWidget {
 
               // Список событий таймлайна
               SliverPadding(
-                padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 24, vertical: 12),
                 sliver: SliverList(
                   delegate: SliverChildBuilderDelegate(
                     (context, index) => _buildTimelineEvent(
@@ -434,7 +464,8 @@ class ProfileScreen extends ConsumerWidget {
             ),
             child: Row(
               children: [
-                const Icon(Icons.lightbulb_outline, color: AppTheme.primaryGold),
+                const Icon(Icons.lightbulb_outline,
+                    color: AppTheme.primaryGold),
                 const SizedBox(width: 12),
                 Expanded(
                   child: Text(
@@ -471,7 +502,10 @@ class ProfileScreen extends ConsumerWidget {
                 height: 14,
                 decoration: BoxDecoration(
                   gradient: const LinearGradient(
-                    colors: [AppTheme.primaryGoldLight, AppTheme.primaryGoldDark],
+                    colors: [
+                      AppTheme.primaryGoldLight,
+                      AppTheme.primaryGoldDark
+                    ],
                   ),
                   shape: BoxShape.circle,
                   boxShadow: [
@@ -529,42 +563,50 @@ class ProfileScreen extends ConsumerWidget {
                         if (event.imageUrl != null)
                           const Padding(
                             padding: EdgeInsets.only(right: 6.0),
-                            child: Icon(Icons.photo_camera_rounded, size: 16, color: AppTheme.primaryGold),
+                            child: Icon(Icons.photo_camera_rounded,
+                                size: 16, color: AppTheme.primaryGold),
                           )
                         else if (event.videoUrl != null)
                           const Padding(
                             padding: EdgeInsets.only(right: 6.0),
-                            child: Icon(Icons.videocam_rounded, size: 16, color: AppTheme.primaryGold),
+                            child: Icon(Icons.videocam_rounded,
+                                size: 16, color: AppTheme.primaryGold),
                           )
                         else
                           const Padding(
                             padding: EdgeInsets.only(right: 6.0),
-                            child: Icon(Icons.auto_stories_rounded, size: 16, color: AppTheme.primaryGold),
+                            child: Icon(Icons.auto_stories_rounded,
+                                size: 16, color: AppTheme.primaryGold),
                           ),
                         Expanded(
                           child: Text(
                             event.title,
-                            style: const TextStyle(fontSize: 16, fontWeight: FontWeight.bold),
+                            style: const TextStyle(
+                                fontSize: 16, fontWeight: FontWeight.bold),
                           ),
                         ),
                       ],
                     ),
 
                     // Описание / Заметка
-                    if (event.description != null && event.description!.isNotEmpty) ...[
+                    if (event.description != null &&
+                        event.description!.isNotEmpty) ...[
                       const SizedBox(height: 8),
                       Text(
                         event.description!,
                         style: TextStyle(
                           fontSize: 14,
-                          color: isDark ? const Color(0xFFE0E5EC) : const Color(0xFF333D4B),
+                          color: isDark
+                              ? const Color(0xFFE0E5EC)
+                              : const Color(0xFF333D4B),
                           height: 1.35,
                         ),
                       ),
                     ],
 
                     // Фото
-                    if (event.imageUrl != null && event.imageUrl!.isNotEmpty) ...[
+                    if (event.imageUrl != null &&
+                        event.imageUrl!.isNotEmpty) ...[
                       const SizedBox(height: 12),
                       ClipRRect(
                         borderRadius: BorderRadius.circular(12),
@@ -591,25 +633,32 @@ class ProfileScreen extends ConsumerWidget {
                     ],
 
                     // Видео карточка
-                    if (event.videoUrl != null && event.videoUrl!.isNotEmpty) ...[
+                    if (event.videoUrl != null &&
+                        event.videoUrl!.isNotEmpty) ...[
                       const SizedBox(height: 12),
                       Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 14, vertical: 10),
                         decoration: BoxDecoration(
-                          color: const Color(0xFF1B3B2B).withValues(alpha: 0.15),
+                          color:
+                              const Color(0xFF1B3B2B).withValues(alpha: 0.15),
                           borderRadius: BorderRadius.circular(12),
                           border: Border.all(
-                            color: const Color(0xFF2D4A3E).withValues(alpha: 0.4),
+                            color:
+                                const Color(0xFF2D4A3E).withValues(alpha: 0.4),
                           ),
                         ),
                         child: Row(
                           children: [
-                            const Icon(Icons.play_circle_fill_rounded, color: AppTheme.primaryGold, size: 28),
+                            const Icon(Icons.play_circle_fill_rounded,
+                                color: AppTheme.primaryGold, size: 28),
                             const SizedBox(width: 10),
                             Expanded(
                               child: Text(
                                 event.videoUrl!,
-                                style: const TextStyle(fontSize: 13, decoration: TextDecoration.underline),
+                                style: const TextStyle(
+                                    fontSize: 13,
+                                    decoration: TextDecoration.underline),
                                 maxLines: 1,
                                 overflow: TextOverflow.ellipsis,
                               ),

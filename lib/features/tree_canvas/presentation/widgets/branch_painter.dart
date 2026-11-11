@@ -20,43 +20,16 @@ class BranchPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     const goldPrimary = Color(0xFFD4AF37);
-    const goldLight = Color(0xFFF3E5AB);
-    const emeraldCore = Color(0xFF1E3A2F);
-    const barkDark = Color(0xFF231B15);
+    const goldLight = Color(0xFFF7E8B5);
+    const emeraldDeep = Color(0xFF183326);
+    const emeraldBright = Color(0xFF2E634A);
+    const barkDark = Color(0xFF241C15);
 
-    final branchBaseColor = isDark ? emeraldCore : const Color(0xFF384E44);
-    final goldAccent = isDark ? goldPrimary : const Color(0xFFB8860B);
+    final barkBase = isDark ? emeraldDeep : const Color(0xFF2C3E33);
+    final goldAccent = isDark ? goldPrimary : const Color(0xFFB38822);
+    final leafGreen = isDark ? const Color(0xFF3B7D58) : const Color(0xFF2E754E);
 
-    // 1. Тень ветвей для объема
-    final shadowPaint = Paint()
-      ..color = (isDark ? Colors.black : const Color(0xFF8C8275)).withValues(alpha: 0.35)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 6.0
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4.0)
-      ..strokeCap = StrokeCap.round;
-
-    // 2. Основная ветвь (ствол)
-    final mainBranchPaint = Paint()
-      ..color = branchBaseColor
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 4.5
-      ..strokeCap = StrokeCap.round;
-
-    // 3. Золотая жила рода (внутренняя световая нить)
-    final goldCorePaint = Paint()
-      ..color = goldAccent.withValues(alpha: 0.85)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 1.6
-      ..strokeCap = StrokeCap.round;
-
-    // 4. Супружеская связь
-    final spouseArcPaint = Paint()
-      ..color = goldAccent.withValues(alpha: 0.7)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 2.2
-      ..strokeCap = StrokeCap.round;
-
-    const cardRadius = 60.0;
+    const cardRadius = 64.0; // Половина ширины карточки-медальона (128px)
 
     for (var rel in relationships) {
       if (hiddenNodeIds.contains(rel.member1Id) ||
@@ -71,78 +44,215 @@ class BranchPainter extends CustomPainter {
       final p1 = node1.position;
       final p2 = node2.position;
 
-      final path = Path();
-
+      // 1. Родительская связь (Рост от корней снизу к кроне вверху)
       if (rel.relationshipType == RelationshipType.parent) {
-        final startY = p1.dy + cardRadius;
-        final endY = p2.dy - cardRadius;
+        // node1 — родитель, node2 — ребенок
+        // В нашей модели роста:
+        // Родитель находится ниже (больший Y, ближе к корням/стволу)
+        // Ребенок находится выше (меньший Y, в кроне)
+        final isParentBelow = p1.dy >= p2.dy;
+        final startP = isParentBelow ? p1 : p2; // Нижняя точка (ствол/родитель)
+        final endP = isParentBelow ? p2 : p1;   // Верхняя точка (крона/ребенок)
 
-        path.moveTo(p1.dx, startY);
+        final level = (isParentBelow ? node2.level : node1.level);
+
+        // Расчет органической толщины ветви:
+        // Глубокие корни/ствол (level >= 1) — толстые ветви (12-16px)
+        // Уровень пользователя (level == 0) — 9-11px
+        // Молодые побеги в кроне (level <= -1) — 4-7px
+        double branchThickness;
+        if (level >= 1) {
+          branchThickness = 14.0;
+        } else if (level == 0) {
+          branchThickness = 10.0;
+        } else if (level == -1) {
+          branchThickness = 7.0;
+        } else {
+          branchThickness = 4.5;
+        }
+
+        final startY = startP.dy - cardRadius + 10;
+        final endY = endP.dy + cardRadius - 10;
+
+        final path = Path()..moveTo(startP.dx, startY);
+
+        // Органический s-образный изгиб ветви дуба
+        final deltaX = endP.dx - startP.dx;
+        final controlDistY = (startY - endY).abs() * 0.55;
+        final wobbleX = math.sin((startP.dx + endP.dx) * 0.02) * 22.0;
+
         path.cubicTo(
-          p1.dx,
-          startY + 90,
-          p2.dx,
-          endY - 90,
-          p2.dx,
+          startP.dx + wobbleX * 0.6,
+          startY - controlDistY,
+          endP.dx - wobbleX * 0.4,
+          endY + controlDistY,
+          endP.dx,
           endY,
         );
 
-        // Рисуем тень -> основную ветвь -> золотую жилу
+        // А. Мягкая объемная тень ветви
+        final shadowPaint = Paint()
+          ..color = (isDark ? Colors.black : const Color(0xFF6E6457)).withValues(alpha: 0.38)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = branchThickness + 5.0
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 5.0)
+          ..strokeCap = StrokeCap.round;
         canvas.drawPath(path, shadowPaint);
-        canvas.drawPath(path, mainBranchPaint);
+
+        // Б. Тело ветви (кора)
+        final barkPaint = Paint()
+          ..color = barkBase
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = branchThickness
+          ..strokeCap = StrokeCap.round;
+        canvas.drawPath(path, barkPaint);
+
+        // В. Золотая сердцевина / световая жила рода
+        final goldCorePaint = Paint()
+          ..color = goldAccent.withValues(alpha: isDark ? 0.8 : 0.7)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = math.max(1.2, branchThickness * 0.25)
+          ..strokeCap = StrokeCap.round;
         canvas.drawPath(path, goldCorePaint);
 
-        // Декоративный геральдический золотой росток/листик на развилке
+        // Г. Лиственные кластеры на ветви (чем выше в крону, тем гуще листва)
+        final midX = (startP.dx + endP.dx) / 2 + wobbleX * 0.3;
         final midY = (startY + endY) / 2;
-        final midX = (p1.dx + p2.dx) / 2;
-        _drawGoldenLeafCluster(canvas, Offset(midX, midY), isDark ? goldLight : goldPrimary);
-
-      } else if (rel.relationshipType == RelationshipType.spouse) {
-        final isLeftToRight = p1.dx < p2.dx;
-        final startX = isLeftToRight ? p1.dx + cardRadius : p1.dx - cardRadius;
-        final endX = isLeftToRight ? p2.dx - cardRadius : p2.dx + cardRadius;
-
-        path.moveTo(startX, p1.dy);
-        path.quadraticBezierTo(
-          (startX + endX) / 2,
-          p1.dy + 35,
-          endX,
-          p2.dy,
+        _drawOakLeafSprig(
+          canvas,
+          Offset(midX, midY),
+          leafGreen,
+          goldAccent,
+          isUpperCanopy: level <= 0,
         );
 
-        canvas.drawPath(path, shadowPaint);
-        canvas.drawPath(path, spouseArcPaint);
+        // Д. Ложе/поддерживающий сучок под верхним медальоном
+        _drawBranchSupportFoot(canvas, Offset(endP.dx, endY), branchThickness, barkBase, goldAccent);
 
-        // Переплетенные золотые брачные кольца союза
-        final ringCenter = Offset((startX + endX) / 2, p1.dy + 18);
-        _drawIntertwinedWeddingRings(canvas, ringCenter, goldAccent, isDark);
+      } else if (rel.relationshipType == RelationshipType.spouse) {
+        // 2. Супружеская ветвь (боковое переплетение на одном ярусе)
+        final isLeftToRight = p1.dx < p2.dx;
+        final startX = isLeftToRight ? p1.dx + cardRadius - 6 : p1.dx - cardRadius + 6;
+        final endX = isLeftToRight ? p2.dx - cardRadius + 6 : p2.dx + cardRadius - 6;
+
+        final path = Path()..moveTo(startX, p1.dy + 8);
+        final midX = (startX + endX) / 2;
+        final arcDipY = p1.dy + 42.0;
+
+        path.quadraticBezierTo(midX, arcDipY, endX, p2.dy + 8);
+
+        // Тень
+        final spouseShadow = Paint()
+          ..color = (isDark ? Colors.black : const Color(0xFF6E6457)).withValues(alpha: 0.3)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 7.0
+          ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4.0);
+        canvas.drawPath(path, spouseShadow);
+
+        // Ветвь союза
+        final spouseBranch = Paint()
+          ..color = barkBase
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 3.6
+          ..strokeCap = StrokeCap.round;
+        canvas.drawPath(path, spouseBranch);
+
+        final spouseGold = Paint()
+          ..color = goldAccent.withValues(alpha: 0.8)
+          ..style = PaintingStyle.stroke
+          ..strokeWidth = 1.4;
+        canvas.drawPath(path, spouseGold);
+
+        // Брачные переплетенные кольца в центре дуги союза
+        _drawWeddingWreath(canvas, Offset(midX, arcDipY - 14), goldAccent, leafGreen, isDark);
       }
     }
   }
 
-  /// Отрисовка двух переплетенных золотых колец
-  void _drawIntertwinedWeddingRings(
+  /// Ложе ветви, на котором покоится медальон персоны
+  void _drawBranchSupportFoot(
+    Canvas canvas,
+    Offset pos,
+    double branchWidth,
+    Color barkColor,
+    Color goldColor,
+  ) {
+    final supportPaint = Paint()
+      ..color = barkColor
+      ..style = PaintingStyle.fill;
+
+    final goldCap = Paint()
+      ..color = goldColor
+      ..style = PaintingStyle.fill;
+
+    // Расширение ветви под основанием карточки
+    final rect = Rect.fromCenter(center: Offset(pos.dx, pos.dy + 2), width: branchWidth + 8, height: 6);
+    canvas.drawRRect(RRect.fromRectAndRadius(rect, const Radius.circular(3)), supportPaint);
+    canvas.drawCircle(Offset(pos.dx, pos.dy), 2.5, goldCap);
+  }
+
+  /// Кластер дубовых листьев с золотыми прожилками на развилке ветви
+  void _drawOakLeafSprig(
+    Canvas canvas,
+    Offset pos,
+    Color greenColor,
+    Color goldColor, {
+    required bool isUpperCanopy,
+  }) {
+    final leafFill = Paint()
+      ..color = greenColor.withValues(alpha: isDark ? 0.9 : 0.85)
+      ..style = PaintingStyle.fill;
+
+    final goldVein = Paint()
+      ..color = goldColor.withValues(alpha: 0.85)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.9;
+
+    // Левый дубовый листик
+    final leftLeaf = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..cubicTo(pos.dx - 12, pos.dy - 6, pos.dx - 18, pos.dy - 1, pos.dx - 16, pos.dy + 5)
+      ..cubicTo(pos.dx - 12, pos.dy + 10, pos.dx - 4, pos.dy + 4, pos.dx, pos.dy);
+    canvas.drawPath(leftLeaf, leafFill);
+    canvas.drawPath(leftLeaf, goldVein);
+
+    // Правый листик
+    final rightLeaf = Path()
+      ..moveTo(pos.dx, pos.dy)
+      ..cubicTo(pos.dx + 12, pos.dy - 6, pos.dx + 18, pos.dy - 1, pos.dx + 16, pos.dy + 5)
+      ..cubicTo(pos.dx + 12, pos.dy + 10, pos.dx + 4, pos.dy + 4, pos.dx, pos.dy);
+    canvas.drawPath(rightLeaf, leafFill);
+    canvas.drawPath(rightLeaf, goldVein);
+
+    // Золотой желудь / почка на верхушке ветви
+    if (isUpperCanopy) {
+      final acornPaint = Paint()
+        ..color = goldColor
+        ..style = PaintingStyle.fill;
+      canvas.drawCircle(Offset(pos.dx, pos.dy - 2), 2.8, acornPaint);
+    }
+  }
+
+  /// Брачный венок с кольцами союза
+  void _drawWeddingWreath(
     Canvas canvas,
     Offset center,
     Color goldColor,
+    Color leafColor,
     bool isDark,
   ) {
-    const ringRadius = 7.0;
+    const ringRadius = 7.5;
 
-    final ringFill = Paint()
-      ..color = (isDark ? const Color(0xFF161A22) : const Color(0xFFFFFDF8))
-      ..style = PaintingStyle.fill;
+    final glow = Paint()
+      ..color = goldColor.withValues(alpha: 0.35)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 6.0
+      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 4.0);
 
     final ringBorder = Paint()
       ..color = goldColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
-
-    final glow = Paint()
-      ..color = goldColor.withValues(alpha: 0.3)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 5.0
-      ..maskFilter = const MaskFilter.blur(BlurStyle.normal, 3.0);
 
     final leftCenter = Offset(center.dx - 4.5, center.dy);
     final rightCenter = Offset(center.dx + 4.5, center.dy);
@@ -151,52 +261,16 @@ class BranchPainter extends CustomPainter {
     canvas.drawCircle(leftCenter, ringRadius, glow);
     canvas.drawCircle(rightCenter, ringRadius, glow);
 
-    // Заливка и контуры колец
-    canvas.drawCircle(leftCenter, ringRadius, ringFill);
+    // Сами кольца
     canvas.drawCircle(leftCenter, ringRadius, ringBorder);
-
-    canvas.drawCircle(rightCenter, ringRadius, ringFill);
     canvas.drawCircle(rightCenter, ringRadius, ringBorder);
 
-    // Центральная точка союза
-    final unionDot = Paint()
-      ..color = goldColor
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(center, 1.8, unionDot);
-  }
-
-  /// Отрисовка золотого ростка жизни на родительской ветви
-  void _drawGoldenLeafCluster(Canvas canvas, Offset pos, Color goldColor) {
+    // Маленькие листики союза по бокам
     final leafPaint = Paint()
-      ..color = goldColor.withValues(alpha: 0.9)
+      ..color = leafColor
       ..style = PaintingStyle.fill;
-
-    final leafBorder = Paint()
-      ..color = const Color(0xFF1B3B2B)
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = 0.8;
-
-    // Маленький левый листик
-    final leftLeaf = Path()
-      ..moveTo(pos.dx, pos.dy)
-      ..quadraticBezierTo(pos.dx - 7, pos.dy - 6, pos.dx - 10, pos.dy - 2)
-      ..quadraticBezierTo(pos.dx - 6, pos.dy + 3, pos.dx, pos.dy);
-    canvas.drawPath(leftLeaf, leafPaint);
-    canvas.drawPath(leftLeaf, leafBorder);
-
-    // Маленький правый листик
-    final rightLeaf = Path()
-      ..moveTo(pos.dx, pos.dy)
-      ..quadraticBezierTo(pos.dx + 7, pos.dy - 6, pos.dx + 10, pos.dy - 2)
-      ..quadraticBezierTo(pos.dx + 6, pos.dy + 3, pos.dx, pos.dy);
-    canvas.drawPath(rightLeaf, leafPaint);
-    canvas.drawPath(rightLeaf, leafBorder);
-
-    // Центральная жемчужина-почка
-    final budPaint = Paint()
-      ..color = const Color(0xFFFFF9E6)
-      ..style = PaintingStyle.fill;
-    canvas.drawCircle(pos, 2.2, budPaint);
+    canvas.drawCircle(Offset(center.dx - 16, center.dy), 2.2, leafPaint);
+    canvas.drawCircle(Offset(center.dx + 16, center.dy), 2.2, leafPaint);
   }
 
   @override

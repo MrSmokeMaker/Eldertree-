@@ -16,7 +16,7 @@ TreeLayoutService treeLayoutService(TreeLayoutServiceRef ref) {
 
 class TreeLayoutService {
   static const double nodeWidth = 140.0;
-  static const double nodeSpacing = 200.0;
+  static const double nodeSpacing = 220.0;
   static const double levelSpacing = 280.0;
 
   Map<String, Offset> calculatePositions({

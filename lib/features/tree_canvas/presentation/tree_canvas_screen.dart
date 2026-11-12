@@ -324,14 +324,14 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                         final double nodeLeft;
                         final double nodeTop;
                         if (branchSize == 'large') {
-                          nodeLeft = pos.dx - (isFlipped ? 76.5 : 93.5);
-                          nodeTop = pos.dy - 73.8;
+                          nodeLeft = pos.dx - 80.0;
+                          nodeTop = pos.dy - 29.0;
                         } else if (branchSize == 'small') {
-                          nodeLeft = pos.dx - (isFlipped ? 60.7 : 74.3);
-                          nodeTop = pos.dy - 55.2;
+                          nodeLeft = pos.dx - 65.0;
+                          nodeTop = pos.dy - 22.0;
                         } else {
-                          nodeLeft = pos.dx - (isFlipped ? 69.7 : 85.3);
-                          nodeTop = pos.dy - 63.0;
+                          nodeLeft = pos.dx - 72.5;
+                          nodeTop = pos.dy - 25.0;
                         }
 
                         return Positioned(

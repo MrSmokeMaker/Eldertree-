@@ -21,7 +21,6 @@ class ParallaxBackground extends StatelessWidget {
         final dy = matrix.getTranslation().y;
 
         // Скорости параллакса
-        final treeOffset = Offset(dx * 0.10, dy * 0.10);
         final particlesOffset = Offset(dx * 0.25, dy * 0.25);
 
         return Stack(
@@ -47,48 +46,24 @@ class ParallaxBackground extends StatelessWidget {
                 ),
               ),
 
-            // 2. Вековое древо с корнями и мощным витым стволом (Grand Ancient Oak)
-            Positioned(
-              left: (MediaQuery.of(context).size.width / 2) -
-                  650 +
-                  treeOffset.dx,
-              top: (MediaQuery.of(context).size.height / 2) -
-                  820 +
-                  treeOffset.dy,
-              width: 1300,
-              height: 1640,
-              child: Opacity(
-                opacity: isDark ? 0.75 : 0.88,
-                child: Image.asset(
-                  'assets/background/grand_tree_trunk.png',
-                  fit: BoxFit.contain,
-                  errorBuilder: (c, e, s) => Image.asset(
-                    'assets/background/bg_grand_tree.png',
-                    fit: BoxFit.contain,
-                    errorBuilder: (c2, e2, s2) => const SizedBox(),
-                  ),
-                ),
-              ),
-            ),
-
-            // 3. Мягкая атмосферная подсветка кроны и туман у корней
+            // 2. Мягкая атмосферная подсветка пергамента
             Positioned.fill(
               child: Container(
                 decoration: BoxDecoration(
                   gradient: RadialGradient(
                     center: Alignment(
-                      (treeOffset.dx / 1200).clamp(-0.8, 0.8),
-                      (treeOffset.dy / 1200).clamp(-0.8, 0.8) - 0.2,
+                      (particlesOffset.dx / 1200).clamp(-0.8, 0.8),
+                      (particlesOffset.dy / 1200).clamp(-0.8, 0.8) - 0.2,
                     ),
                     radius: 1.3,
                     colors: [
                       (isDark
                               ? const Color(0xFF1B3B2B)
                               : const Color(0xFFD4AF37))
-                          .withValues(alpha: isDark ? 0.25 : 0.15),
+                          .withValues(alpha: isDark ? 0.20 : 0.12),
                       Colors.transparent,
                     ],
-                    stops: const [0.0, 0.7],
+                    stops: const [0.0, 0.75],
                   ),
                 ),
               ),

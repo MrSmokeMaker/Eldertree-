@@ -43,6 +43,9 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
         widget.member.birthDate!.month == now.month;
   }
 
+  String get _fullName =>
+      '${widget.member.firstName} ${widget.member.lastName ?? ''}'.trim();
+
   String get _yearsText {
     final b = widget.member.birthDate?.year;
     final d = widget.member.deathDate?.year;
@@ -55,59 +58,37 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
   Widget build(BuildContext context) {
     const goldPrimary = Color(0xFFD4AF37);
     const goldLight = Color(0xFFF3E5AB);
+    const goldDark = Color(0xFF9E7710);
 
-    // Параметры геометрии в зависимости от размера ветви
+    // Параметры геометрии медальона в зависимости от статуса ветви
     final double nodeWidth;
     final double nodeHeight;
-    final double frameSize;
-    final double frameLeft;
-    final double frameTop;
+    final double medallionSize;
     final double plaqueWidth;
-    final double plaqueLeft;
-    final double plaqueTop;
-    final String assetName;
 
     switch (widget.branchSize) {
       case 'large':
-        nodeWidth = 170.0;
-        nodeHeight = 136.0;
-        frameSize = 54.0;
-        assetName = 'assets/branches/branch_large.png';
-        frameLeft = widget.isFlipped ? 49.5 : 66.5;
-        frameTop = 46.8;
+        nodeWidth = 160.0;
+        nodeHeight = 130.0;
+        medallionSize = 58.0;
         plaqueWidth = 98.0;
-        plaqueLeft = widget.isFlipped ? 27.5 : 44.5;
-        plaqueTop = 103.0;
         break;
       case 'small':
-        nodeWidth = 135.0;
-        nodeHeight = 104.0;
-        frameSize = 40.0;
-        assetName = 'assets/branches/branch_small.png';
-        frameLeft = widget.isFlipped ? 40.7 : 54.3;
-        frameTop = 35.2;
-        plaqueWidth = 76.0;
-        plaqueLeft = widget.isFlipped ? 22.7 : 36.3;
-        plaqueTop = 76.0;
+        nodeWidth = 130.0;
+        nodeHeight = 108.0;
+        medallionSize = 44.0;
+        plaqueWidth = 80.0;
         break;
       case 'medium':
       default:
-        nodeWidth = 155.0;
+        nodeWidth = 145.0;
         nodeHeight = 118.0;
-        frameSize = 48.0;
-        assetName = 'assets/branches/branch_medium.png';
-        frameLeft = widget.isFlipped ? 45.7 : 61.3;
-        frameTop = 39.0;
-        plaqueWidth = 88.0;
-        plaqueLeft = widget.isFlipped ? 25.7 : 41.3;
-        plaqueTop = 88.0;
+        medallionSize = 50.0;
+        plaqueWidth = 90.0;
         break;
     }
 
-    final frameCenter = Offset(
-      frameLeft + frameSize / 2,
-      frameTop + frameSize / 2,
-    );
+    final centerOffset = Offset(nodeWidth / 2, medallionSize / 2 + 10);
 
     return AnimatedOpacity(
       opacity: widget.isVisible ? 1.0 : 0.0,
@@ -127,30 +108,30 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
               // Всплывающие золотые печати управления при выборе узла
               if (widget.isSelected) ...[
                 _buildAddBtn(
-                  frameCenter,
-                  const Offset(0, -78),
+                  centerOffset,
+                  const Offset(0, -68),
                   'parent',
                   Icons.account_tree_outlined,
                   'Родитель (к корням)',
                 ),
                 _buildAddBtn(
-                  frameCenter,
-                  const Offset(0, 78),
+                  centerOffset,
+                  const Offset(0, 68),
                   'child',
                   Icons.child_care_outlined,
                   'Потомок (в крону)',
                 ),
                 _buildAddBtn(
-                  frameCenter,
-                  Offset(widget.isFlipped ? -78 : 78, 0),
+                  centerOffset,
+                  Offset(widget.isFlipped ? -68 : 68, 0),
                   'spouse',
                   Icons.favorite_rounded,
                   'Супруг(а)',
                 ),
-                // Кнопка быстрого перехода в карточку летописи
+                // Кнопка быстрого перехода в летопись рода
                 Positioned(
-                  left: frameCenter.dx - 18 + (widget.isFlipped ? 78 : -78),
-                  top: frameCenter.dy - 18,
+                  left: centerOffset.dx - 18 + (widget.isFlipped ? 68 : -68),
+                  top: centerOffset.dy - 18,
                   child: Tooltip(
                     message: 'Открыть летопись / профиль',
                     child: GestureDetector(
@@ -164,7 +145,7 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                         decoration: BoxDecoration(
                           shape: BoxShape.circle,
                           gradient: const LinearGradient(
-                            colors: [goldLight, goldPrimary],
+                            colors: [goldLight, goldPrimary, goldDark],
                             begin: Alignment.topLeft,
                             end: Alignment.bottomRight,
                           ),
@@ -185,7 +166,7 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                 ),
               ],
 
-              // Основное тело ветви с рамкой и табличкой
+              // Основное интерактивное тело медальона персоны
               GestureDetector(
                 onDoubleTap: () {
                   HapticFeedback.lightImpact();
@@ -209,84 +190,83 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                   scale: _isPressed ? 0.96 : (widget.isSelected ? 1.05 : 1.0),
                   duration: const Duration(milliseconds: 160),
                   curve: Curves.easeOutBack,
-                  child: Stack(
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
                     children: [
-                      // 1. Фотография или гербовый силуэт под рамкой
-                      Positioned(
-                        left: frameLeft + 4,
-                        top: frameTop + 4,
-                        width: frameSize - 8,
-                        height: frameSize - 8,
-                        child: Container(
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(frameSize * 0.16),
-                            boxShadow: [
-                              if (widget.isSelected || widget.isHighlighted)
-                                BoxShadow(
-                                  color: goldPrimary.withValues(alpha: 0.8),
-                                  blurRadius: 16,
-                                  spreadRadius: 2,
+                      // 1. Позолоченный геральдический медальон с портретом
+                      Stack(
+                        alignment: Alignment.center,
+                        clipBehavior: Clip.none,
+                        children: [
+                          // Декоративные дубовые веточки по бокам медальона
+                          Positioned(
+                            left: -12,
+                            top: 4,
+                            child: Transform.rotate(
+                              angle: -0.3,
+                              child: _buildSideOakSprig(),
+                            ),
+                          ),
+                          Positioned(
+                            right: -12,
+                            top: 4,
+                            child: Transform.rotate(
+                              angle: 0.3,
+                              child: Transform.flip(
+                                flipX: true,
+                                child: _buildSideOakSprig(),
+                              ),
+                            ),
+                          ),
+
+                          // Золотой медальон
+                          _buildGildedMedallionFrame(
+                            medallionSize,
+                            goldPrimary,
+                            goldLight,
+                            goldDark,
+                          ),
+
+                          // Иконка вечной памяти
+                          if (_isDeceased)
+                            Positioned(
+                              left: 0,
+                              top: 0,
+                              child: Container(
+                                padding: const EdgeInsets.all(2.5),
+                                decoration: const BoxDecoration(
+                                  color: Color(0xFF202020),
+                                  shape: BoxShape.circle,
                                 ),
-                            ],
-                          ),
-                          child: ClipRRect(
-                            borderRadius: BorderRadius.circular(frameSize * 0.16),
-                            child: _buildAvatar(frameSize - 8),
-                          ),
-                        ),
+                                child: const Icon(
+                                  Icons.history_edu,
+                                  size: 11,
+                                  color: Color(0xFFF3E5AB),
+                                ),
+                              ),
+                            ),
+
+                          // Именинная золотая звёздочка
+                          if (_isBirthday)
+                            Positioned(
+                              right: 0,
+                              top: 0,
+                              child: const Icon(
+                                Icons.auto_awesome,
+                                size: 15,
+                                color: goldPrimary,
+                              ),
+                            ),
+                        ],
                       ),
 
-                      // 2. Ассет дубовой ветви с золотой рамкой
-                      Positioned.fill(
-                        child: Transform.flip(
-                          flipX: widget.isFlipped,
-                          child: Image.asset(
-                            assetName,
-                            fit: BoxFit.contain,
-                            errorBuilder: (ctx, err, stack) =>
-                                _buildFallbackBranch(nodeWidth, nodeHeight),
-                          ),
-                        ),
-                      ),
+                      const SizedBox(height: 5),
 
-                      // 3. Пергаментная подвесная табличка с именем и датами
-                      Positioned(
-                        left: plaqueLeft,
-                        top: plaqueTop,
+                      // 2. Пергаментная табличка с именем и датами
+                      SizedBox(
                         width: plaqueWidth,
                         child: _buildParchmentPlaque(),
                       ),
-
-                      // Иконка вечной памяти
-                      if (_isDeceased)
-                        Positioned(
-                          left: frameLeft + 6,
-                          top: frameTop + 6,
-                          child: Container(
-                            padding: const EdgeInsets.all(2),
-                            decoration: BoxDecoration(
-                              color: Colors.black.withValues(alpha: 0.6),
-                              shape: BoxShape.circle,
-                            ),
-                            child: const Icon(
-                              Icons.history_edu,
-                              size: 11,
-                              color: Color(0xFFF3E5AB),
-                            ),
-                          ),
-                        ),
-
-                      // Именинная золотая звёздочка
-                      if (_isBirthday)
-                        Positioned(
-                          left: frameLeft + frameSize - 16,
-                          top: frameTop + 4,
-                          child: const Icon(
-                            Icons.auto_awesome,
-                            size: 14,
-                            color: goldPrimary,
-                          ),
-                        ),
                     ],
                   ),
                 ),
@@ -298,7 +278,69 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
     );
   }
 
-  /// Аватар персоны или антикварный силуэт
+  /// Позолоченный медальон в стиле референса (Image 2)
+  Widget _buildGildedMedallionFrame(
+    double size,
+    Color goldPrimary,
+    Color goldLight,
+    Color goldDark,
+  ) {
+    return Container(
+      width: size,
+      height: size,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF382314).withValues(alpha: 0.35),
+            blurRadius: 8,
+            offset: const Offset(0, 3),
+          ),
+          if (widget.isSelected || widget.isHighlighted)
+            BoxShadow(
+              color: goldPrimary.withValues(alpha: 0.85),
+              blurRadius: 18,
+              spreadRadius: 3,
+            ),
+        ],
+        gradient: LinearGradient(
+          colors: [goldLight, goldPrimary, goldDark, goldPrimary],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        border: Border.all(
+          color: const Color(0xFF5A3E1B),
+          width: 1.4,
+        ),
+      ),
+      padding: const EdgeInsets.all(3.2),
+      child: Container(
+        decoration: BoxDecoration(
+          shape: BoxShape.circle,
+          border: Border.all(
+            color: const Color(0xFF8B6B42),
+            width: 1.0,
+          ),
+        ),
+        child: ClipOval(
+          child: _buildAvatar(size - 9),
+        ),
+      ),
+    );
+  }
+
+  /// Декоративные дубовые листики и желудь у медальона
+  Widget _buildSideOakSprig() {
+    return SizedBox(
+      width: 20,
+      height: 24,
+      child: CustomPaint(
+        painter: _MiniOakSprigPainter(),
+      ),
+    );
+  }
+
+  /// Аватар персоны или благородный винтажный силуэт
   Widget _buildAvatar(double size) {
     if (widget.member.avatarUrl != null &&
         widget.member.avatarUrl!.isNotEmpty) {
@@ -335,12 +377,12 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
     );
   }
 
-  /// Пергаментная табличка в антикварном стиле референса
+  /// Пергаментная свиточная табличка в стиле геральдического референса
   Widget _buildParchmentPlaque() {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
       decoration: BoxDecoration(
-        color: const Color(0xFFF5EEDB),
+        color: const Color(0xFFF7F2E4),
         borderRadius: BorderRadius.circular(6),
         border: Border.all(
           color: const Color(0xFF8B6B42),
@@ -348,7 +390,7 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
         ),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withValues(alpha: 0.28),
+            color: const Color(0xFF4A3423).withValues(alpha: 0.24),
             blurRadius: 5,
             offset: const Offset(0, 2),
           ),
@@ -358,16 +400,16 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
         mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            '${widget.member.firstName} ${widget.member.lastName ?? ''}'.trim(),
+            _fullName,
             maxLines: 1,
             overflow: TextOverflow.ellipsis,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              fontSize: 11,
+              fontSize: 10.5,
               fontWeight: FontWeight.bold,
-              color: Color(0xFF26190E),
+              color: Color(0xFF2C1E14),
               fontFamily: 'serif',
-              letterSpacing: 0.2,
+              letterSpacing: 0.1,
             ),
           ),
           if (_yearsText.isNotEmpty)
@@ -379,25 +421,14 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                 overflow: TextOverflow.ellipsis,
                 textAlign: TextAlign.center,
                 style: const TextStyle(
-                  fontSize: 9.5,
+                  fontSize: 9.0,
                   fontWeight: FontWeight.w600,
-                  color: Color(0xFF5E452E),
+                  color: Color(0xFF6A4D32),
                   fontFamily: 'serif',
                 ),
               ),
             ),
         ],
-      ),
-    );
-  }
-
-  Widget _buildFallbackBranch(double w, double h) {
-    return Container(
-      width: w,
-      height: h,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: const Color(0xFFD4AF37), width: 1.5),
       ),
     );
   }
@@ -453,4 +484,36 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
       ),
     );
   }
+}
+
+/// Миниатюрный дубовый листик с желудем у кромки медальона
+class _MiniOakSprigPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    final leafPaint = Paint()
+      ..color = const Color(0xFF2E6B47)
+      ..style = PaintingStyle.fill;
+    final goldVein = Paint()
+      ..color = const Color(0xFFDFB743).withValues(alpha: 0.75)
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 0.8;
+
+    final leafPath = Path()
+      ..moveTo(size.width, size.height * 0.7)
+      ..cubicTo(size.width * 0.5, size.height * 0.4, 0, size.height * 0.3, 0, 0)
+      ..cubicTo(size.width * 0.3, size.height * 0.4, size.width * 0.7, size.height * 0.5, size.width, size.height * 0.7);
+
+    canvas.drawPath(leafPath, leafPaint);
+    canvas.drawLine(Offset(size.width, size.height * 0.7), Offset(0, 0), goldVein);
+
+    // Золотой желудь
+    canvas.drawCircle(
+      Offset(size.width * 0.6, size.height * 0.75),
+      2.5,
+      Paint()..color = const Color(0xFFDFB743),
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => false;
 }

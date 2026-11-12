@@ -46,12 +46,16 @@ class ParallaxBackground extends StatelessWidget {
               child: Opacity(
                 opacity: isDark ? 0.45 : 0.35,
                 child: Image.asset(
-                  'assets/background/bg_grand_tree.png',
+                  'assets/background/bg_ancestral_hall.jpg',
                   fit: BoxFit.cover,
                   errorBuilder: (c, e, s) => Image.asset(
-                    'assets/background/bg_grand_tree.jpg',
+                    'assets/background/bg_ancestral_hall.png',
                     fit: BoxFit.cover,
-                    errorBuilder: (c2, e2, s2) => const SizedBox(),
+                    errorBuilder: (c2, e2, s2) => Image.asset(
+                      'assets/background/bg_grand_tree.png',
+                      fit: BoxFit.cover,
+                      errorBuilder: (c3, e3, s3) => const SizedBox(),
+                    ),
                   ),
                 ),
               ),

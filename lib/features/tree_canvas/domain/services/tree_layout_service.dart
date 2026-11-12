@@ -14,6 +14,18 @@ TreeLayoutService treeLayoutService(TreeLayoutServiceRef ref) {
   return TreeLayoutService();
 }
 
+class NodeLayoutInfo {
+  final Offset position;
+  final String branchSize; // 'large', 'medium', 'small'
+  final bool isFlipped;
+
+  const NodeLayoutInfo({
+    required this.position,
+    required this.branchSize,
+    required this.isFlipped,
+  });
+}
+
 class TreeLayoutService {
   static const double nodeWidth = 140.0;
   static const double nodeSpacing = 220.0;
@@ -21,6 +33,18 @@ class TreeLayoutService {
   static const double levelSpacing = 280.0;
 
   Map<String, Offset> calculatePositions({
+    required String ownerId,
+    required List<MemberModel> members,
+    required List<RelationshipModel> relationships,
+  }) {
+    return calculateLayout(
+      ownerId: ownerId,
+      members: members,
+      relationships: relationships,
+    ).map((key, info) => MapEntry(key, info.position));
+  }
+
+  Map<String, NodeLayoutInfo> calculateLayout({
     required String ownerId,
     required List<MemberModel> members,
     required List<RelationshipModel> relationships,
@@ -50,7 +74,27 @@ class TreeLayoutService {
     _assignLevels(ownerNode, nodes);
     _assignTreeCoordinates(ownerNode, nodes);
 
-    return nodes.map((key, node) => MapEntry(key, node.position));
+    return nodes.map((key, node) {
+      String size;
+      if (node.level >= 1) {
+        size = node.level >= 2 ? 'large' : 'medium';
+      } else if (node.level == 0) {
+        size = 'large';
+      } else if (node.level == -1) {
+        size = 'medium';
+      } else {
+        size = 'small';
+      }
+
+      return MapEntry(
+        key,
+        NodeLayoutInfo(
+          position: node.position,
+          branchSize: size,
+          isFlipped: node.x < 0,
+        ),
+      );
+    });
   }
 
   void _assignLevels(GraphNode root, Map<String, GraphNode> allNodes) {

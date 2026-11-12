@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import '../../../../data/models/member_model.dart';
+import '../../../../data/models/enums.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import '../../../profile/presentation/profile_screen.dart';
 
@@ -9,6 +10,8 @@ class MemberNodeWidget extends StatefulWidget {
   final bool isSelected;
   final bool isVisible;
   final bool isHighlighted;
+  final String branchSize; // 'large', 'medium', 'small'
+  final bool isFlipped;
   final VoidCallback onTap;
   final Function(String relationType) onAddTap;
 
@@ -18,6 +21,8 @@ class MemberNodeWidget extends StatefulWidget {
     required this.isSelected,
     required this.isVisible,
     this.isHighlighted = false,
+    this.branchSize = 'medium',
+    this.isFlipped = false,
     required this.onTap,
     required this.onAddTap,
   });
@@ -42,37 +47,82 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
     final b = widget.member.birthDate?.year;
     final d = widget.member.deathDate?.year;
     if (b == null) return '';
-    if (d != null) return '$b  ◆  $d';
+    if (d != null) return '$b — $d';
     return '$b г.';
   }
 
   @override
   Widget build(BuildContext context) {
-    final isDark = Theme.of(context).brightness == Brightness.dark;
-
-    // Премиальная геральдическая палитра
     const goldPrimary = Color(0xFFD4AF37);
     const goldLight = Color(0xFFF3E5AB);
-    const goldDark = Color(0xFFAA8012);
 
-    final surfaceColor =
-        isDark ? const Color(0xFF141820) : const Color(0xFFFFFFFF);
-    final cardBorderColor = isDark
-        ? (widget.isSelected ? goldPrimary : const Color(0xFF384355))
-        : (widget.isSelected ? goldPrimary : const Color(0xFFE2D9C8));
+    // Параметры геометрии в зависимости от размера ветви
+    final double nodeWidth;
+    final double nodeHeight;
+    final double frameSize;
+    final double frameLeft;
+    final double frameTop;
+    final double plaqueWidth;
+    final double plaqueLeft;
+    final double plaqueTop;
+    final String assetName;
 
-    Color glowColor;
-    if (widget.isHighlighted) {
-      glowColor = goldPrimary.withValues(alpha: 0.8);
-    } else if (_isBirthday) {
-      glowColor = goldLight.withValues(alpha: 0.9);
-    } else if (widget.isSelected) {
-      glowColor = goldPrimary.withValues(alpha: 0.5);
-    } else if (_isDeceased) {
-      glowColor = Colors.black.withValues(alpha: 0.3);
-    } else {
-      glowColor = goldPrimary.withValues(alpha: isDark ? 0.12 : 0.08);
+    switch (widget.branchSize) {
+      case 'large':
+        nodeWidth = 176.0;
+        nodeHeight = 184.0;
+        frameSize = 70.0;
+        assetName = 'assets/branches/branch_large.png';
+        if (widget.isFlipped) {
+          frameLeft = 24.0;
+          plaqueLeft = 10.0;
+        } else {
+          frameLeft = 82.0;
+          plaqueLeft = 66.0;
+        }
+        frameTop = 58.0;
+        plaqueWidth = 100.0;
+        plaqueTop = 134.0;
+        break;
+      case 'small':
+        nodeWidth = 130.0;
+        nodeHeight = 142.0;
+        frameSize = 50.0;
+        assetName = 'assets/branches/branch_small.png';
+        if (widget.isFlipped) {
+          frameLeft = 18.0;
+          plaqueLeft = 4.0;
+        } else {
+          frameLeft = 62.0;
+          plaqueLeft = 50.0;
+        }
+        frameTop = 46.0;
+        plaqueWidth = 76.0;
+        plaqueTop = 100.0;
+        break;
+      case 'medium':
+      default:
+        nodeWidth = 150.0;
+        nodeHeight = 158.0;
+        frameSize = 60.0;
+        assetName = 'assets/branches/branch_medium.png';
+        if (widget.isFlipped) {
+          frameLeft = 20.0;
+          plaqueLeft = 6.0;
+        } else {
+          frameLeft = 70.0;
+          plaqueLeft = 56.0;
+        }
+        frameTop = 50.0;
+        plaqueWidth = 88.0;
+        plaqueTop = 114.0;
+        break;
     }
+
+    final frameCenter = Offset(
+      frameLeft + frameSize / 2,
+      frameTop + frameSize / 2,
+    );
 
     return AnimatedOpacity(
       opacity: widget.isVisible ? 1.0 : 0.0,
@@ -82,309 +132,171 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
         scale: widget.isVisible ? 1.0 : 0.85,
         duration: const Duration(milliseconds: 500),
         curve: Curves.easeInOut,
-        child: Stack(
-          clipBehavior: Clip.none,
-          alignment: Alignment.center,
-          children: [
-            // Всплывающие кнопки управления при выборе узла
-            if (widget.isSelected) ...[
-              _buildAddBtn(
-                const Offset(0, -96),
-                'parent',
-                Icons.account_tree_outlined,
-                'Родитель (к корням)',
-              ),
-              _buildAddBtn(
-                const Offset(0, 96),
-                'child',
-                Icons.child_care_outlined,
-                'Потомок (в крону)',
-              ),
-              _buildAddBtn(
-                const Offset(-96, 0),
-                'spouse',
-                Icons.favorite_rounded,
-                'Супруг(а)',
-              ),
-              // Кнопка быстрого перехода в карточку профиля (справа)
-              Positioned(
-                left: 64 - 20 + 96,
-                top: 64 - 20,
-                child: Tooltip(
-                  message: 'Открыть летопись / профиль',
-                  child: GestureDetector(
-                    onTap: () {
-                      HapticFeedback.lightImpact();
-                      ProfileScreen.show(context, widget.member);
-                    },
-                    child: Container(
-                      width: 40,
-                      height: 40,
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        gradient: const LinearGradient(
-                          colors: [goldLight, goldPrimary],
-                          begin: Alignment.topLeft,
-                          end: Alignment.bottomRight,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: goldPrimary.withValues(alpha: 0.6),
-                            blurRadius: 10,
-                            offset: const Offset(0, 3),
-                          ),
-                        ],
-                        border: Border.all(color: Colors.white, width: 1.5),
-                      ),
-                      child: const Icon(Icons.menu_book_rounded,
-                          size: 20, color: Color(0xFF1A1A1A)),
-                    ),
-                  ),
+        child: SizedBox(
+          width: nodeWidth,
+          height: nodeHeight,
+          child: Stack(
+            clipBehavior: Clip.none,
+            alignment: Alignment.center,
+            children: [
+              // Всплывающие золотые печати управления при выборе узла
+              if (widget.isSelected) ...[
+                _buildAddBtn(
+                  frameCenter,
+                  const Offset(0, -78),
+                  'parent',
+                  Icons.account_tree_outlined,
+                  'Родитель (к корням)',
                 ),
-              ),
-              // Информационная плашка "Открыть профиль" под карточкой
-              Positioned(
-                top: 142,
-                child: GestureDetector(
-                  onTap: () {
-                    HapticFeedback.lightImpact();
-                    ProfileScreen.show(context, widget.member);
-                  },
-                  child: Container(
-                    padding:
-                        const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
-                    decoration: BoxDecoration(
-                      color: surfaceColor.withValues(alpha: 0.95),
-                      borderRadius: BorderRadius.circular(20),
-                      border: Border.all(color: goldPrimary, width: 1.2),
-                      boxShadow: [
-                        BoxShadow(
-                          color: Colors.black.withValues(alpha: 0.25),
-                          blurRadius: 8,
-                          offset: const Offset(0, 3),
-                        ),
-                      ],
-                    ),
-                    child: const Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Icon(Icons.history_edu_rounded,
-                            size: 15, color: goldPrimary),
-                        SizedBox(width: 6),
-                        Text(
-                          'Летопись персоны',
-                          style: TextStyle(
-                            fontSize: 12,
-                            fontWeight: FontWeight.bold,
-                            color: goldPrimary,
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
+                _buildAddBtn(
+                  frameCenter,
+                  const Offset(0, 78),
+                  'child',
+                  Icons.child_care_outlined,
+                  'Потомок (в крону)',
                 ),
-              ),
-            ],
-
-            // Основная карточка-медальон персоны
-            GestureDetector(
-              onDoubleTap: () {
-                HapticFeedback.lightImpact();
-                ProfileScreen.show(context, widget.member);
-              },
-              onTapDown: (_) {
-                HapticFeedback.selectionClick();
-                setState(() => _isPressed = true);
-              },
-              onTapUp: (_) {
-                HapticFeedback.lightImpact();
-                setState(() => _isPressed = false);
-                if (widget.isSelected) {
-                  ProfileScreen.show(context, widget.member);
-                } else {
-                  widget.onTap();
-                }
-              },
-              onTapCancel: () => setState(() => _isPressed = false),
-              child: AnimatedScale(
-                scale: _isPressed ? 0.96 : (widget.isSelected ? 1.04 : 1.0),
-                duration: const Duration(milliseconds: 160),
-                curve: Curves.easeOutBack,
-                child: Container(
-                  width: 128,
-                  height: 128,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(26),
-                    color: surfaceColor,
-                    boxShadow: [
-                      // Мягкое благородное свечение
-                      BoxShadow(
-                        color: glowColor,
-                        blurRadius: (widget.isHighlighted ||
-                                _isBirthday ||
-                                widget.isSelected)
-                            ? 24
-                            : 12,
-                        spreadRadius: widget.isSelected ? 3 : 0,
-                        offset: const Offset(0, 4),
-                      ),
-                      // Тень основания
-                      BoxShadow(
-                        color: Colors.black
-                            .withValues(alpha: isDark ? 0.45 : 0.08),
-                        blurRadius: 10,
-                        offset: const Offset(0, 5),
-                      ),
-                    ],
-                    // Внешний золотой/платиновый безель
-                    border: Border.all(
-                      color: widget.isHighlighted
-                          ? goldLight
-                          : (widget.isSelected ? goldPrimary : cardBorderColor),
-                      width: (widget.isSelected || widget.isHighlighted)
-                          ? 2.2
-                          : 1.4,
-                    ),
-                  ),
-                  child: Stack(
-                    alignment: Alignment.center,
-                    children: [
-                      // Тонкий внутренний золотистый контур для эффекта филиграни
-                      Positioned.fill(
-                        child: Container(
-                          margin: const EdgeInsets.all(3.5),
-                          decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(22),
-                            border: Border.all(
-                              color: goldPrimary.withValues(
-                                alpha: widget.isSelected
-                                    ? 0.6
-                                    : (isDark ? 0.2 : 0.3),
-                              ),
-                              width: 0.8,
-                            ),
+                _buildAddBtn(
+                  frameCenter,
+                  Offset(widget.isFlipped ? -78 : 78, 0),
+                  'spouse',
+                  Icons.favorite_rounded,
+                  'Супруг(а)',
+                ),
+                // Кнопка быстрого перехода в карточку летописи
+                Positioned(
+                  left: frameCenter.dx - 18 + (widget.isFlipped ? 78 : -78),
+                  top: frameCenter.dy - 18,
+                  child: Tooltip(
+                    message: 'Открыть летопись / профиль',
+                    child: GestureDetector(
+                      onTap: () {
+                        HapticFeedback.lightImpact();
+                        ProfileScreen.show(context, widget.member);
+                      },
+                      child: Container(
+                        width: 36,
+                        height: 36,
+                        decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          gradient: const LinearGradient(
+                            colors: [goldLight, goldPrimary],
+                            begin: Alignment.topLeft,
+                            end: Alignment.bottomRight,
                           ),
-                        ),
-                      ),
-
-                      // Контент узла
-                      Padding(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 8.0, vertical: 10.0),
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            // Аватар-медальон с золотым кольцом
-                            Container(
-                              padding: const EdgeInsets.all(2.5),
-                              decoration: BoxDecoration(
-                                shape: BoxShape.circle,
-                                gradient: LinearGradient(
-                                  colors: _isDeceased
-                                      ? const [
-                                          Color(0xFF8A939E),
-                                          Color(0xFF5E6570)
-                                        ]
-                                      : const [goldLight, goldDark],
-                                  begin: Alignment.topLeft,
-                                  end: Alignment.bottomRight,
-                                ),
-                                boxShadow: [
-                                  BoxShadow(
-                                    color: (_isDeceased
-                                            ? Colors.black
-                                            : goldPrimary)
-                                        .withValues(alpha: 0.3),
-                                    blurRadius: 6,
-                                  ),
-                                ],
-                              ),
-                              child: CircleAvatar(
-                                radius: 25,
-                                backgroundColor: isDark
-                                    ? const Color(0xFF1C222D)
-                                    : const Color(0xFFF7F4EE),
-                                backgroundImage: widget.member.avatarUrl != null
-                                    ? CachedNetworkImageProvider(
-                                        widget.member.avatarUrl!)
-                                    : null,
-                                child: widget.member.avatarUrl == null
-                                    ? Text(
-                                        widget.member.firstName.isNotEmpty
-                                            ? widget.member.firstName[0]
-                                            : '?',
-                                        style: TextStyle(
-                                          color: _isDeceased
-                                              ? (isDark
-                                                  ? Colors.grey[400]
-                                                  : Colors.grey[700])
-                                              : goldPrimary,
-                                          fontWeight: FontWeight.bold,
-                                          fontSize: 19,
-                                          fontFamily: 'Inter',
-                                        ),
-                                      )
-                                    : null,
-                              ),
+                          boxShadow: [
+                            BoxShadow(
+                              color: goldPrimary.withValues(alpha: 0.6),
+                              blurRadius: 10,
+                              offset: const Offset(0, 3),
                             ),
-                            const SizedBox(height: 7),
-
-                            // Имя персоны
-                            Text(
-                              widget.member.firstName,
-                              style: TextStyle(
-                                fontWeight: FontWeight.bold,
-                                fontSize: 13,
-                                letterSpacing: 0.2,
-                                color: isDark
-                                    ? const Color(0xFFF3F4F6)
-                                    : const Color(0xFF1F2937),
-                              ),
-                              maxLines: 1,
-                              overflow: TextOverflow.ellipsis,
-                            ),
-
-                            // Годы жизни с золотым ромбиком
-                            if (_yearsText.isNotEmpty)
-                              Padding(
-                                padding: const EdgeInsets.only(top: 2.0),
-                                child: Text(
-                                  _yearsText,
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.w500,
-                                    letterSpacing: 0.3,
-                                    color: _isDeceased
-                                        ? const Color(0xFF8B949E)
-                                        : (isDark
-                                            ? const Color(0xFFC7A855)
-                                            : const Color(0xFF8A6C25)),
-                                  ),
-                                ),
-                              ),
                           ],
+                          border: Border.all(color: Colors.white, width: 1.5),
+                        ),
+                        child: const Icon(Icons.menu_book_rounded,
+                            size: 18, color: Color(0xFF1A1A1A)),
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+
+              // Основное тело ветви с рамкой и табличкой
+              GestureDetector(
+                onDoubleTap: () {
+                  HapticFeedback.lightImpact();
+                  ProfileScreen.show(context, widget.member);
+                },
+                onTapDown: (_) {
+                  HapticFeedback.selectionClick();
+                  setState(() => _isPressed = true);
+                },
+                onTapUp: (_) {
+                  HapticFeedback.lightImpact();
+                  setState(() => _isPressed = false);
+                  if (widget.isSelected) {
+                    ProfileScreen.show(context, widget.member);
+                  } else {
+                    widget.onTap();
+                  }
+                },
+                onTapCancel: () => setState(() => _isPressed = false),
+                child: AnimatedScale(
+                  scale: _isPressed ? 0.96 : (widget.isSelected ? 1.05 : 1.0),
+                  duration: const Duration(milliseconds: 160),
+                  curve: Curves.easeOutBack,
+                  child: Stack(
+                    children: [
+                      // 1. Фотография или гербовый силуэт под рамкой
+                      Positioned(
+                        left: frameLeft + 4,
+                        top: frameTop + 4,
+                        width: frameSize - 8,
+                        height: frameSize - 8,
+                        child: Container(
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadius.circular(frameSize * 0.16),
+                            boxShadow: [
+                              if (widget.isSelected || widget.isHighlighted)
+                                BoxShadow(
+                                  color: goldPrimary.withValues(alpha: 0.8),
+                                  blurRadius: 16,
+                                  spreadRadius: 2,
+                                ),
+                            ],
+                          ),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(frameSize * 0.16),
+                            child: _buildAvatar(frameSize - 8),
+                          ),
                         ),
                       ),
 
-                      // Ленточка "Вечная память" для ушедших предков
+                      // 2. Ассет дубовой ветви с золотой рамкой
+                      Positioned.fill(
+                        child: Transform.flip(
+                          flipX: widget.isFlipped,
+                          child: Image.asset(
+                            assetName,
+                            fit: BoxFit.contain,
+                            errorBuilder: (ctx, err, stack) =>
+                                _buildFallbackBranch(nodeWidth, nodeHeight),
+                          ),
+                        ),
+                      ),
+
+                      // 3. Пергаментная подвесная табличка с именем и датами
+                      Positioned(
+                        left: plaqueLeft,
+                        top: plaqueTop,
+                        width: plaqueWidth,
+                        child: _buildParchmentPlaque(),
+                      ),
+
+                      // Иконка вечной памяти
                       if (_isDeceased)
                         Positioned(
-                          top: 8,
-                          right: 8,
-                          child: Icon(
-                            Icons.history_edu,
-                            size: 13,
-                            color: isDark
-                                ? const Color(0xFF8B949E)
-                                : const Color(0xFF6B7280),
+                          left: frameLeft + 6,
+                          top: frameTop + 6,
+                          child: Container(
+                            padding: const EdgeInsets.all(2),
+                            decoration: BoxDecoration(
+                              color: Colors.black.withValues(alpha: 0.6),
+                              shape: BoxShape.circle,
+                            ),
+                            child: const Icon(
+                              Icons.history_edu,
+                              size: 11,
+                              color: Color(0xFFF3E5AB),
+                            ),
                           ),
                         ),
 
-                      // Корона/звездочка для дня рождения
+                      // Именинная золотая звёздочка
                       if (_isBirthday)
-                        const Positioned(
-                          top: 6,
-                          child: Icon(
+                        Positioned(
+                          left: frameLeft + frameSize - 16,
+                          top: frameTop + 4,
+                          child: const Icon(
                             Icons.auto_awesome,
                             size: 14,
                             color: goldPrimary,
@@ -394,23 +306,132 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
                   ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
+      ),
+    );
+  }
+
+  /// Аватар персоны или антикварный силуэт
+  Widget _buildAvatar(double size) {
+    if (widget.member.avatarUrl != null &&
+        widget.member.avatarUrl!.isNotEmpty) {
+      return CachedNetworkImage(
+        imageUrl: widget.member.avatarUrl!,
+        fit: BoxFit.cover,
+        errorWidget: (c, u, e) => _buildDefaultSilhouette(size),
+      );
+    }
+    return _buildDefaultSilhouette(size);
+  }
+
+  Widget _buildDefaultSilhouette(double size) {
+    final isMale = widget.member.gender == Gender.male;
+    return Container(
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: widget.member.deathDate != null
+              ? const [Color(0xFF6B7280), Color(0xFF374151)]
+              : (isMale
+                  ? const [Color(0xFF8B6B42), Color(0xFF533E26)]
+                  : const [Color(0xFFA67C52), Color(0xFF66482D)]),
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+      ),
+      child: Center(
+        child: Icon(
+          isMale ? Icons.person_rounded : Icons.person_3_rounded,
+          size: size * 0.65,
+          color: const Color(0xFFF3E5AB).withValues(alpha: 0.9),
+        ),
+      ),
+    );
+  }
+
+  /// Пергаментная табличка в антикварном стиле референса
+  Widget _buildParchmentPlaque() {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 5, vertical: 3),
+      decoration: BoxDecoration(
+        color: const Color(0xFFF5EEDB),
+        borderRadius: BorderRadius.circular(6),
+        border: Border.all(
+          color: const Color(0xFF8B6B42),
+          width: 1.1,
+        ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withValues(alpha: 0.28),
+            blurRadius: 5,
+            offset: const Offset(0, 2),
+          ),
+        ],
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            '${widget.member.firstName} ${widget.member.lastName ?? ''}'.trim(),
+            maxLines: 1,
+            overflow: TextOverflow.ellipsis,
+            textAlign: TextAlign.center,
+            style: const TextStyle(
+              fontSize: 11,
+              fontWeight: FontWeight.bold,
+              color: Color(0xFF26190E),
+              fontFamily: 'serif',
+              letterSpacing: 0.2,
+            ),
+          ),
+          if (_yearsText.isNotEmpty)
+            Padding(
+              padding: const EdgeInsets.only(top: 1),
+              child: Text(
+                _yearsText,
+                maxLines: 1,
+                overflow: TextOverflow.ellipsis,
+                textAlign: TextAlign.center,
+                style: const TextStyle(
+                  fontSize: 9.5,
+                  fontWeight: FontWeight.w600,
+                  color: Color(0xFF5E452E),
+                  fontFamily: 'serif',
+                ),
+              ),
+            ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildFallbackBranch(double w, double h) {
+    return Container(
+      width: w,
+      height: h,
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(16),
+        border: Border.all(color: const Color(0xFFD4AF37), width: 1.5),
       ),
     );
   }
 
   /// Золотая сургучная печать-кнопка для добавления родственников
   Widget _buildAddBtn(
-      Offset offset, String type, IconData icon, String tooltip) {
+    Offset center,
+    Offset offset,
+    String type,
+    IconData icon,
+    String tooltip,
+  ) {
     const goldPrimary = Color(0xFFD4AF37);
     const goldLight = Color(0xFFF7E7B4);
     const goldDark = Color(0xFF9E7710);
 
     return Positioned(
-      left: 64 - 18 + offset.dx,
-      top: 64 - 18 + offset.dy,
+      left: center.dx - 18 + offset.dx,
+      top: center.dy - 18 + offset.dy,
       child: Tooltip(
         message: tooltip,
         child: GestureDetector(

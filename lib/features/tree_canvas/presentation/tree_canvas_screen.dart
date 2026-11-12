@@ -273,12 +273,14 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
 
           final allHiddenIds = hiddenNodeIds.union(searchHiddenIds);
 
-          final positions =
-              ref.watch(treeLayoutServiceProvider).calculatePositions(
+          final layoutMap =
+              ref.watch(treeLayoutServiceProvider).calculateLayout(
                     ownerId: rootId,
                     members: members,
                     relationships: rels,
                   );
+
+          final positions = layoutMap.map((k, v) => MapEntry(k, v.position));
 
           final dummyNodes = {
             for (var m in members)
@@ -311,14 +313,30 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                         ),
                       ),
                       ...members.map((m) {
-                        final pos = positions[m.id] ?? Offset.zero;
+                        final layoutInfo = layoutMap[m.id];
+                        final pos = layoutInfo?.position ?? Offset.zero;
+                        final branchSize = layoutInfo?.branchSize ?? 'medium';
+                        final isFlipped = layoutInfo?.isFlipped ?? false;
                         final isVisible = !allHiddenIds.contains(m.id);
                         final isHighlighted = searchQuery.isNotEmpty &&
                             !searchHiddenIds.contains(m.id);
 
+                        final double nodeLeft;
+                        final double nodeTop;
+                        if (branchSize == 'large') {
+                          nodeLeft = pos.dx - (isFlipped ? 59 : 117);
+                          nodeTop = pos.dy - 93;
+                        } else if (branchSize == 'small') {
+                          nodeLeft = pos.dx - (isFlipped ? 43 : 87);
+                          nodeTop = pos.dy - 71;
+                        } else {
+                          nodeLeft = pos.dx - (isFlipped ? 50 : 100);
+                          nodeTop = pos.dy - 80;
+                        }
+
                         return Positioned(
-                          left: pos.dx - 64,
-                          top: pos.dy - 64,
+                          left: nodeLeft,
+                          top: nodeTop,
                           child: IgnorePointer(
                             ignoring: !isVisible,
                             child: AnimatedOpacity(
@@ -329,6 +347,8 @@ class _TreeCanvasScreenState extends ConsumerState<TreeCanvasScreen> {
                                 isSelected: _selectedMemberId == m.id,
                                 isVisible: isVisible,
                                 isHighlighted: isHighlighted,
+                                branchSize: branchSize,
+                                isFlipped: isFlipped,
                                 onTap: () =>
                                     setState(() => _selectedMemberId = m.id),
                                 onAddTap: (relationType) async {

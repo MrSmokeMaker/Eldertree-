@@ -123,6 +123,18 @@ void main() {
       expect(positions[mother.id]!.dy, greaterThan(0.0));
       // Father and mother are separated horizontally
       expect(positions[father.id]!.dx, isNot(equals(positions[mother.id]!.dx)));
+
+      // Check calculateLayout branch sizes and flipping
+      final layoutMap = layoutService.calculateLayout(
+        ownerId: founder.id,
+        members: members,
+        relationships: rels,
+      );
+      expect(layoutMap[founder.id]!.branchSize, 'large');
+      expect(layoutMap[child1.id]!.branchSize, 'medium');
+      expect(layoutMap[child2.id]!.branchSize, 'medium');
+      // Symmetrical branch flipping
+      expect(layoutMap[child1.id]!.isFlipped, isNot(equals(layoutMap[child2.id]!.isFlipped)));
     });
   });
 }

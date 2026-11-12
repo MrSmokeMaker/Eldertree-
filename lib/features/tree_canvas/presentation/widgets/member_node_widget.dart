@@ -69,53 +69,38 @@ class _MemberNodeWidgetState extends State<MemberNodeWidget> {
 
     switch (widget.branchSize) {
       case 'large':
-        nodeWidth = 176.0;
-        nodeHeight = 184.0;
-        frameSize = 70.0;
+        nodeWidth = 170.0;
+        nodeHeight = 136.0;
+        frameSize = 54.0;
         assetName = 'assets/branches/branch_large.png';
-        if (widget.isFlipped) {
-          frameLeft = 24.0;
-          plaqueLeft = 10.0;
-        } else {
-          frameLeft = 82.0;
-          plaqueLeft = 66.0;
-        }
-        frameTop = 58.0;
-        plaqueWidth = 100.0;
-        plaqueTop = 134.0;
+        frameLeft = widget.isFlipped ? 49.5 : 66.5;
+        frameTop = 46.8;
+        plaqueWidth = 98.0;
+        plaqueLeft = widget.isFlipped ? 27.5 : 44.5;
+        plaqueTop = 103.0;
         break;
       case 'small':
-        nodeWidth = 130.0;
-        nodeHeight = 142.0;
-        frameSize = 50.0;
+        nodeWidth = 135.0;
+        nodeHeight = 104.0;
+        frameSize = 40.0;
         assetName = 'assets/branches/branch_small.png';
-        if (widget.isFlipped) {
-          frameLeft = 18.0;
-          plaqueLeft = 4.0;
-        } else {
-          frameLeft = 62.0;
-          plaqueLeft = 50.0;
-        }
-        frameTop = 46.0;
+        frameLeft = widget.isFlipped ? 40.7 : 54.3;
+        frameTop = 35.2;
         plaqueWidth = 76.0;
-        plaqueTop = 100.0;
+        plaqueLeft = widget.isFlipped ? 22.7 : 36.3;
+        plaqueTop = 76.0;
         break;
       case 'medium':
       default:
-        nodeWidth = 150.0;
-        nodeHeight = 158.0;
-        frameSize = 60.0;
+        nodeWidth = 155.0;
+        nodeHeight = 118.0;
+        frameSize = 48.0;
         assetName = 'assets/branches/branch_medium.png';
-        if (widget.isFlipped) {
-          frameLeft = 20.0;
-          plaqueLeft = 6.0;
-        } else {
-          frameLeft = 70.0;
-          plaqueLeft = 56.0;
-        }
-        frameTop = 50.0;
+        frameLeft = widget.isFlipped ? 45.7 : 61.3;
+        frameTop = 39.0;
         plaqueWidth = 88.0;
-        plaqueTop = 114.0;
+        plaqueLeft = widget.isFlipped ? 25.7 : 41.3;
+        plaqueTop = 88.0;
         break;
     }
 

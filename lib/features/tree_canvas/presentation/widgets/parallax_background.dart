@@ -27,35 +27,45 @@ class ParallaxBackground extends StatelessWidget {
         return Stack(
           fit: StackFit.expand,
           children: [
-            // 1. Базовый фон
-            Container(
-              color: isDark ? const Color(0xFF090D11) : const Color(0xFFFAF7F0),
+            // 1. Антикварное пергаментное полотно
+            Positioned.fill(
+              child: Image.asset(
+                'assets/background/bg_parchment.jpg',
+                fit: BoxFit.cover,
+                errorBuilder: (c, e, s) => Container(
+                  color: isDark
+                      ? const Color(0xFF0D1117)
+                      : const Color(0xFFF7F2E7),
+                ),
+              ),
             ),
+            // Мягкая тонировка пергамента для ночной темы
+            if (isDark)
+              Positioned.fill(
+                child: Container(
+                  color: Colors.black.withValues(alpha: 0.65),
+                ),
+              ),
 
-            // 2. Сгенерированная художественная картина векового дерева (Grand Eldertree)
+            // 2. Вековое древо с корнями и мощным витым стволом (Grand Ancient Oak)
             Positioned(
               left: (MediaQuery.of(context).size.width / 2) -
-                  1300 +
+                  650 +
                   treeOffset.dx,
               top: (MediaQuery.of(context).size.height / 2) -
-                  1300 +
-                  treeOffset.dy +
-                  80,
-              width: 2600,
-              height: 2600,
+                  820 +
+                  treeOffset.dy,
+              width: 1300,
+              height: 1640,
               child: Opacity(
-                opacity: isDark ? 0.45 : 0.35,
+                opacity: isDark ? 0.75 : 0.88,
                 child: Image.asset(
-                  'assets/background/bg_ancestral_hall.jpg',
-                  fit: BoxFit.cover,
+                  'assets/background/grand_tree_trunk.png',
+                  fit: BoxFit.contain,
                   errorBuilder: (c, e, s) => Image.asset(
-                    'assets/background/bg_ancestral_hall.png',
-                    fit: BoxFit.cover,
-                    errorBuilder: (c2, e2, s2) => Image.asset(
-                      'assets/background/bg_grand_tree.png',
-                      fit: BoxFit.cover,
-                      errorBuilder: (c3, e3, s3) => const SizedBox(),
-                    ),
+                    'assets/background/bg_grand_tree.png',
+                    fit: BoxFit.contain,
+                    errorBuilder: (c2, e2, s2) => const SizedBox(),
                   ),
                 ),
               ),
